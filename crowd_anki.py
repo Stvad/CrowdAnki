@@ -103,14 +103,21 @@ class Deck(object):
     def __init__(self):
         pass
 
-    def from_collection(self, collection, name):
-        self.collection = collection
-        self.name = name
+    @classmethod
+    def from_collection(cls, collection, name):
+        creation = Deck()
+        creation.collection = collection
+        creation.name = name
 
-        self.update_db()
-        self.anki_deck = self.collection.decks.byName(self.name)
+        creation.update_db()
+        creation.anki_deck = collection.decks.byName(name)
 
-        self.notes = Note.get_notes_from_cards(Note.get_cards_from_db(self.collection.db, name)) # Todo?
+        creation.notes = Note.get_notes_from_cards(Note.get_cards_from_db(collection.db, name))  # Todo?
+
+        creation.children = [cls.from_collection(collection, child_name) for child_name, _ in
+                             collection.decks.children(creation.anki_deck["id"])]
+
+        return creation
 
     def update_db(self):
         # Introduce uuid field for unique identification of entities
@@ -138,14 +145,20 @@ class Note(object):
         self.anki_note = AnkiNote(collection, id=note_id)
 
 
-
-
 class NoteModel(object):
-    pass
+    def __init__(self):
+        pass
+
+    def from_collection(self, collection, model_id):
+        self.anki_model = collection.models.get(model_id)
 
 
 class DeckConfig(object):
-    pass
+    def __init__(self):
+        pass
+
+    def from_collection(self, collection, deck_config_id):
+        self.anki_deck_config = collection.decks.getConf(deck_config_id)
 
 
 # Todo trigger backup before export/import.
