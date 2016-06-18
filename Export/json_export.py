@@ -1,7 +1,9 @@
 import json
-import anki
 from pprint import pprint
 
+
+import anki
+from anki.notes import Note
 # import the main window object (mw) from aqt
 from aqt import mw
 # import the "show info" tool from utils.py
@@ -38,13 +40,19 @@ class JsonExporter(object):
         # for deck in self.collection.decks.all():
         #     pprint(deck)
 
-        deckname = "VideoStitch Insights"
+        deck_name = "VideoStitch Insights"
 
         # for note in self.collection.findNotes('"deck:Software::Bash::Shell navigation"'):
         #     pprint(note)
 
-        pprint(self.get_note_ids(deckname))
-        pprint(self.get_note_ids_find(deckname))
+        pprint(self.get_note_ids(deck_name))
+        pprint(self.get_note_ids_find(deck_name))
+
+        # pprint([note._model for note in self.get_notes(deckname)][0])
+        pprint([note.data for note in self.get_notes("Rationality") if note.data])
+
+        deck_id = self.collection.decks.byName(deck_name)["id"]
+        pprint(self.collection.decks.confForDid(deck_id))
 
     def export_deck(self, deck_id):
         """Returns json for given deck and list of dependencies"""
@@ -53,8 +61,8 @@ class JsonExporter(object):
         for child in working_deck.children():
             pass
 
-    def get_notes(self, deck_id):
-        pass
+    def get_notes(self, deck_name):
+        return [Note(self.collection, id=note_id) for note_id in self.get_note_ids_find(deck_name)]
 
     def get_note_ids_find(self, deck_name):
         return self.collection.findNotes("'deck:" + deck_name + "'")
@@ -83,7 +91,13 @@ def main():
     collection = Collection(COLLECTION_PATH)
     tw = JsonExporter(collection)
 
-    pprint(tw)
-
 if __name__ == "__main__":
     main()
+
+
+
+"""
+Note.mod - modification time
+Note.mid - model id
+
+"""
