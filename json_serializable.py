@@ -5,6 +5,12 @@ class JsonSerializable(object):
     readable_names = {}
     filter_set = set()
 
+    def __init__(self):
+        pass
+        # self._update_fields()
+        # Todo consider introducing anki_dict and anki_object
+        # multiple inheritance?
+
     @staticmethod
     def default_json(wobject):
         if isinstance(wobject, JsonSerializable):
@@ -19,3 +25,8 @@ class JsonSerializable(object):
 
     def _dict_extension(self):
         return {}
+
+    def _update_fields(self):
+        """
+        Add necessary fields to anki dicts/objects. E.g. uuid
+        """

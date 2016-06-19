@@ -19,3 +19,14 @@ def add_column(db, table_name, column_name, default_value="\"\""):
     except OperationalError as e:
         # The point is to ignore error if there is already the column
         pprint(e)
+
+
+def add_absent_field(object, field_name, default_value=None):
+    """
+    Add field to the object if it does not exist yet.
+    :param object:
+    :param field_name:
+    :param default_value:
+    :return:
+    """
+    setattr(object, field_name, getattr(object, field_name, default_value))
