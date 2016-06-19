@@ -13,9 +13,9 @@ def merge_dicts(*dict_args):
     return result
 
 
-def add_column(db, table_name, column_name):
+def add_column(db, table_name, column_name, default_value="\"\""):
     try:
-        db.execute('ALTER TABLE {} ADD COLUMN {};'.format(table_name, column_name))
+        db.execute('ALTER TABLE {} ADD COLUMN {} TEXT DEFAULT {};'.format(table_name, column_name, default_value))
     except OperationalError as e:
         # The point is to ignore error if there is already the column
         pprint(e)
