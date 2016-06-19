@@ -4,19 +4,19 @@ from collections import namedtuple
 import CrowdAnki.utils
 from CrowdAnki.common_constants import UUID_FIELD_NAME
 from CrowdAnki.deck_config import DeckConfig
-from CrowdAnki.json_serializable import JsonSerializable
+from CrowdAnki.json_serializable import JsonSerializableAnkiDict
 from CrowdAnki.note import Note
 
 
-class Deck(JsonSerializable):
+class Deck(JsonSerializableAnkiDict):
     Metadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
-    filter_set = {"anki_deck", "collection"}
+    filter_set = JsonSerializableAnkiDict.filter_set | {"collection"}
+    # todo super(Deck, self)
 
-    def __init__(self):
-        super(Deck, self).__init__()
+    def __init__(self, anki_deck=None):
+        super(Deck, self).__init__(anki_deck)
         self.collection = None
         self.name = None
-        self.anki_deck = None
         self.notes = None
         self.children = None
         self.metadata = None
@@ -28,28 +28,22 @@ class Deck(JsonSerializable):
         deck.name = name
 
         # deck._update_db()
-        deck.anki_deck = collection.decks.byName(name)
+        deck.anki_dict = collection.decks.byName(name)
         deck._update_fields()
 
-        deck.notes = Note.get_notes_from_collection(collection, deck.anki_deck["id"])  # Todo ugly
+        deck.notes = Note.get_notes_from_collection(collection, deck.anki_dict["id"])  # Todo ugly
 
         deck.metadata = deck_metadata
         deck._load_metadata()
 
         deck.children = [cls.from_collection(collection, child_name, deck_metadata) for child_name, _ in
-                         collection.decks.children(deck.anki_deck["id"])]
+                         collection.decks.children(deck.anki_dict["id"])]
 
         return deck
-
-    def _update_fields(self):
-        self.anki_deck.setdefault(UUID_FIELD_NAME, str(uuid1()))
 
     def _update_db(self):
         # Introduce uuid field for unique identification of entities
         CrowdAnki.utils.add_column(self.collection.db, "notes", UUID_FIELD_NAME)
-
-    def _dict_extension(self):
-        return self.anki_deck
 
     def _load_metadata(self):
         if not self.metadata:
@@ -60,8 +54,8 @@ class Deck(JsonSerializable):
 
     def _load_deck_config(self):
         # Todo switch to uuid
-        new_config = DeckConfig.from_collection(self.collection, self.anki_deck["conf"])
-        config_uiid = new_config.anki_deck_config[UUID_FIELD_NAME]
+        new_config = DeckConfig.from_collection(self.collection, self.anki_dict["conf"])
+        config_uiid = new_config.anki_dict[UUID_FIELD_NAME]
 
         self.metadata.deck_configs.setdefault(config_uiid, new_config)
 

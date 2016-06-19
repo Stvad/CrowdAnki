@@ -4,20 +4,19 @@ import anki
 from anki.notes import Note as AnkiNote
 
 from CrowdAnki import utils
-from CrowdAnki.json_serializable import JsonSerializable
+from CrowdAnki.json_serializable import JsonSerializableAnkiObject
 from CrowdAnki.common_constants import UUID_FIELD_NAME
 
 
-class Note(JsonSerializable):
-    filter_set = {"anki_note",  # Flattened
-                  "col",  # Don't need collection
-                  "_fmap",  # Generated data
-                  "mod",  # Modification time
+class Note(JsonSerializableAnkiObject):
+    filter_set = JsonSerializableAnkiObject.filter_set | \
+                 {"col",  # Don't need collection
+                  "_fmap"  # Generated data
                   }
 
-    def __init__(self):
-        super(Note, self).__init__()
-        self.anki_note = None
+    def __init__(self, anki_note=None):
+        super(Note, self).__init__(anki_note)
+        self.anki_object = None
 
     @staticmethod
     # Todo:
@@ -35,9 +34,5 @@ class Note(JsonSerializable):
     @classmethod
     def from_collection(cls, collection, note_id):
         note = Note()
-        note.anki_note = AnkiNote(collection, id=note_id)
+        note.anki_object = AnkiNote(collection, id=note_id)
         return note
-
-    def _dict_extension(self):
-        utils.add_absent_field(self.anki_note, UUID_FIELD_NAME, str(uuid1()))
-        return self.anki_note.__dict__

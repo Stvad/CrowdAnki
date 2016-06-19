@@ -14,6 +14,7 @@ from aqt.utils import showInfo
 from anki import Collection
 
 from CrowdAnki.deck import Deck
+from CrowdAnki.json_serializable import JsonSerializable
 
 COLLECTION_PATH = "../WCollection/collection.anki2"
 
@@ -105,8 +106,11 @@ def main():
 
     pprint((json.dumps(deck, default=Deck.default_json, sort_keys=True, indent=4)))
 
+    pprint(deck.filter_set)
+    pprint(JsonSerializable.filter_set)
 
-    deck.notes[0].anki_note.flush(mod=True)
+
+    deck.notes[0].anki_object.flush(mod=True)
 
 if __name__ == "__main__":
     main()
