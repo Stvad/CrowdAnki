@@ -11,7 +11,8 @@ from CrowdAnki.common_constants import UUID_FIELD_NAME
 class Note(JsonSerializableAnkiObject):
     filter_set = JsonSerializableAnkiObject.filter_set | \
                  {"col",  # Don't need collection
-                  "_fmap"  # Generated data
+                  "_fmap",  # Generated data
+                  "_model"  # Card model. Would be handled by deck. uuid?
                   }
 
     def __init__(self, anki_note=None):

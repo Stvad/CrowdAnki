@@ -12,8 +12,8 @@ class DeckConfig(JsonSerializableAnkiDict):
 
     @classmethod
     def from_collection(cls, collection, deck_config_id):
-        deck_config = DeckConfig()
-        deck_config.anki_dict = collection.decks.getConf(deck_config_id)
+        anki_dict = collection.decks.getConf(deck_config_id)
+        deck_config = DeckConfig(anki_dict)
         deck_config._update_fields()
 
         return deck_config

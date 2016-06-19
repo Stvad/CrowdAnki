@@ -38,60 +38,6 @@ def testFunction():
 # mw.form.menuTools.addAction(action)
 
 
-class JsonExporter(object):
-    def __init__(self, collection):  # Todo default parameter current running collection
-        self.collection = collection
-
-        # for deck in self.collection.decks.all():
-        #     pprint(deck)
-
-        deck_name = "tdeckl1"
-
-        # for note in self.collection.findNotes('"deck:Software::Bash::Shell navigation"'):
-        #     pprint(note)
-
-        pprint(self.get_note_ids(deck_name))
-        pprint(self.get_note_ids_find(deck_name))
-
-        pprint([note._model for note in self.get_notes(deck_name)][0])
-        # pprint([note.data for note in self.get_notes("Rationality") if note.data])
-
-        deck_id = self.collection.decks.byName(deck_name)["id"]
-        # pprint(self.collection.decks.confForDid(deck_id))
-
-    def export_deck(self, deck_id):
-        """Returns json for given deck and list of dependencies"""
-        working_deck = self.collection.decks.get(deck_id)
-
-        for child in working_deck.children():
-            pass
-
-    def get_notes(self, deck_name):
-        return [AnkiNote(self.collection, id=note_id) for note_id in self.get_note_ids_find(deck_name)]
-
-    def get_note_ids_find(self, deck_name):
-        return self.collection.findNotes("'deck:" + deck_name + "'")
-
-    # Todo:
-    # Bad, need to switch to API usage if ever available. As an option - implement them myself.
-    def get_card_ids(self, deck_id):
-        # We don't use DeckManager.cids(), as we want to export cards in cram decks too.
-        return self.collection.db.list(
-            "SELECT id FROM cards WHERE did=? OR odid=?", deck_id, deck_id)
-
-    def get_notes_from_cards(self, card_ids):
-        card_ids_str = anki.utils.ids2str(card_ids)
-        return set(self.collection.db.list("SELECT nid FROM cards WHERE id IN " + card_ids_str))
-
-    def get_note_ids(self, deck_name):
-        deck_id = self.collection.decks.byName(deck_name)["id"]
-        card_ids = self.get_card_ids(deck_id)
-        return self.get_notes_from_cards(card_ids)
-
-    def process_dependencies(self):
-        pass
-
-
 def main():
     deck_name = "tdeckl1"
     collection = Collection(COLLECTION_PATH)
@@ -109,11 +55,16 @@ def main():
     pprint(deck.filter_set)
     pprint(JsonSerializable.filter_set)
 
-
     deck.notes[0].anki_object.flush(mod=True)
+
+
+def anki_init():
+    pass
 
 if __name__ == "__main__":
     main()
+else:
+    anki_init()
 
 # Todo trigger backup before export/import.
 # Need backup for export because plan to alter table to add uuid

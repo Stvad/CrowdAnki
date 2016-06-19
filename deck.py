@@ -6,11 +6,17 @@ from CrowdAnki.common_constants import UUID_FIELD_NAME
 from CrowdAnki.deck_config import DeckConfig
 from CrowdAnki.json_serializable import JsonSerializableAnkiDict
 from CrowdAnki.note import Note
+from CrowdAnki.note_model import NoteModel
 
 
 class Deck(JsonSerializableAnkiDict):
     Metadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
-    filter_set = JsonSerializableAnkiDict.filter_set | {"collection"}
+    filter_set = JsonSerializableAnkiDict.filter_set | \
+                 {"collection",
+                  "newToday",
+                  "revToday",
+                  "timeToday",
+                  "lrnToday"}
     # todo super(Deck, self)
 
     def __init__(self, anki_deck=None):
@@ -24,11 +30,15 @@ class Deck(JsonSerializableAnkiDict):
     @classmethod
     def from_collection(cls, collection, name, deck_metadata=None):
         deck = Deck()
+
+        # deck._update_db()
+        anki_dict = collection.decks.byName(name)
+
+        deck = Deck(anki_dict)
+
         deck.collection = collection
         deck.name = name
 
-        # deck._update_db()
-        deck.anki_dict = collection.decks.byName(name)
         deck._update_fields()
 
         deck.notes = Note.get_notes_from_collection(collection, deck.anki_dict["id"])  # Todo ugly
@@ -55,9 +65,12 @@ class Deck(JsonSerializableAnkiDict):
     def _load_deck_config(self):
         # Todo switch to uuid
         new_config = DeckConfig.from_collection(self.collection, self.anki_dict["conf"])
-        config_uiid = new_config.anki_dict[UUID_FIELD_NAME]
+        # config_uiid = new_config.anki_dict[UUID_FIELD_NAME]
 
-        self.metadata.deck_configs.setdefault(config_uiid, new_config)
+        self.metadata.deck_configs.setdefault(new_config.get_uuid(), new_config)
 
     def _load_note_models(self):
-        pass
+        for note in self.notes:
+            note_model = NoteModel.from_collection(self.collection, note.anki_object.mid)
+            self.metadata.models.setdefault(note_model.get_uuid(), note_model)
+
