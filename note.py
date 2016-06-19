@@ -1,11 +1,17 @@
+from uuid import uuid1
+
 import anki
 from anki.notes import Note as AnkiNote
 
 from CrowdAnki.json_serializable import JsonSerializable
-
+from CrowdAnki.common_constants import UUID_FIELD_NAME
 
 class Note(JsonSerializable):
-    filter_set = {"anki_note", "col"}
+    filter_set = {"anki_note",  # Flattened
+                  "col",  # Don't need collection
+                  "_fmap",  # Generated data
+                  "mod",  # Modification time
+                  }
 
     def __init__(self):
         self.anki_note = None
@@ -30,4 +36,5 @@ class Note(JsonSerializable):
         return note
 
     def _dict_extension(self):
+        setattr(self.anki_note, UUID_FIELD_NAME, getattr(self.anki_note, UUID_FIELD_NAME, str(uuid1())))
         return self.anki_note.__dict__

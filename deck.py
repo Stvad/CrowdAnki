@@ -1,8 +1,9 @@
-import CrowdAnki.utils
-from CrowdAnki.note import Note
-from CrowdAnki.json_serializable import JsonSerializable
+from uuid import uuid1
 
-UUID_FIELD_NAME = "crowdanki_uuid"
+import CrowdAnki.utils
+from CrowdAnki.common_constants import UUID_FIELD_NAME
+from CrowdAnki.json_serializable import JsonSerializable
+from CrowdAnki.note import Note
 
 
 class Deck(JsonSerializable):
@@ -36,4 +37,5 @@ class Deck(JsonSerializable):
         CrowdAnki.utils.add_column(self.collection.db, "notes", UUID_FIELD_NAME)
 
     def _dict_extension(self):
+        self.anki_deck.setdefault(UUID_FIELD_NAME, str(uuid1()))
         return self.anki_deck

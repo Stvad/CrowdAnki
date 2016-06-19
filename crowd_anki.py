@@ -106,6 +106,8 @@ def main():
     pprint((json.dumps(deck, default=Deck.default_json, sort_keys=True, indent=4)))
 
 
+    deck.notes[0].anki_note.flush(mod=True)
+
 if __name__ == "__main__":
     main()
 
