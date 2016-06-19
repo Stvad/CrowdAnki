@@ -1,5 +1,6 @@
 import json
 from pprint import pprint
+import os.path
 
 import anki
 from anki.notes import Note as AnkiNote
@@ -11,10 +12,14 @@ from aqt.utils import showInfo
 from aqt.qt import QAction, SIGNAL
 
 from anki import Collection
+from reportlab.lib.validators import isInstanceOf
 
 import db_util
+from utils import merge_dicts
 
-COLLECTION_PATH = "../../WCollection/collection.anki2"
+COLLECTION_PATH = "../WCollection/collection.anki2"
+
+UUID_FIELD_NAME = "crowdanki_uuid"
 
 
 # We're going to add a menu item below. First we want to create a function to
@@ -90,43 +95,65 @@ class JsonExporter(object):
         pass
 
 
-def main():
-    collection = Collection(COLLECTION_PATH)
-    tw = JsonExporter(collection)
+class JsonSerializable(object):
+    readable_names = {}
+    filter_set = set()
+
+    @staticmethod
+    def default_json(wobject):
+        if isinstance(wobject, JsonSerializable):
+            return wobject.flatten()
+
+        raise TypeError
+
+    def flatten(self):
+        return {self.readable_names[key] if key in self.readable_names else key: value
+                for key, value in merge_dicts(self.__dict__, self._dict_extension()).iteritems() if
+                key not in self.filter_set}
+
+    def _dict_extension(self):
+        return {}
 
 
-if __name__ == "__main__":
-    main()
+class Deck(JsonSerializable):
+    filter_set = {"anki_deck", "collection"}
 
-
-class Deck(object):
     def __init__(self):
-        pass
+        self.collection = None
+        self.name = None
+        self.anki_deck = None
+        self.notes = None
+        self.children = None
 
     @classmethod
     def from_collection(cls, collection, name):
-        creation = Deck()
-        creation.collection = collection
-        creation.name = name
+        deck = Deck()
+        deck.collection = collection
+        deck.name = name
 
-        creation.update_db()
-        creation.anki_deck = collection.decks.byName(name)
+        deck.update_db()
+        deck.anki_deck = collection.decks.byName(name)
 
-        creation.notes = Note.get_notes_from_cards(Note.get_cards_from_db(collection.db, name))  # Todo?
+        deck.notes = Note.get_notes_from_collection(collection, deck.anki_deck["id"])  # Todo ugly
 
-        creation.children = [cls.from_collection(collection, child_name) for child_name, _ in
-                             collection.decks.children(creation.anki_deck["id"])]
+        deck.children = [cls.from_collection(collection, child_name) for child_name, _ in
+                         collection.decks.children(deck.anki_deck["id"])]
 
-        return creation
+        return deck
 
     def update_db(self):
         # Introduce uuid field for unique identification of entities
-        db_util.add_column(self.collection.db, "notes", "uuid")
+        db_util.add_column(self.collection.db, "notes", UUID_FIELD_NAME)
+
+    def _dict_extension(self):
+        return self.anki_deck
 
 
-class Note(object):
+class Note(JsonSerializable):
+    filter_set = {"anki_note", "col"}
+
     def __init__(self):
-        pass
+        self.anki_note = None
 
     @staticmethod
     # Todo:
@@ -136,13 +163,19 @@ class Note(object):
             "SELECT id FROM cards WHERE did=? OR odid=?", deck_id, deck_id)
 
     @staticmethod
-    def get_notes_from_cards(collection, card_ids):
-        card_ids_str = anki.utils.ids2str(card_ids)
+    def get_notes_from_collection(collection, deck_id):
+        card_ids_str = anki.utils.ids2str(Note.get_cards_from_db(collection.db, deck_id))
         note_id_set = set(collection.db.list("SELECT nid FROM cards WHERE id IN " + card_ids_str))
         return [Note.from_collection(collection, note_id) for note_id in note_id_set]
 
-    def from_collection(self, collection, note_id):
-        self.anki_note = AnkiNote(collection, id=note_id)
+    @classmethod
+    def from_collection(cls, collection, note_id):
+        note = Note()
+        note.anki_note = AnkiNote(collection, id=note_id)
+        return note
+
+    def _dict_extension(self):
+        return self.anki_note.__dict__
 
 
 class NoteModel(object):
@@ -160,6 +193,24 @@ class DeckConfig(object):
     def from_collection(self, collection, deck_config_id):
         self.anki_deck_config = collection.decks.getConf(deck_config_id)
 
+
+def main():
+    deck_name = "tdeckl1"
+    collection = Collection(COLLECTION_PATH)
+    # tw = JsonExporter(collection)
+    deck = Deck.from_collection(collection, deck_name)
+
+    result_filename = "../result.json"
+    print(os.path.realpath(os.path.curdir))
+
+    with open(result_filename, mode='w') as result_file:
+        result_file.write(json.dumps(deck, default=Deck.default_json, sort_keys=True, indent=4))
+
+    pprint((json.dumps(deck, default=Deck.default_json, sort_keys=True, indent=4)))
+
+
+if __name__ == "__main__":
+    main()
 
 # Todo trigger backup before export/import.
 # Need backup for export because plan to alter table to add uuid
@@ -181,7 +232,11 @@ class DeckConfig(object):
 # Todo define definite order of save/load
 
 """
+Info:
 AnkiNote.mod - modification time
 AnkiNote.mid - model id
 
+
+Warning:
+Creation of collection has a side effect of changing current directory to ${collection_path}/collection.media
 """
