@@ -14,8 +14,6 @@ class JsonSerializable(object):
     def __init__(self):
         pass
         # self._update_fields()
-        # Todo consider introducing anki_dict and anki_object
-        # multiple inheritance?
 
     @staticmethod
     def default_json(wobject):
@@ -52,6 +50,7 @@ class JsonSerializable(object):
         """
         :return: Unique identificator in a string format.
         """
+
 
 class JsonSerializableAnkiDict(JsonSerializable):
     filter_set = JsonSerializable.filter_set | {"anki_dict"}

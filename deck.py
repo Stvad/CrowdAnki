@@ -2,6 +2,7 @@ from uuid import uuid1
 from collections import namedtuple
 
 import CrowdAnki.utils
+from CrowdAnki import utils
 from CrowdAnki.common_constants import UUID_FIELD_NAME
 from CrowdAnki.deck_config import DeckConfig
 from CrowdAnki.json_serializable import JsonSerializableAnkiDict
@@ -11,12 +12,15 @@ from CrowdAnki.note_model import NoteModel
 
 class Deck(JsonSerializableAnkiDict):
     Metadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
+    # Todo either unpack or represent differently because right now - not serialized properly
+
     filter_set = JsonSerializableAnkiDict.filter_set | \
                  {"collection",
                   "newToday",
                   "revToday",
                   "timeToday",
-                  "lrnToday"}
+                  "lrnToday",
+                  "metadata"}
     # todo super(Deck, self)
 
     def __init__(self, anki_deck=None):
@@ -74,3 +78,8 @@ class Deck(JsonSerializableAnkiDict):
             note_model = NoteModel.from_collection(self.collection, note.anki_object.mid)
             self.metadata.models.setdefault(note_model.get_uuid(), note_model)
 
+    def _dict_extension(self):
+        return utils.merge_dicts(
+            super(Deck, self)._dict_extension(),
+            {"note_models": self.metadata.models.values(),
+             "deck_configurations": self.metadata.deck_configs.values()})
