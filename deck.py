@@ -1,5 +1,6 @@
-from uuid import uuid1
 from collections import namedtuple
+
+from anki.exporting import AnkiExporter
 
 import CrowdAnki.utils
 from CrowdAnki import utils
@@ -21,6 +22,7 @@ class Deck(JsonSerializableAnkiDict):
                   "timeToday",
                   "lrnToday",
                   "metadata"}
+
     # todo super(Deck, self)
 
     def __init__(self, anki_deck=None):
@@ -82,4 +84,22 @@ class Deck(JsonSerializableAnkiDict):
         return utils.merge_dicts(
             super(Deck, self)._dict_extension(),
             {"note_models": self.metadata.models.values(),
-             "deck_configurations": self.metadata.deck_configs.values()})
+             "deck_configurations": self.metadata.deck_configs.values(),
+             "media_files": list(self.get_media_file_list())})
+
+    def get_media_file_list(self, data_from_models=True):
+        media = set()
+        for note in self.notes:
+            for media_file in self.collection.media.filesInStr(note.anki_object.mid, note.anki_object.joinedFields()):
+                media.add(media_file)
+
+        for child in self.children:
+            media |= child.get_media_file_list(False)
+
+        return media | (self._get_media_from_models() if data_from_models else set())
+
+    def _get_media_from_models(self):
+        anki_exporter = AnkiExporter(self.collection)
+        model_ids = [model.anki_dict["id"] for model in self.metadata.models.values()]
+
+        return anki_exporter.get_files_for_models(model_ids, self.collection.media.dir())

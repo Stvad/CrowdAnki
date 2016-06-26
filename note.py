@@ -17,7 +17,6 @@ class Note(JsonSerializableAnkiObject):
 
     def __init__(self, anki_note=None):
         super(Note, self).__init__(anki_note)
-        self.anki_object = None
 
     @staticmethod
     # Todo:
@@ -29,11 +28,11 @@ class Note(JsonSerializableAnkiObject):
     @staticmethod
     def get_notes_from_collection(collection, deck_id):
         card_ids_str = anki.utils.ids2str(Note.get_cards_from_db(collection.db, deck_id))
-        note_id_set = set(collection.db.list("SELECT nid FROM cards WHERE id IN " + card_ids_str))
-        return [Note.from_collection(collection, note_id) for note_id in note_id_set]
+        note_ids = collection.db.list("SELECT DISTINCT nid FROM cards WHERE id IN " + card_ids_str)
+        return [Note.from_collection(collection, note_id) for note_id in note_ids]
 
     @classmethod
     def from_collection(cls, collection, note_id):
-        note = Note()
-        note.anki_object = AnkiNote(collection, id=note_id)
+        anki_note = AnkiNote(collection, id=note_id)
+        note = Note(anki_note)
         return note
