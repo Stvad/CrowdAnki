@@ -21,12 +21,16 @@ class Deck(JsonSerializableAnkiDict):
                   "revToday",
                   "timeToday",
                   "lrnToday",
-                  "metadata"}
+                  "metadata",
+                  "browserCollapsed",
+                  "collapsed"}
 
     # todo super(Deck, self)
 
-    def __init__(self, anki_deck=None):
+    def __init__(self, anki_deck=None, is_child=False):
         super(Deck, self).__init__(anki_deck)
+        self.is_child = is_child
+
         self.collection = None
         self.name = None
         self.notes = None
@@ -34,13 +38,13 @@ class Deck(JsonSerializableAnkiDict):
         self.metadata = None
 
     @classmethod
-    def from_collection(cls, collection, name, deck_metadata=None):
+    def from_collection(cls, collection, name, deck_metadata=None, is_child=False):
         deck = Deck()
 
         # deck._update_db()
         anki_dict = collection.decks.byName(name)
 
-        deck = Deck(anki_dict)
+        deck = Deck(anki_dict, is_child)
 
         deck.collection = collection
         deck.name = name
@@ -52,7 +56,7 @@ class Deck(JsonSerializableAnkiDict):
         deck.metadata = deck_metadata
         deck._load_metadata()
 
-        deck.children = [cls.from_collection(collection, child_name, deck_metadata) for child_name, _ in
+        deck.children = [cls.from_collection(collection, child_name, deck_metadata, True) for child_name, _ in
                          collection.decks.children(deck.anki_dict["id"])]
 
         return deck
@@ -83,9 +87,9 @@ class Deck(JsonSerializableAnkiDict):
     def _dict_extension(self):
         return utils.merge_dicts(
             super(Deck, self)._dict_extension(),
+            {"media_files": list(self.get_media_file_list(include_children=False))},
             {"note_models": self.metadata.models.values(),
-             "deck_configurations": self.metadata.deck_configs.values(),
-             "media_files": list(self.get_media_file_list(include_children=False))})
+             "deck_configurations": self.metadata.deck_configs.values()} if not self.is_child else {})
 
     def get_media_file_list(self, data_from_models=True, include_children=True):
         media = set()
