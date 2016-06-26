@@ -1,3 +1,4 @@
+import json
 from collections import namedtuple
 
 from anki.exporting import AnkiExporter
@@ -32,7 +33,7 @@ class Deck(JsonSerializableAnkiDict):
         self.is_child = is_child
 
         self.collection = None
-        self.name = None
+        # self.name = None
         self.notes = None
         self.children = None
         self.metadata = None
@@ -47,7 +48,7 @@ class Deck(JsonSerializableAnkiDict):
         deck = Deck(anki_dict, is_child)
 
         deck.collection = collection
-        deck.name = name
+        # deck.name = name
 
         deck._update_fields()
 
@@ -108,3 +109,32 @@ class Deck(JsonSerializableAnkiDict):
         model_ids = [model.anki_dict["id"] for model in self.metadata.models.values()]
 
         return anki_exporter.get_files_for_models(model_ids, self.collection.media.dir())
+
+    def _load_metadata_from_json(self, json_dict):
+        if not self.metadata:
+            self.metadata = self.Metadata({}, {})
+
+        self.metadata.models = utils.merge_dicts(self.metadata.models,
+                                                 {model.get_uuid(): model for model in
+                                                  json.loads(json_dict["note_models"],
+                                                             object_hook=self.json_object_hook)})
+
+        self.metadata.deck_configs = utils.merge_dicts(self.metadata.models,
+                                                       {model.get_uuid(): model for model in
+                                                        json.loads(json_dict["deck_configurations"],
+                                                                   object_hook=self.json_object_hook)})
+
+    @classmethod
+    def from_json(cls, json_dict, deck_metadata=None):
+        """load metadata, load notes, load children"""
+        deck = Deck()
+        deck._load_metadata_from_json(json_dict)
+
+        deck.notes = json.loads(json_dict["notes"], object_hook=cls.json_object_hook)
+
+        deck.children = []
+        for child in json_dict["children"]:
+            deck.children.append(cls.from_json(child, deck.metadata))
+
+        
+

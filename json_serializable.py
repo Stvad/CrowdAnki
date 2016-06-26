@@ -22,6 +22,15 @@ class JsonSerializable(object):
 
         raise TypeError
 
+    @staticmethod
+    def json_object_hook(json_dict):
+        object_type = json_dict.get("__type__", "")
+        type_class = globals().get(object_type, None)
+        if type_class:
+            return type_class.from_json(json_dict)
+
+        return json_dict
+
     @classmethod
     def from_collection(cls, collection, entity_id):
         """
@@ -31,13 +40,21 @@ class JsonSerializable(object):
         :return:
         """
 
+    @classmethod
+    def from_json(cls, json_dict):
+        """
+        Initialize object from json dictionary
+        :param json_dict:
+        :return:
+        """
+
     def flatten(self):
         return {self.readable_names[key] if key in self.readable_names else key: value
-                for key, value in merge_dicts(self.__dict__, self._dict_extension()).iteritems() if
+                for key, value in merge_dicts(self.__dict__, self._dict_extension()).items() if
                 key not in self.filter_set}
 
     def _dict_extension(self):
-        return {}
+        return {"__type__": self.__class__.__name__}
 
     def _update_fields(self):
         """
@@ -60,7 +77,8 @@ class JsonSerializableAnkiDict(JsonSerializable):
         self.anki_dict = anki_dict
 
     def _dict_extension(self):
-        return self.anki_dict
+        return utils.merge_dicts(super(JsonSerializableAnkiDict, self)._dict_extension(),
+                                 self.anki_dict)
 
     def _update_fields(self):
         self.anki_dict.setdefault(UUID_FIELD_NAME, str(uuid1()))
@@ -78,7 +96,8 @@ class JsonSerializableAnkiObject(JsonSerializable):
         self.anki_object = anki_object
 
     def _dict_extension(self):
-        return self.anki_object.__dict__
+        return utils.merge_dicts(super(JsonSerializableAnkiObject, self)._dict_extension(),
+                                 self.anki_object.__dict__)
 
     def _update_fields(self):
         utils.add_absent_field(self.anki_object, UUID_FIELD_NAME, str(uuid1()))
