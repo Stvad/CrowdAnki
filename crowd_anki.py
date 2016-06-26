@@ -1,8 +1,10 @@
 import json
 import os.path
+import sys
 from pprint import pprint
 
 import anki
+from CrowdAnki.anki_exporter import AnkiJsonExporter
 from anki.notes import Note as AnkiNote
 
 # import the main window object (mw) from aqt
@@ -41,25 +43,16 @@ def testFunction():
 def main():
     deck_name = "tdeckl1"
     collection = Collection(COLLECTION_PATH)
-    # tw = JsonExporter(collection)
-    deck = Deck.from_collection(collection, deck_name)
-
-    result_filename = "../result.json"
     print(os.path.realpath(os.path.curdir))
 
-    with open(result_filename, mode='w') as result_file:
-        result_file.write(json.dumps(deck, default=Deck.default_json, sort_keys=True, indent=4))
-
-    pprint((json.dumps(deck, default=Deck.default_json, sort_keys=True, indent=4)))
-
-    pprint(deck.filter_set)
-    pprint(JsonSerializable.filter_set)
-
-    deck.notes[0].anki_object.flush(mod=True)
+    exporter = AnkiJsonExporter(collection)
+    exporter.export_deck(deck_name)
+    # deck.notes[0].anki_object.flush(mod=True)
 
 
 def anki_init():
     pass
+
 
 if __name__ == "__main__":
     main()

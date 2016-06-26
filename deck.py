@@ -85,16 +85,17 @@ class Deck(JsonSerializableAnkiDict):
             super(Deck, self)._dict_extension(),
             {"note_models": self.metadata.models.values(),
              "deck_configurations": self.metadata.deck_configs.values(),
-             "media_files": list(self.get_media_file_list())})
+             "media_files": list(self.get_media_file_list(include_children=False))})
 
-    def get_media_file_list(self, data_from_models=True):
+    def get_media_file_list(self, data_from_models=True, include_children=True):
         media = set()
         for note in self.notes:
             for media_file in self.collection.media.filesInStr(note.anki_object.mid, note.anki_object.joinedFields()):
                 media.add(media_file)
 
-        for child in self.children:
-            media |= child.get_media_file_list(False)
+        if include_children:
+            for child in self.children:
+                media |= child.get_media_file_list(False, include_children)
 
         return media | (self._get_media_from_models() if data_from_models else set())
 
