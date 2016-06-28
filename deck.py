@@ -127,7 +127,8 @@ class Deck(JsonSerializableAnkiDict):
     @classmethod
     def from_json(cls, json_dict, deck_metadata=None):
         """load metadata, load notes, load children"""
-        deck = Deck()
+        deck = Deck(json_dict)
+        # todo filter some  parts
         deck._load_metadata_from_json(json_dict)
 
         deck.notes = json.loads(json_dict["notes"], object_hook=cls.json_object_hook)
@@ -136,5 +137,5 @@ class Deck(JsonSerializableAnkiDict):
         for child in json_dict["children"]:
             deck.children.append(cls.from_json(child, deck.metadata))
 
-        
+
 

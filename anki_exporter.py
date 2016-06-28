@@ -20,6 +20,8 @@ class AnkiJsonExporter(object):
         with open(deck_json, mode='w') as result_file:
             result_file.write(json.dumps(deck, default=Deck.default_json, sort_keys=True, indent=4))
 
+        # todo flush changes (uuid)
+
         if copy_media:
             self._copy_media(deck, deck_directory)
 

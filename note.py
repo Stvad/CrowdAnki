@@ -36,3 +36,9 @@ class Note(JsonSerializableAnkiObject):
         anki_note = AnkiNote(collection, id=note_id)
         note = Note(anki_note)
         return note
+
+    @classmethod
+    def from_json(cls, json_dict):
+        note = Note()
+        note.anki_object_dict = json_dict
+        return note

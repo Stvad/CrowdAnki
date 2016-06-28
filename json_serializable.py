@@ -87,6 +87,12 @@ class JsonSerializableAnkiDict(JsonSerializable):
         super(JsonSerializableAnkiDict, self).get_uuid()
         return self.anki_dict[UUID_FIELD_NAME]
 
+    @classmethod
+    def from_json(cls, json_dict):
+        anki_dict_object = cls(json_dict)
+        del anki_dict_object.anki_dict["__type__"]
+        return anki_dict_object
+
 
 class JsonSerializableAnkiObject(JsonSerializable):
     filter_set = JsonSerializable.filter_set | {"anki_object"}
