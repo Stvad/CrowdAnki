@@ -114,28 +114,30 @@ class Deck(JsonSerializableAnkiDict):
         if not self.metadata:
             self.metadata = self.Metadata({}, {})
 
-        self.metadata.models = utils.merge_dicts(self.metadata.models,
-                                                 {model.get_uuid(): model for model in
-                                                  json.loads(json_dict["note_models"],
-                                                             object_hook=self.json_object_hook)})
+        # Todo get_uuid?
+        new_models = utils.merge_dicts(self.metadata.models,
+                                       {model[UUID_FIELD_NAME]: NoteModel.from_json(model) for model in
+                                        json_dict.get("note_models", [])})
 
-        self.metadata.deck_configs = utils.merge_dicts(self.metadata.models,
-                                                       {model.get_uuid(): model for model in
-                                                        json.loads(json_dict["deck_configurations"],
-                                                                   object_hook=self.json_object_hook)})
+        new_deck_configs = utils.merge_dicts(self.metadata.deck_configs,
+                                             {deck_config[UUID_FIELD_NAME]: DeckConfig.from_json(deck_config) for
+                                              deck_config in
+                                              json_dict["deck_configurations"]})
+
+        self.metadata = Deck.Metadata(new_deck_configs, new_models)
 
     @classmethod
     def from_json(cls, json_dict, deck_metadata=None):
         """load metadata, load notes, load children"""
-        deck = Deck(json_dict)
         # todo filter some  parts
-        deck._load_metadata_from_json(json_dict)
+        deck = Deck(json_dict)
+        deck.metadata = deck_metadata
 
-        deck.notes = json.loads(json_dict["notes"], object_hook=cls.json_object_hook)
+        if not deck.metadata:  # Todo mental check. The idea is that children don't have metadata
+            deck._load_metadata_from_json(json_dict)
 
-        deck.children = []
-        for child in json_dict["children"]:
-            deck.children.append(cls.from_json(child, deck.metadata))
+        deck.notes = [Note.from_json(json_note) for json_note in json_dict["notes"]]
 
+        deck.children = [cls.from_json(child, deck.metadata) for child in json_dict["children"]]
 
-
+        return deck

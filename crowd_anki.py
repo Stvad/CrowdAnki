@@ -5,6 +5,7 @@ from pprint import pprint
 
 import anki
 from CrowdAnki.anki_exporter import AnkiJsonExporter
+from CrowdAnki.anki_importer import AnkiJsonImporter
 from anki.notes import Note as AnkiNote
 
 # import the main window object (mw) from aqt
@@ -47,6 +48,12 @@ def main():
 
     exporter = AnkiJsonExporter(collection)
     exporter.export_deck(deck_name)
+
+    deck_directory = os.path.join("./", deck_name)
+    deck_json = os.path.join(deck_directory, deck_name + ".json")
+
+    importer = AnkiJsonImporter(collection)
+    importer.load_from_file(deck_json)
     # deck.notes[0].anki_object.flush(mod=True)
 
 

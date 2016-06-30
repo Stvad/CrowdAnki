@@ -5,6 +5,7 @@ from CrowdAnki.common_constants import UUID_FIELD_NAME
 from CrowdAnki.utils import merge_dicts
 
 
+
 class JsonSerializable(object):
     readable_names = {}
     filter_set = {"mod",  # Modification time
@@ -24,8 +25,14 @@ class JsonSerializable(object):
 
     @staticmethod
     def json_object_hook(json_dict):
+        # Add names to locals()
+        from CrowdAnki.deck import Deck
+        from CrowdAnki.deck_config import DeckConfig
+        from CrowdAnki.note import Note
+        from CrowdAnki.note_model import NoteModel
+
         object_type = json_dict.get("__type__", "")
-        type_class = globals().get(object_type, None)
+        type_class = locals().get(object_type, None)
         if type_class:
             return type_class.from_json(json_dict)
 
