@@ -141,3 +141,6 @@ class Deck(JsonSerializableAnkiDict):
         deck.children = [cls.from_json(child, deck.metadata) for child in json_dict["children"]]
 
         return deck
+
+    def save_to_collection(self, collection):
+        pass

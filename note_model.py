@@ -1,3 +1,4 @@
+from CrowdAnki import utils
 from CrowdAnki.json_serializable import JsonSerializableAnkiDict
 
 
@@ -12,3 +13,8 @@ class NoteModel(JsonSerializableAnkiDict):
         note_model._update_fields()
 
         return note_model
+
+    def save_to_collection(self, collection):
+        default_note_config = collection.models.new(self.anki_dict["name"])
+        self.anki_dict = utils.merge_dicts(default_note_config, self.anki_dict)
+        collection.models.add(self.anki_dict)

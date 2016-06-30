@@ -75,6 +75,13 @@ class JsonSerializable(object):
         :return: Unique identificator in a string format.
         """
 
+    def save_to_collection(self, collection):
+        """
+        Save content to anki collection
+        :param collection:
+        :return:
+        """
+
 
 class JsonSerializableAnkiDict(JsonSerializable):
     filter_set = JsonSerializable.filter_set | {"anki_dict"}
