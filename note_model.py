@@ -18,3 +18,4 @@ class NoteModel(JsonSerializableAnkiDict):
         default_note_config = collection.models.new(self.anki_dict["name"])
         self.anki_dict = utils.merge_dicts(default_note_config, self.anki_dict)
         collection.models.add(self.anki_dict)
+        collection.models.flush()

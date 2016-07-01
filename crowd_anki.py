@@ -46,16 +46,17 @@ def main():
     collection = Collection(COLLECTION_PATH)
     print(os.path.realpath(os.path.curdir))
 
-    exporter = AnkiJsonExporter(collection)
-    exporter.export_deck(deck_name)
+    # exporter = AnkiJsonExporter(collection)
+    # exporter.export_deck(deck_name)
 
     deck_directory = os.path.join("./", deck_name)
     deck_json = os.path.join(deck_directory, deck_name + ".json")
 
     importer = AnkiJsonImporter(collection)
     importer.load_from_file(deck_json)
-    # deck.notes[0].anki_object.flush(mod=True)
 
+    # deck.notes[0].anki_object.flush(mod=True)
+    collection.close()
 
 def anki_init():
     pass

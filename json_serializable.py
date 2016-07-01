@@ -5,7 +5,6 @@ from CrowdAnki.common_constants import UUID_FIELD_NAME
 from CrowdAnki.utils import merge_dicts
 
 
-
 class JsonSerializable(object):
     readable_names = {}
     filter_set = {"mod",  # Modification time
@@ -57,11 +56,12 @@ class JsonSerializable(object):
 
     def flatten(self):
         return {self.readable_names[key] if key in self.readable_names else key: value
-                for key, value in merge_dicts(self.__dict__, self._dict_extension()).items() if
+                for key, value in self.serialization_dict().items() if
                 key not in self.filter_set}
 
-    def _dict_extension(self):
-        return {"__type__": self.__class__.__name__}
+    def serialization_dict(self):
+        return merge_dicts(self.__dict__,
+                           {"__type__": self.__class__.__name__})
 
     def _update_fields(self):
         """
@@ -90,8 +90,8 @@ class JsonSerializableAnkiDict(JsonSerializable):
         super(JsonSerializableAnkiDict, self).__init__()
         self.anki_dict = anki_dict
 
-    def _dict_extension(self):
-        return utils.merge_dicts(super(JsonSerializableAnkiDict, self)._dict_extension(),
+    def serialization_dict(self):
+        return utils.merge_dicts(super(JsonSerializableAnkiDict, self).serialization_dict(),
                                  self.anki_dict)
 
     def _update_fields(self):
@@ -109,14 +109,15 @@ class JsonSerializableAnkiDict(JsonSerializable):
 
 
 class JsonSerializableAnkiObject(JsonSerializable):
-    filter_set = JsonSerializable.filter_set | {"anki_object"}
+    filter_set = JsonSerializable.filter_set | {"anki_object", "anki_object_dict"}
 
     def __init__(self, anki_object=None):
         super(JsonSerializableAnkiObject, self).__init__()
         self.anki_object = anki_object
+        self.anki_object_dict = getattr(anki_object, "__dict__", None)
 
-    def _dict_extension(self):
-        return utils.merge_dicts(super(JsonSerializableAnkiObject, self)._dict_extension(),
+    def serialization_dict(self):
+        return utils.merge_dicts(super(JsonSerializableAnkiObject, self).serialization_dict(),
                                  self.anki_object.__dict__)
 
     def _update_fields(self):

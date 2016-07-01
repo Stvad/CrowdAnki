@@ -37,6 +37,7 @@ class Deck(JsonSerializableAnkiDict):
         self.notes = None
         self.children = None
         self.metadata = None
+        self.deck_config_uuid = None
 
     @classmethod
     def from_collection(cls, collection, name, deck_metadata=None, is_child=False):
@@ -52,10 +53,10 @@ class Deck(JsonSerializableAnkiDict):
 
         deck._update_fields()
 
-        deck.notes = Note.get_notes_from_collection(collection, deck.anki_dict["id"])  # Todo ugly
-
         deck.metadata = deck_metadata
         deck._load_metadata()
+
+        deck.notes = Note.get_notes_from_collection(collection, deck.anki_dict["id"], deck.metadata.models)
 
         deck.children = [cls.from_collection(collection, child_name, deck_metadata, True) for child_name, _ in
                          collection.decks.children(deck.anki_dict["id"])]
@@ -71,23 +72,17 @@ class Deck(JsonSerializableAnkiDict):
             self.metadata = Deck.Metadata({}, {})
 
         self._load_deck_config()
-        self._load_note_models()
 
     def _load_deck_config(self):
         # Todo switch to uuid
         new_config = DeckConfig.from_collection(self.collection, self.anki_dict["conf"])
-        # config_uiid = new_config.anki_dict[UUID_FIELD_NAME]
+        self.deck_config_uuid = new_config.get_uuid()
 
         self.metadata.deck_configs.setdefault(new_config.get_uuid(), new_config)
 
-    def _load_note_models(self):
-        for note in self.notes:
-            note_model = NoteModel.from_collection(self.collection, note.anki_object.mid)
-            self.metadata.models.setdefault(note_model.get_uuid(), note_model)
-
-    def _dict_extension(self):
+    def serialization_dict(self):
         return utils.merge_dicts(
-            super(Deck, self)._dict_extension(),
+            super(Deck, self).serialization_dict(),
             {"media_files": list(self.get_media_file_list(include_children=False))},
             {"note_models": self.metadata.models.values(),
              "deck_configurations": self.metadata.deck_configs.values()} if not self.is_child else {})
@@ -143,4 +138,28 @@ class Deck(JsonSerializableAnkiDict):
         return deck
 
     def save_to_collection(self, collection):
-        pass
+        for config in self.metadata.deck_configs.values():
+            config.save_to_collection(collection)
+
+        for note_model in self.metadata.models.values():
+            note_model.save_to_collection(collection)
+
+        # Todo renaming on name match - right now - override
+        # Todo get deck config by uuid, right now - match on old id
+        # Todo uuid
+
+        deck_id = collection.decks.id(self.anki_dict["name"])
+
+        in_dict = collection.decks.get(deck_id)
+        in_dict.update(self.anki_dict)
+        in_dict["id"] = deck_id
+        self.anki_dict = in_dict
+
+        collection.decks.save()
+        collection.decks.flush()
+
+        for child in self.children:
+            child.save_to_collection(collection)
+
+        for note in self.notes:
+            note.save_to_collection(collection, self.metadata.models)

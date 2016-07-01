@@ -15,3 +15,4 @@ class AnkiJsonImporter(object):
             # deck_json = json.load(deck_file, object_hook=JsonSerializable.json_object_hook)
             deck_json = json.load(deck_file)
             deck = Deck.from_json(deck_json)
+            deck.save_to_collection(self.collection)

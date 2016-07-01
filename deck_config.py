@@ -25,3 +25,4 @@ class DeckConfig(JsonSerializableAnkiDict):
         # self.anki_dict["id"] = collection.decks.confId(self.anki_dict["name"], self.anki_dict)
         new_id = collection.decks.confId(self.anki_dict["name"], self.anki_dict)
         self.anki_dict = collection.decks.getConf(new_id)
+        collection.decks.flush()
