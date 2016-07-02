@@ -1,13 +1,7 @@
-import json
 import os.path
-import sys
-from pprint import pprint
 
-import anki
-from CrowdAnki.anki_exporter import AnkiJsonExporter
-from CrowdAnki.anki_importer import AnkiJsonImporter
-from anki.notes import Note as AnkiNote
-
+from anki_importer import AnkiJsonImporter
+from anki_exporter import AnkiJsonExporter
 # import the main window object (mw) from aqt
 from aqt import mw
 # import the "show info" tool from utils.py
@@ -16,10 +10,7 @@ from aqt.utils import showInfo
 
 from anki import Collection
 
-from CrowdAnki.deck import Deck
-from CrowdAnki.json_serializable import JsonSerializable
-
-COLLECTION_PATH = "../WCollection/collection.anki2"
+COLLECTION_PATH = "../../WCollection/collection.anki2"
 
 
 # We're going to add a menu item below. First we want to create a function to
@@ -46,8 +37,8 @@ def main():
     collection = Collection(COLLECTION_PATH)
     print(os.path.realpath(os.path.curdir))
 
-    # exporter = AnkiJsonExporter(collection)
-    # exporter.export_deck(deck_name)
+    exporter = AnkiJsonExporter(collection)
+    exporter.export_deck(deck_name)
 
     deck_directory = os.path.join("./", deck_name)
     deck_json = os.path.join(deck_directory, deck_name + ".json")

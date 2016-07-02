@@ -1,8 +1,6 @@
 import json
-import os
 
-from CrowdAnki.deck import Deck
-from CrowdAnki.json_serializable import JsonSerializable
+from representation.deck import Deck
 
 
 class AnkiJsonImporter(object):

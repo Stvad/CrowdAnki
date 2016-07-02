@@ -21,12 +21,12 @@ def add_column(db, table_name, column_name, default_value="\"\""):
         pprint(e)
 
 
-def add_absent_field(object, field_name, default_value=None):
+def add_absent_field(pobject, field_name, default_value=None):
     """
     Add field to the object if it does not exist yet.
-    :param object:
+    :param pobject:
     :param field_name:
     :param default_value:
     :return:
     """
-    setattr(object, field_name, getattr(object, field_name, default_value))
+    setattr(pobject, field_name, getattr(pobject, field_name, default_value))

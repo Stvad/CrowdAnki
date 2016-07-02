@@ -1,7 +1,4 @@
-from uuid import uuid1
-
-from CrowdAnki.common_constants import UUID_FIELD_NAME
-from CrowdAnki.json_serializable import JsonSerializableAnkiDict
+from json_serializable import JsonSerializableAnkiDict
 
 
 class DeckConfig(JsonSerializableAnkiDict):

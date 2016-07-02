@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 
-from CrowdAnki.deck import Deck
+from representation.deck import Deck
 
 
 class AnkiJsonExporter(object):

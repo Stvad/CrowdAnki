@@ -1,12 +1,7 @@
-from uuid import uuid1
-
 import anki
-from CrowdAnki.note_model import NoteModel
 from anki.notes import Note as AnkiNote
-
-from CrowdAnki import utils
-from CrowdAnki.json_serializable import JsonSerializableAnkiObject
-from CrowdAnki.common_constants import UUID_FIELD_NAME
+from json_serializable import JsonSerializableAnkiObject
+from note_model import NoteModel
 
 
 class Note(JsonSerializableAnkiObject):

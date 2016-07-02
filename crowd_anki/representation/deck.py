@@ -1,15 +1,13 @@
-import json
 from collections import namedtuple
 
-from anki.exporting import AnkiExporter
+from crowd_anki.utils import utils
+from crowd_anki.utils.constants import UUID_FIELD_NAME
 
-import CrowdAnki.utils
-from CrowdAnki import utils
-from CrowdAnki.common_constants import UUID_FIELD_NAME
-from CrowdAnki.deck_config import DeckConfig
-from CrowdAnki.json_serializable import JsonSerializableAnkiDict
-from CrowdAnki.note import Note
-from CrowdAnki.note_model import NoteModel
+from anki.exporting import AnkiExporter
+from deck_config import DeckConfig
+from json_serializable import JsonSerializableAnkiDict
+from note import Note
+from note_model import NoteModel
 
 
 class Deck(JsonSerializableAnkiDict):
@@ -65,7 +63,7 @@ class Deck(JsonSerializableAnkiDict):
 
     def _update_db(self):
         # Introduce uuid field for unique identification of entities
-        CrowdAnki.utils.add_column(self.collection.db, "notes", UUID_FIELD_NAME)
+        CrowdAnki.utils.utils.add_column(self.collection.db, "notes", UUID_FIELD_NAME)
 
     def _load_metadata(self):
         if not self.metadata:

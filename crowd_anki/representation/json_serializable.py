@@ -1,8 +1,7 @@
 from uuid import uuid1
 
-from CrowdAnki import utils
-from CrowdAnki.common_constants import UUID_FIELD_NAME
-from CrowdAnki.utils import merge_dicts
+from crowd_anki.utils import utils
+from crowd_anki.utils.constants import UUID_FIELD_NAME
 
 
 class JsonSerializable(object):
@@ -26,10 +25,6 @@ class JsonSerializable(object):
     @staticmethod
     def json_object_hook(json_dict):
         # Add names to locals()
-        from CrowdAnki.deck import Deck
-        from CrowdAnki.deck_config import DeckConfig
-        from CrowdAnki.note import Note
-        from CrowdAnki.note_model import NoteModel
 
         object_type = json_dict.get("__type__", "")
         type_class = locals().get(object_type, None)
@@ -61,8 +56,8 @@ class JsonSerializable(object):
                 key not in self.filter_set}
 
     def serialization_dict(self):
-        return merge_dicts(self.__dict__,
-                           {"__type__": self.__class__.__name__})
+        return utils.merge_dicts(self.__dict__,
+                                 {"__type__": self.__class__.__name__})
 
     def _update_fields(self):
         """
