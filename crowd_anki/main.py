@@ -37,8 +37,8 @@ def main():
     collection = Collection(COLLECTION_PATH)
     print(os.path.realpath(os.path.curdir))
 
-    exporter = AnkiJsonExporter(collection)
-    exporter.export_deck(deck_name)
+    # exporter = AnkiJsonExporter(collection)
+    # exporter.export_deck(deck_name)
 
     deck_directory = os.path.join("./", deck_name)
     deck_json = os.path.join(deck_directory, deck_name + ".json")

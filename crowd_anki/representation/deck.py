@@ -31,7 +31,6 @@ class Deck(JsonSerializableAnkiDict):
         self.is_child = is_child
 
         self.collection = None
-        # self.name = None
         self.notes = None
         self.children = None
         self.metadata = None
@@ -47,7 +46,6 @@ class Deck(JsonSerializableAnkiDict):
         deck = Deck(anki_dict, is_child)
 
         deck.collection = collection
-        # deck.name = name
 
         deck._update_fields()
 
@@ -56,14 +54,14 @@ class Deck(JsonSerializableAnkiDict):
 
         deck.notes = Note.get_notes_from_collection(collection, deck.anki_dict["id"], deck.metadata.models)
 
-        deck.children = [cls.from_collection(collection, child_name, deck_metadata, True) for child_name, _ in
+        deck.children = [cls.from_collection(collection, child_name, deck.metadata, True) for child_name, _ in
                          collection.decks.children(deck.anki_dict["id"])]
 
         return deck
 
     def _update_db(self):
         # Introduce uuid field for unique identification of entities
-        CrowdAnki.utils.utils.add_column(self.collection.db, "notes", UUID_FIELD_NAME)
+        utils.add_column(self.collection.db, "notes", UUID_FIELD_NAME)
 
     def _load_metadata(self):
         if not self.metadata:
@@ -129,21 +127,24 @@ class Deck(JsonSerializableAnkiDict):
         if not deck.metadata:  # Todo mental check. The idea is that children don't have metadata
             deck._load_metadata_from_json(json_dict)
 
+        deck.deck_config_uuid = json_dict["deck_config_uuid"]
+
         deck.notes = [Note.from_json(json_note) for json_note in json_dict["notes"]]
 
         deck.children = [cls.from_json(child, deck.metadata) for child in json_dict["children"]]
 
         return deck
 
-    def save_to_collection(self, collection):
-        for config in self.metadata.deck_configs.values():
-            config.save_to_collection(collection)
+    def save_to_collection(self, collection, save_configs=True, save_note_models=True):
+        if save_configs:  # Todo when update implemented multiple save can be harmless and code simpler
+            for config in self.metadata.deck_configs.values():
+                config.save_to_collection(collection)
 
-        for note_model in self.metadata.models.values():
-            note_model.save_to_collection(collection)
+        if save_note_models:
+            for note_model in self.metadata.models.values():
+                note_model.save_to_collection(collection)
 
         # Todo renaming on name match - right now - override
-        # Todo get deck config by uuid, right now - match on old id
         # Todo uuid
 
         deck_id = collection.decks.id(self.anki_dict["name"])
@@ -151,12 +152,13 @@ class Deck(JsonSerializableAnkiDict):
         in_dict = collection.decks.get(deck_id)
         in_dict.update(self.anki_dict)
         self.anki_dict = in_dict
+        self.anki_dict["conf"] = self.metadata.deck_configs[self.deck_config_uuid].anki_dict["id"]
 
         collection.decks.save()
         collection.decks.flush()
 
         for child in self.children:
-            child.save_to_collection(collection)
+            child.save_to_collection(collection, save_configs=False, save_note_models=False)
 
         for note in self.notes:
             note.save_to_collection(collection, self.metadata.models)

@@ -8,7 +8,8 @@ class Note(JsonSerializableAnkiObject):
     filter_set = JsonSerializableAnkiObject.filter_set | \
                  {"col",  # Don't need collection
                   "_fmap",  # Generated data
-                  "_model"  # Card model. Would be handled by deck. uuid?
+                  "_model",  # Card model. Would be handled by deck.
+                  "mid"  # -> uuid
                   }
 
     def __init__(self, anki_note=None):
@@ -44,13 +45,13 @@ class Note(JsonSerializableAnkiObject):
     def from_json(cls, json_dict):
         note = Note()
         note.anki_object_dict = json_dict
+        note.note_model_uuid = json_dict["note_model_uuid"]
         return note
 
     def save_to_collection(self, collection, note_models):
         # Todo uuid match on existing notes
 
-        # Todo get model by uuid
-        note_model = note_models[self.anki_object_dict["note_model_uuid"]]
+        note_model = note_models[self.note_model_uuid]
         # collection.models.get(self.anki_object_dict["id"])
         self.anki_object = AnkiNote(collection, note_model.anki_dict)
         self.anki_object.__dict__.update(self.anki_object_dict)
