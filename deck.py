@@ -152,7 +152,6 @@ class Deck(JsonSerializableAnkiDict):
 
         in_dict = collection.decks.get(deck_id)
         in_dict.update(self.anki_dict)
-        in_dict["id"] = deck_id
         self.anki_dict = in_dict
 
         collection.decks.save()

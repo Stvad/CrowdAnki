@@ -8,7 +8,8 @@ from CrowdAnki.utils import merge_dicts
 class JsonSerializable(object):
     readable_names = {}
     filter_set = {"mod",  # Modification time
-                  "usn"  # Todo clarify
+                  "usn",  # Todo clarify
+                  "id"
                   }
 
     def __init__(self):
