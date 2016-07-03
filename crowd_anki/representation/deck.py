@@ -12,6 +12,7 @@ from note_model import NoteModel
 
 class Deck(JsonSerializableAnkiDict):
     Metadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
+    DECK_NAME_DELIMITER = "::"
 
     # todo super(Deck, self)
     export_filter_set = JsonSerializableAnkiDict.export_filter_set | \
@@ -46,8 +47,6 @@ class Deck(JsonSerializableAnkiDict):
 
     @classmethod
     def from_collection(cls, collection, name, deck_metadata=None, is_child=False):
-        deck = Deck()
-
         # deck._update_db()
         anki_dict = collection.decks.byName(name)
 
@@ -128,7 +127,6 @@ class Deck(JsonSerializableAnkiDict):
     @classmethod
     def from_json(cls, json_dict, deck_metadata=None):
         """load metadata, load notes, load children"""
-        # todo filter some  parts
         deck = Deck(json_dict)
         deck.metadata = deck_metadata
 
@@ -146,7 +144,7 @@ class Deck(JsonSerializableAnkiDict):
 
         return deck
 
-    def save_to_collection(self, collection, save_configs=True, save_note_models=True):
+    def save_to_collection(self, collection, parent_name="", save_configs=True, save_note_models=True):
         if save_configs:  # Todo when update implemented multiple save can be harmless and code simpler
             for config in self.metadata.deck_configs.values():
                 config.save_to_collection(collection)
@@ -155,21 +153,53 @@ class Deck(JsonSerializableAnkiDict):
             for note_model in self.metadata.models.values():
                 note_model.save_to_collection(collection)
 
-        # Todo renaming on name match - right now - override
-        # Todo uuid
-
-        deck_id = collection.decks.id(self.anki_dict["name"])
-
-        in_dict = collection.decks.get(deck_id)
-        in_dict.update(self.anki_dict)
-        self.anki_dict = in_dict
-        self.anki_dict["conf"] = self.metadata.deck_configs[self.deck_config_uuid].anki_dict["id"]
-
-        collection.decks.save()
-        collection.decks.flush()
+        name = self._save_deck(collection, parent_name)
 
         for child in self.children:
-            child.save_to_collection(collection, save_configs=False, save_note_models=False)
+            child.save_to_collection(collection, parent_name=name, save_configs=False, save_note_models=False)
 
         for note in self.notes:
             note.save_to_collection(collection, self)
+
+    def _save_deck(self, collection, parent_name):
+        # Todo consider storing names without parent prefix
+        name = self.anki_dict["name"].split(self.DECK_NAME_DELIMITER)[-1]
+        if parent_name:
+            name = parent_name + self.DECK_NAME_DELIMITER + name
+
+        deck_dict = collection.decks.get_deck_by_uuid(self.get_uuid())
+
+        deck_id = collection.decks.id(name, create=False)
+        if deck_id and (not deck_dict or deck_dict["id"] != deck_id):
+            name = self._rename_deck(name, collection)
+
+        if not deck_dict:
+            new_deck_id = collection.decks.id(name)
+            deck_dict = collection.decks.get(new_deck_id)
+
+        deck_dict.update(self.anki_dict)
+
+        self.anki_dict = deck_dict
+        self.anki_dict["name"] = name
+        self.anki_dict["conf"] = self.metadata.deck_configs[self.deck_config_uuid].anki_dict["id"]
+        collection.decks.save()
+        collection.decks.flush()
+
+        return name
+
+    @staticmethod
+    def _rename_deck(initial_name, collection):
+        """Adds unique suffix to the name, until it becomes unique (required by Anki)"""
+        # Todo consider popup
+
+        # This approach can be costly if we have a lot of decks with specific set of names.
+        # And adding random appendix would've been faster, but less user-friendly
+        number = 2
+        deck_id = collection.decks.id(initial_name, create=False)
+        new_name = ""
+        while deck_id:
+            new_name = initial_name + "_" + str(number)
+            number += 1
+            deck_id = collection.decks.id(new_name, create=False)
+
+        return new_name
