@@ -18,7 +18,12 @@ class NoteModel(JsonSerializableAnkiDict):
         return note_model
 
     def save_to_collection(self, collection):
-        default_note_config = collection.models.new(self.anki_dict["name"])
-        self.anki_dict = utils.merge_dicts(default_note_config, self.anki_dict)
-        collection.models.add(self.anki_dict)
+        # Todo regenerate cards on update
+        # look into template manipulation in "models"
+
+        note_model_dict = collection.models.get_by_uuid(self.get_uuid()) or \
+                          collection.models.new(self.anki_dict["name"])
+
+        self.anki_dict = utils.merge_dicts(note_model_dict, self.anki_dict)
+        collection.models.update(self.anki_dict)
         collection.models.flush()
