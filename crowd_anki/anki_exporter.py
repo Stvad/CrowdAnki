@@ -20,10 +20,21 @@ class AnkiJsonExporter(object):
         with open(deck_json, mode='w') as result_file:
             result_file.write(json.dumps(deck, default=Deck.default_json, sort_keys=True, indent=4))
 
-        # todo flush changes (uuid)
+        self._save_changes()
 
         if copy_media:
             self._copy_media(deck, deck_directory)
+
+    def _save_changes(self):
+        """Save updates that were maid during the export. E.g. UUID fields"""
+        # This saves decks and deck configurations
+        self.collection.decks.save()
+        self.collection.decks.flush()
+
+        self.collection.models.save()
+        self.collection.models.flush()
+
+        # Notes?
 
     def _copy_media(self, deck, deck_directory):
         new_media_directory = os.path.join(deck_directory, "media")
