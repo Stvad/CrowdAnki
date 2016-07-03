@@ -6,10 +6,10 @@ from crowd_anki.utils.constants import UUID_FIELD_NAME
 
 class JsonSerializable(object):
     readable_names = {}
-    filter_set = {"mod",  # Modification time
-                  "usn",  # Todo clarify
-                  "id"
-                  }
+    export_filter_set = {"mod",  # Modification time
+                         "usn",  # Todo clarify
+                         "id"}
+    import_filter_set = {"__type__"}
 
     def __init__(self):
         pass
@@ -53,7 +53,7 @@ class JsonSerializable(object):
     def flatten(self):
         return {self.readable_names[key] if key in self.readable_names else key: value
                 for key, value in self.serialization_dict().items() if
-                key not in self.filter_set}
+                key not in self.export_filter_set}
 
     def serialization_dict(self):
         return utils.merge_dicts(self.__dict__,
@@ -78,9 +78,12 @@ class JsonSerializable(object):
         :return:
         """
 
+    def post_import_filter(self):
+        """Remove unnecessary information imported in bulk with necessary"""
+
 
 class JsonSerializableAnkiDict(JsonSerializable):
-    filter_set = JsonSerializable.filter_set | {"anki_dict"}
+    export_filter_set = JsonSerializable.export_filter_set | {"anki_dict"}
 
     def __init__(self, anki_dict=None):
         super(JsonSerializableAnkiDict, self).__init__()
@@ -97,15 +100,20 @@ class JsonSerializableAnkiDict(JsonSerializable):
         super(JsonSerializableAnkiDict, self).get_uuid()
         return self.anki_dict[UUID_FIELD_NAME]
 
+    def post_import_filter(self):
+        for entry in self.import_filter_set:
+            if entry in self.anki_dict:
+                del self.anki_dict[entry]
+
     @classmethod
     def from_json(cls, json_dict):
         anki_dict_object = cls(json_dict)
-        del anki_dict_object.anki_dict["__type__"]
+        anki_dict_object.post_import_filter()
         return anki_dict_object
 
 
 class JsonSerializableAnkiObject(JsonSerializable):
-    filter_set = JsonSerializable.filter_set | {"anki_object", "anki_object_dict"}
+    export_filter_set = JsonSerializable.export_filter_set | {"anki_object", "anki_object_dict"}
 
     def __init__(self, anki_object=None):
         super(JsonSerializableAnkiObject, self).__init__()

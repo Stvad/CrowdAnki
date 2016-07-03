@@ -5,12 +5,12 @@ from note_model import NoteModel
 
 
 class Note(JsonSerializableAnkiObject):
-    filter_set = JsonSerializableAnkiObject.filter_set | \
-                 {"col",  # Don't need collection
-                  "_fmap",  # Generated data
-                  "_model",  # Card model. Would be handled by deck.
-                  "mid"  # -> uuid
-                  }
+    export_filter_set = JsonSerializableAnkiObject.export_filter_set | \
+                        {"col",  # Don't need collection
+                         "_fmap",  # Generated data
+                         "_model",  # Card model. Would be handled by deck.
+                         "mid"  # -> uuid
+                         }
 
     def __init__(self, anki_note=None):
         super(Note, self).__init__(anki_note)

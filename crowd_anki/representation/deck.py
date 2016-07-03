@@ -14,16 +14,23 @@ class Deck(JsonSerializableAnkiDict):
     Metadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
     # Todo either unpack or represent differently because right now - not serialized properly
 
-    filter_set = JsonSerializableAnkiDict.filter_set | \
-                 {"collection",
-                  "newToday",
-                  "revToday",
-                  "timeToday",
-                  "lrnToday",
-                  "metadata",
-                  "browserCollapsed",
-                  "collapsed",
-                  "is_child"}
+    export_filter_set = JsonSerializableAnkiDict.export_filter_set | \
+                        {"collection",
+                         "newToday",
+                         "revToday",
+                         "timeToday",
+                         "lrnToday",
+                         "metadata",
+                         "browserCollapsed",
+                         "collapsed",
+                         "is_child"}
+
+    import_filter_set = JsonSerializableAnkiDict.import_filter_set | \
+                        {"note_models",
+                         "deck_configurations",
+                         "children",
+                         "media_files",
+                         "notes"}
 
     # todo super(Deck, self)
 
@@ -133,6 +140,9 @@ class Deck(JsonSerializableAnkiDict):
         deck.notes = [Note.from_json(json_note) for json_note in json_dict["notes"]]
 
         deck.children = [cls.from_json(child, deck.metadata) for child in json_dict["children"]]
+
+        # Todo should I call this here?
+        deck.post_import_filter()
 
         return deck
 
