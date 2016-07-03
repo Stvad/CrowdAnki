@@ -4,6 +4,8 @@ from json_serializable import JsonSerializableAnkiDict
 
 
 class NoteModel(JsonSerializableAnkiDict):
+    filter_set = JsonSerializableAnkiDict.filter_set | {"did"}
+
     def __init__(self, anki_model=None):
         super(NoteModel, self).__init__(anki_model)
 

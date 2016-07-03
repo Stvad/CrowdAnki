@@ -48,11 +48,22 @@ class Note(JsonSerializableAnkiObject):
         note.note_model_uuid = json_dict["note_model_uuid"]
         return note
 
-    def save_to_collection(self, collection, note_models):
+    def save_to_collection(self, collection, deck):
         # Todo uuid match on existing notes
 
-        note_model = note_models[self.note_model_uuid]
-        # collection.models.get(self.anki_object_dict["id"])
+        note_model = deck.metadata.models[self.note_model_uuid]
+        # You may ask WTF? Well, it seems anki has 2 ways to identify deck where to place card:
+        # 1) Looking for existing cards of this note
+        # 2) Looking at model->did and to add new cards to correct deck we need to modify the did each time
+        # ;(
+        note_model.anki_dict["did"] = deck.anki_dict["id"]
+
+        # Need?
+        # collection.models.save()
+        # collection.models.flush()
+
         self.anki_object = AnkiNote(collection, note_model.anki_dict)
         self.anki_object.__dict__.update(self.anki_object_dict)
         self.anki_object.flush()
+
+        collection.addNote(self.anki_object)

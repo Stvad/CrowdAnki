@@ -2,8 +2,6 @@ from json_serializable import JsonSerializableAnkiDict
 
 
 class DeckConfig(JsonSerializableAnkiDict):
-    # filter_set = JsonSerializableAnkiDict.filter_set | {}
-
     def __init__(self, anki_deck_config=None):
         super(DeckConfig, self).__init__(anki_deck_config)
 
@@ -19,7 +17,8 @@ class DeckConfig(JsonSerializableAnkiDict):
         # Todo whole uuid matching thingy
         # For now only create scenario
 
-        # self.anki_dict["id"] = collection.decks.confId(self.anki_dict["name"], self.anki_dict)
         new_id = collection.decks.confId(self.anki_dict["name"], self.anki_dict)
         self.anki_dict = collection.decks.getConf(new_id)
+
+        collection.decks.save()
         collection.decks.flush()

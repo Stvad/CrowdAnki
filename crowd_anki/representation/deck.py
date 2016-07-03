@@ -22,7 +22,8 @@ class Deck(JsonSerializableAnkiDict):
                   "lrnToday",
                   "metadata",
                   "browserCollapsed",
-                  "collapsed"}
+                  "collapsed",
+                  "is_child"}
 
     # todo super(Deck, self)
 
@@ -161,4 +162,4 @@ class Deck(JsonSerializableAnkiDict):
             child.save_to_collection(collection, save_configs=False, save_note_models=False)
 
         for note in self.notes:
-            note.save_to_collection(collection, self.metadata.models)
+            note.save_to_collection(collection, self)
