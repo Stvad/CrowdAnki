@@ -1,4 +1,5 @@
 import os.path
+from pprint import pprint
 
 from anki_importer import AnkiJsonImporter
 from anki_exporter import AnkiJsonExporter
@@ -9,6 +10,7 @@ from aqt.utils import showInfo
 # import all of the Qt GUI library
 
 from anki import Collection
+from anki.notes import Note as AnkiNote
 
 COLLECTION_PATH = "../../WCollection/collection.anki2"
 
@@ -37,17 +39,27 @@ def main():
     collection = Collection(COLLECTION_PATH)
     print(os.path.realpath(os.path.curdir))
 
-    # exporter = AnkiJsonExporter(collection)
-    # exporter.export_deck(deck_name)
+    pprint(collection.decks.get_deck_by_uuid("0f0432c2-412e-11e6-9f95-8c705a50cbf0"))
+    print("\n\n")
+    pprint(collection.decks.get_deck_config_by_uuid("0f043506-412e-11e6-9f95-8c705a50cbf0"))
+    print("\n\n")
+    pprint(collection.models.get_by_uuid("0f042818-412e-11e6-9f95-8c705a50cbf0"))
+    print("\n\n")
+    pprint(AnkiNote.get_by_uuid(collection, "wVFJn`f>L[").__dict__)
+
+
+    exporter = AnkiJsonExporter(collection)
+    exporter.export_deck(deck_name)
 
     deck_directory = os.path.join("./", deck_name)
     deck_json = os.path.join(deck_directory, deck_name + ".json")
 
-    importer = AnkiJsonImporter(collection)
-    importer.load_from_file(deck_json)
+    # importer = AnkiJsonImporter(collection)
+    # importer.load_from_file(deck_json)
 
     # deck.notes[0].anki_object.flush(mod=True)
     collection.close()
+
 
 def anki_init():
     pass
