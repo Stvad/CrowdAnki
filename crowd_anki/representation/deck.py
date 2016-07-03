@@ -12,10 +12,10 @@ from note_model import NoteModel
 
 class Deck(JsonSerializableAnkiDict):
     Metadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
-    # Todo either unpack or represent differently because right now - not serialized properly
 
+    # todo super(Deck, self)
     export_filter_set = JsonSerializableAnkiDict.export_filter_set | \
-                        {"collection",
+                        {"collection",  # runtime-relevant
                          "newToday",
                          "revToday",
                          "timeToday",
@@ -23,7 +23,9 @@ class Deck(JsonSerializableAnkiDict):
                          "metadata",
                          "browserCollapsed",
                          "collapsed",
-                         "is_child"}
+                         "is_child",  # runtime-relevant
+                         "conf"  # uuid
+                         }
 
     import_filter_set = JsonSerializableAnkiDict.import_filter_set | \
                         {"note_models",
@@ -31,8 +33,6 @@ class Deck(JsonSerializableAnkiDict):
                          "children",
                          "media_files",
                          "notes"}
-
-    # todo super(Deck, self)
 
     def __init__(self, anki_deck=None, is_child=False):
         super(Deck, self).__init__(anki_deck)
