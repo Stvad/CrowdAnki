@@ -124,9 +124,9 @@ class JsonSerializableAnkiObject(JsonSerializable):
         return utils.merge_dicts(super(JsonSerializableAnkiObject, self).serialization_dict(),
                                  self.anki_object.__dict__)
 
-    def _update_fields(self):
-        utils.add_absent_field(self.anki_object, UUID_FIELD_NAME, str(uuid1()))
+    # def _update_fields(self):
+    #     utils.add_absent_field(self.anki_object, UUID_FIELD_NAME, str(uuid1()))
 
-    def get_uuid(self):
-        super(JsonSerializableAnkiObject, self).get_uuid()
-        return getattr(self.anki_object, UUID_FIELD_NAME)
+    # def get_uuid(self):
+    #     super(JsonSerializableAnkiObject, self).get_uuid()
+    #     return getattr(self.anki_object, UUID_FIELD_NAME)

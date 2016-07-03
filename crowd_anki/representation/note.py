@@ -48,6 +48,9 @@ class Note(JsonSerializableAnkiObject):
         note.note_model_uuid = json_dict["note_model_uuid"]
         return note
 
+    def get_uuid(self):
+        return self.anki_object.guid
+
     def save_to_collection(self, collection, deck):
         # Todo uuid match on existing notes
 
