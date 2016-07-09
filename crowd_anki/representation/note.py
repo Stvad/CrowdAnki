@@ -1,7 +1,7 @@
 import anki
 from anki.notes import Note as AnkiNote
-from json_serializable import JsonSerializableAnkiObject
-from note_model import NoteModel
+from .json_serializable import JsonSerializableAnkiObject
+from .note_model import NoteModel
 
 
 class Note(JsonSerializableAnkiObject):
@@ -56,15 +56,14 @@ class Note(JsonSerializableAnkiObject):
 
         self.anki_object = AnkiNote.get_by_uuid(collection, self.get_uuid())
         note_model = deck.metadata.models[self.note_model_uuid]
+        # You may ask WTF? Well, it seems anki has 2 ways to identify deck where to place card:
+        # 1) Looking for existing cards of this note
+        # 2) Looking at model->did and to add new cards to correct deck we need to modify the did each time
+        # ;(
+        note_model.anki_dict["did"] = deck.anki_dict["id"]
 
         new_note = not bool(self.anki_object)
         if not self.anki_object:
-            # You may ask WTF? Well, it seems anki has 2 ways to identify deck where to place card:
-            # 1) Looking for existing cards of this note
-            # 2) Looking at model->did and to add new cards to correct deck we need to modify the did each time
-            # ;(
-            note_model.anki_dict["did"] = deck.anki_dict["id"]
-
             self.anki_object = AnkiNote(collection, note_model.anki_dict)
 
         self.anki_object.__dict__.update(self.anki_object_dict)

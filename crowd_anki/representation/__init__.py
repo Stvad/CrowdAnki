@@ -1,1 +1,1 @@
-import uuid_operations
+from . import uuid_operations

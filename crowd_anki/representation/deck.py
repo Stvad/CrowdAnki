@@ -4,10 +4,10 @@ from crowd_anki.utils import utils
 from crowd_anki.utils.constants import UUID_FIELD_NAME
 
 from anki.exporting import AnkiExporter
-from deck_config import DeckConfig
-from json_serializable import JsonSerializableAnkiDict
-from note import Note
-from note_model import NoteModel
+from .deck_config import DeckConfig
+from .json_serializable import JsonSerializableAnkiDict
+from .note import Note
+from .note_model import NoteModel
 
 
 class Deck(JsonSerializableAnkiDict):
@@ -87,8 +87,8 @@ class Deck(JsonSerializableAnkiDict):
         return utils.merge_dicts(
             super(Deck, self).serialization_dict(),
             {"media_files": list(self.get_media_file_list(include_children=False))},
-            {"note_models": self.metadata.models.values(),
-             "deck_configurations": self.metadata.deck_configs.values()} if not self.is_child else {})
+            {"note_models": list(self.metadata.models.values()),
+             "deck_configurations": list(self.metadata.deck_configs.values())} if not self.is_child else {})
 
     def get_media_file_list(self, data_from_models=True, include_children=True):
         media = set()

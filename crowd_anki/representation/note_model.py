@@ -1,6 +1,6 @@
 from crowd_anki.utils import utils
 
-from json_serializable import JsonSerializableAnkiDict
+from .json_serializable import JsonSerializableAnkiDict
 
 
 class NoteModel(JsonSerializableAnkiDict):
