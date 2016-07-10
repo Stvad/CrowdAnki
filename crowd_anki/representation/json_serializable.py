@@ -109,6 +109,7 @@ class JsonSerializableAnkiDict(JsonSerializable):
     def from_json(cls, json_dict):
         anki_dict_object = cls(json_dict)
         anki_dict_object.post_import_filter()
+        anki_dict_object._update_fields()
         return anki_dict_object
 
 

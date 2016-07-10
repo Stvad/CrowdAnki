@@ -112,15 +112,15 @@ class Deck(JsonSerializableAnkiDict):
         if not self.metadata:
             self.metadata = self.Metadata({}, {})
 
-        # Todo get_uuid?
+        note_models_list = [NoteModel.from_json(model) for model in json_dict.get("note_models", [])]
         new_models = utils.merge_dicts(self.metadata.models,
-                                       {model[UUID_FIELD_NAME]: NoteModel.from_json(model) for model in
-                                        json_dict.get("note_models", [])})
+                                       {model.get_uuid(): model for model in note_models_list})
+
+        deck_config_list = [DeckConfig.from_json(deck_config) for deck_config in
+                            json_dict.get("deck_configurations", [])]
 
         new_deck_configs = utils.merge_dicts(self.metadata.deck_configs,
-                                             {deck_config[UUID_FIELD_NAME]: DeckConfig.from_json(deck_config) for
-                                              deck_config in
-                                              json_dict["deck_configurations"]})
+                                             {deck_config.get_uuid(): deck_config for deck_config in deck_config_list})
 
         self.metadata = Deck.Metadata(new_deck_configs, new_models)
 
@@ -128,6 +128,7 @@ class Deck(JsonSerializableAnkiDict):
     def from_json(cls, json_dict, deck_metadata=None):
         """load metadata, load notes, load children"""
         deck = Deck(json_dict)
+        deck._update_fields()
         deck.metadata = deck_metadata
 
         if not deck.metadata:  # Todo mental check. The idea is that children don't have metadata
