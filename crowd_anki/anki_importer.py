@@ -1,5 +1,4 @@
 import json
-import os.path
 import shutil
 from pathlib import Path
 
@@ -12,6 +11,10 @@ class AnkiJsonImporter(object):
         self.collection = collection
 
     def load_from_file(self, file_path):
+        """
+        Load deck from json file
+        :type file_path: Path
+        """
         deck = None
         with file_path.open() as deck_file:
             deck_json = json.load(deck_file)
@@ -23,6 +26,8 @@ class AnkiJsonImporter(object):
         Load deck serialized to directory
         Assumes that deck json file is located in the directory and named
         same way as a directory but with json file extension.
+        :param import_media: Should we copy media?
+        :type directory_path: Path
         """
         self.load_from_file(directory_path.joinpath(directory_path.name).with_suffix(DECK_FILE_EXTENSION))
 
