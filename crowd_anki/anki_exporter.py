@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 
+from crowd_anki.utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from representation.deck import Deck
 
 
@@ -16,9 +17,9 @@ class AnkiJsonExporter(object):
         if not os.path.exists(deck_directory):
             os.makedirs(deck_directory)
 
-        deck_json = os.path.join(deck_directory, deck_name + ".json")
-        with open(deck_json, mode='w') as result_file:
-            result_file.write(json.dumps(deck, default=Deck.default_json, sort_keys=True, indent=4))
+        deck_filename = os.path.join(deck_directory, deck_name + DECK_FILE_EXTENSION)
+        with open(deck_filename, mode='w') as deck_file:
+            deck_file.write(json.dumps(deck, default=Deck.default_json, sort_keys=True, indent=4))
 
         self._save_changes()
 
@@ -37,7 +38,7 @@ class AnkiJsonExporter(object):
         # Notes?
 
     def _copy_media(self, deck, deck_directory):
-        new_media_directory = os.path.join(deck_directory, "media")
+        new_media_directory = os.path.join(deck_directory, MEDIA_SUBDIRECTORY_NAME)
 
         if not os.path.exists(new_media_directory):
             os.makedirs(new_media_directory)
