@@ -1,3 +1,5 @@
+from . import main
+
 # from byteplay import *
 #
 # from pprint import pprint

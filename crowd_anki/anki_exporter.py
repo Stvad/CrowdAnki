@@ -3,7 +3,7 @@ import os
 import shutil
 
 from crowd_anki.utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
-from representation.deck import Deck
+from crowd_anki.representation.deck import Deck
 
 
 class AnkiJsonExporter(object):
