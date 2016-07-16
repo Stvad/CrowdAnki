@@ -20,6 +20,15 @@ class NoteModel(JsonSerializableAnkiDict):
 
         return note_model
 
+    @staticmethod
+    def check_semantically_identical(first_model, second_model):
+        field_names = ("flds", "tmpls")
+        for field in field_names:
+            if not utils.json_compare(first_model.anki_dict[field], second_model.anki_dict[field]):
+                return False
+
+        return True
+
     def save_to_collection(self, collection):
         # Todo regenerate cards on update
         # look into template manipulation in "models"
@@ -37,12 +46,7 @@ class NoteModel(JsonSerializableAnkiDict):
             self.update_cards(collection, note_model_dict)
 
     def update_cards(self, collection, old_model):
-        field_names = ("flds", "tmpls")
-
-        for field in field_names:
-            if not utils.json_compare(old_model[field], self.anki_dict[field]):
-                break
-        else:
+        if self.check_semantically_identical(NoteModel.from_json(old_model), self):
             return
 
         # Sync through setting global "current" model makes me sad too, but it's ingrained on many levels down
