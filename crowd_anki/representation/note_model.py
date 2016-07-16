@@ -1,5 +1,3 @@
-from collections import namedtuple
-
 from aqt.dialog.change_model import ChangeModelDialog
 from crowd_anki.utils import utils
 
@@ -7,7 +5,6 @@ from .json_serializable import JsonSerializableAnkiDict
 
 
 class NoteModel(JsonSerializableAnkiDict):
-    ModelMap = namedtuple("ModelMap", ["field_map", "template_map"])
     export_filter_set = JsonSerializableAnkiDict.export_filter_set | \
                         {"did"  # uuid
                          }
@@ -36,7 +33,8 @@ class NoteModel(JsonSerializableAnkiDict):
         collection.models.update(self.anki_dict)
         collection.models.flush()
 
-        return self.update_cards(collection, note_model_dict) if not new_model else {}
+        if not new_model:
+            self.update_cards(collection, note_model_dict)
 
     def update_cards(self, collection, old_model):
         field_names = ("flds", "tmpls")
@@ -45,7 +43,7 @@ class NoteModel(JsonSerializableAnkiDict):
             if not utils.json_compare(old_model[field], self.anki_dict[field]):
                 break
         else:
-            return {}
+            return
 
         # Sync through setting global "current" model makes me sad too, but it's ingrained on many levels down
         collection.models.setCurrent(self.anki_dict)
@@ -53,7 +51,4 @@ class NoteModel(JsonSerializableAnkiDict):
 
         # todo: check if we are in "ui mode"
         # todo: handle canceled
-        dialog = ChangeModelDialog(collection, collection.models.nids(old_model), old_model, self.anki_dict)
-
-        return {self.get_uuid(): NoteModel.ModelMap(dialog.get_field_map(), dialog.get_template_map())}
-
+        ChangeModelDialog(collection, collection.models.nids(old_model), old_model)

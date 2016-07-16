@@ -150,12 +150,9 @@ class Deck(JsonSerializableAnkiDict):
             for config in self.metadata.deck_configs.values():
                 config.save_to_collection(collection)
 
-        model_maps = {}
         if save_note_models:
             for note_model in self.metadata.models.values():
-                model_map = note_model.save_to_collection(collection)
-                if model_map:
-                    model_maps[note_model.get_uuid()] = model_map
+                note_model.save_to_collection(collection)
 
         name = self._save_deck(collection, parent_name)
 
