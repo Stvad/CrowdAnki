@@ -1,4 +1,4 @@
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 
 from crowd_anki.utils import utils
 from crowd_anki.utils.constants import UUID_FIELD_NAME
@@ -145,7 +145,12 @@ class Deck(JsonSerializableAnkiDict):
 
         return deck
 
-    def save_to_collection(self, collection, parent_name="", save_configs=True, save_note_models=True):
+    def save_to_collection(self,
+                           collection,
+                           parent_name="",
+                           save_configs=True,
+                           save_note_models=True,
+                           model_map_cache=None):
         if save_configs:  # Todo when update implemented multiple save can be harmless and code simpler
             for config in self.metadata.deck_configs.values():
                 config.save_to_collection(collection)
@@ -156,11 +161,16 @@ class Deck(JsonSerializableAnkiDict):
 
         name = self._save_deck(collection, parent_name)
 
+        model_map_cache = model_map_cache or defaultdict(dict)
         for child in self.children:
-            child.save_to_collection(collection, parent_name=name, save_configs=False, save_note_models=False)
+            child.save_to_collection(collection,
+                                     parent_name=name,
+                                     save_configs=False,
+                                     save_note_models=False,
+                                     model_map_cache=model_map_cache)
 
         for note in self.notes:
-            note.save_to_collection(collection, self)
+            note.save_to_collection(collection, self, model_map_cache)
 
     def _save_deck(self, collection, parent_name):
         # Todo consider storing names without parent prefix
