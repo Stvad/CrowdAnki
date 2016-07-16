@@ -9,7 +9,8 @@ class Note(JsonSerializableAnkiObject):
                         {"col",  # Don't need collection
                          "_fmap",  # Generated data
                          "_model",  # Card model. Would be handled by deck.
-                         "mid"  # -> uuid
+                         "mid",  # -> uuid
+                         "scm"  # todo: clarify
                          }
 
     def __init__(self, anki_note=None):

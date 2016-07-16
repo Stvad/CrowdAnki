@@ -1,3 +1,4 @@
+import json
 from pprint import pprint
 from sqlite3 import OperationalError
 
@@ -30,3 +31,12 @@ def add_absent_field(pobject, field_name, default_value=None):
     :return:
     """
     setattr(pobject, field_name, getattr(pobject, field_name, default_value))
+
+
+def json_compare(first, second):
+    """
+    Json comparison for complex objects. Should be JsonSerializable
+    """
+    fj = json.dumps(first, sort_keys=True)
+    sj = json.dumps(second, sort_keys=True)
+    return json.dumps(first, sort_keys=True) == json.dumps(second, sort_keys=True)
