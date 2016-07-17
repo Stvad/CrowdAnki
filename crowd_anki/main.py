@@ -2,6 +2,7 @@ import os.path
 from pprint import pprint
 from pathlib import Path
 
+from crowd_anki import anki_exporter_wrapper  # To hook exporters list extension
 from crowd_anki.anki_importer import AnkiJsonImporter
 from crowd_anki.anki_exporter import AnkiJsonExporter
 
@@ -18,7 +19,7 @@ def main():
     print(os.path.realpath(os.path.curdir))
 
     exporter = AnkiJsonExporter(collection)
-    exporter.export_deck(deck_name)
+    exporter.export_deck_to_directory(deck_name)
 
     # deck_directory = os.path.join("./", deck_name)
     deck_directory = Path(deck_name)
