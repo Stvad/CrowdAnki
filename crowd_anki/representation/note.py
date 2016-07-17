@@ -1,4 +1,5 @@
 import anki
+import anki.utils
 from anki.notes import Note as AnkiNote
 from aqt.dialog.change_model import ChangeModelDialog
 from crowd_anki.utils.constants import UUID_FIELD_NAME
@@ -87,6 +88,30 @@ class Note(JsonSerializableAnkiObject):
         # To get an updated note to work with
         self.anki_object = AnkiNote.get_by_uuid(collection, self.get_uuid())
 
+    def move_cards_to_deck(self, collection, deck_id, move_from_dynamic_decks=False):
+        """
+        Move all cards for note with given id to specified deck.
+        :param collection:
+        :param deck_id:
+        :param move_from_dynamic_decks:
+        :return:
+        """
+        cards = self.anki_object.cards()
+        dynamic_cards = [card for card in cards if card.odid]
+        if move_from_dynamic_decks:
+            collection.sched.remFromDyn([card.id for card in dynamic_cards])
+        else:
+            self.update_cards_field(dynamic_cards, "odid", deck_id)
+
+        self.update_cards_field([card for card in cards if not card.odid or move_from_dynamic_decks], "did", deck_id)
+
+    @staticmethod
+    def update_cards_field(cards, field_name, new_value):
+        for card in cards:
+            setattr(card, field_name, new_value)
+            card.mod = anki.utils.intTime()
+            card.flush()
+
     def save_to_collection(self, collection, deck, model_map_cache):
         # Todo uuid match on existing notes
 
@@ -106,7 +131,10 @@ class Note(JsonSerializableAnkiObject):
 
         self.anki_object.__dict__.update(self.anki_object_dict)
         self.anki_object.mid = note_model.anki_dict["id"]
+        self.anki_object.mod = anki.utils.intTime()
         self.anki_object.flush()
 
         if new_note:
             collection.addNote(self.anki_object)
+        else:
+            self.move_cards_to_deck(collection, deck.anki_dict["id"])
