@@ -2,6 +2,8 @@ import json
 import shutil
 from pathlib import Path
 
+import anki.hooks
+
 from crowd_anki.utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from crowd_anki.representation.deck import Deck
 
@@ -15,10 +17,11 @@ class AnkiJsonImporter(object):
         Load deck from json file
         :type file_path: Path
         """
-        deck = None
         with file_path.open() as deck_file:
             deck_json = json.load(deck_file)
             deck = Deck.from_json(deck_json)
+
+            anki.hooks.runHook("request_backup")  # Won't affect anything if run not from withing anki
             deck.save_to_collection(self.collection)
 
     def load_from_directory(self, directory_path, import_media=True):
