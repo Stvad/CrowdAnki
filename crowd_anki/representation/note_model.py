@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from aqt.dialog.change_model import ChangeModelDialog
+from aqt.browser import ChangeModel
 from crowd_anki.utils import utils
 
 from .json_serializable import JsonSerializableAnkiDict
@@ -64,4 +64,4 @@ class NoteModel(JsonSerializableAnkiDict):
         # todo: check if we are in "ui mode"
         # todo: handle canceled
         # todo: think on "mixed update" handling
-        ChangeModelDialog(collection, collection.models.nids(old_model), old_model)
+        ChangeModel(collection, collection.models.nids(old_model), old_model)
