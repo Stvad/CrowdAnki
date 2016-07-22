@@ -59,7 +59,7 @@ class Note(JsonSerializableAnkiObject):
         """
         Update note's cards if note's model has changed
         """
-        old_model_uuid = self.anki_object.model()[UUID_FIELD_NAME]
+        old_model_uuid = self.anki_object.model().get(UUID_FIELD_NAME)
         if self.note_model_uuid == old_model_uuid:
             return
 
