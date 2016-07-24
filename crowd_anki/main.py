@@ -1,5 +1,4 @@
 import os.path
-from pprint import pprint
 from pathlib import Path
 
 from crowd_anki import anki_exporter_wrapper  # To hook exporters list extension

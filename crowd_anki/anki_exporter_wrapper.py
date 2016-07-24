@@ -20,7 +20,7 @@ class AnkiJsonExporterWrapper:
     def __init__(self, collection):
         self.includeMedia = True
         self.did = None
-        self.count = 0 # Todo?
+        self.count = 0  # Todo?
         self.collection = collection
         self.anki_json_exporter = AnkiJsonExporter(collection)
 

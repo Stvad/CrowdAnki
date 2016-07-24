@@ -37,6 +37,4 @@ def json_compare(first, second):
     """
     Json comparison for complex objects. Should be JsonSerializable
     """
-    fj = json.dumps(first, sort_keys=True)
-    sj = json.dumps(second, sort_keys=True)
     return json.dumps(first, sort_keys=True) == json.dumps(second, sort_keys=True)
