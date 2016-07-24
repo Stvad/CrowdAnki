@@ -96,20 +96,9 @@ class Note(JsonSerializableAnkiObject):
         :param move_from_dynamic_decks:
         :return:
         """
-        cards = self.anki_object.cards()
-        dynamic_cards = [card for card in cards if card.odid]
-        if move_from_dynamic_decks:
-            collection.sched.remFromDyn([card.id for card in dynamic_cards])
-        else:
-            self.update_cards_field(dynamic_cards, "odid", deck_id)
-
-        self.update_cards_field([card for card in cards if not card.odid or move_from_dynamic_decks], "did", deck_id)
-
-    @staticmethod
-    def update_cards_field(cards, field_name, new_value):
-        for card in cards:
-            setattr(card, field_name, new_value)
-            card.mod = anki.utils.intTime()
+        # Todo: consider move only when majority of cards are in a different deck.
+        for card in self.anki_object.cards():
+            card.move_to_deck(deck_id)
             card.flush()
 
     def save_to_collection(self, collection, deck, model_map_cache):
