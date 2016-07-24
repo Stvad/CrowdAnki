@@ -21,16 +21,8 @@ class Note(JsonSerializableAnkiObject):
         self.note_model_uuid = None
 
     @staticmethod
-    # Todo:
-    # Bad, need to switch to API usage if ever available. As an option - implement them myself.
-    def get_cards_from_db(db, deck_id):
-        return db.list(
-            "SELECT id FROM cards WHERE did=? OR odid=?", deck_id, deck_id)
-
-    @staticmethod
     def get_notes_from_collection(collection, deck_id, note_models):
-        card_ids_str = anki.utils.ids2str(Note.get_cards_from_db(collection.db, deck_id))
-        note_ids = collection.db.list("SELECT DISTINCT nid FROM cards WHERE id IN " + card_ids_str)
+        note_ids = collection.decks.get_note_ids(deck_id, include_from_dynamic=True)
         return [Note.from_collection(collection, note_id, note_models) for note_id in note_ids]
 
     @classmethod
