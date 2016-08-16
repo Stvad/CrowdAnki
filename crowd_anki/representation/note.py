@@ -1,7 +1,7 @@
 import anki
 import anki.utils
 from anki.notes import Note as AnkiNote
-from aqt.browser import ChangeModel
+from aqt.dialog.change_model import ChangeModelDialog
 from crowd_anki.utils.constants import UUID_FIELD_NAME
 from .json_serializable import JsonSerializableAnkiObject
 from .note_model import NoteModel
@@ -67,11 +67,11 @@ class Note(JsonSerializableAnkiObject):
                                      mapping.template_map)
         else:
             new_model.make_current(collection)
-            dialog = ChangeModel(collection, [self.anki_object.id], self.anki_object.model())
+            dialog = ChangeModelDialog(collection, [self.anki_object.id], self.anki_object.model())
 
             def on_accepted():
                 model_map_cache[old_model_uuid][self.note_model_uuid] = \
-                    NoteModel.ModelMap(dialog.getFieldMap(), dialog.getTemplateMap())
+                    NoteModel.ModelMap(dialog.get_field_map(), dialog.get_template_map())
 
             dialog.accepted.connect(on_accepted)
             dialog.exec_()
