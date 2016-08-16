@@ -1,6 +1,3 @@
-# Inserts uuid operation functionality to anki objects.
-# Todo contribute updated version to Anki mainstream
-
 from anki.decks import DeckManager
 from anki.models import ModelManager
 from crowd_anki.utils.constants import UUID_FIELD_NAME
