@@ -2,6 +2,7 @@ import json
 import shutil
 from pathlib import Path
 
+import aqt
 import anki.hooks
 
 from crowd_anki.utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
@@ -21,7 +22,9 @@ class AnkiJsonImporter(object):
             deck_json = json.load(deck_file)
             deck = Deck.from_json(deck_json)
 
-            anki.hooks.runHook("request_backup")  # Won't affect anything if run not from withing anki
+            if aqt.mw:
+                aqt.mw.backup()
+
             deck.save_to_collection(self.collection)
 
     def load_from_directory(self, directory_path, import_media=True):
