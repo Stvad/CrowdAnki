@@ -16,9 +16,9 @@ class JsonSerializable(object):
         # self._update_fields()
 
     @staticmethod
-    def default_json(wobject):
-        if isinstance(wobject, JsonSerializable):
-            return wobject.flatten()
+    def default_json(object_to_serialize):
+        if isinstance(object_to_serialize, JsonSerializable):
+            return object_to_serialize.flatten()
 
         raise TypeError
 

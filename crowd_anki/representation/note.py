@@ -84,7 +84,6 @@ class Note(JsonSerializableAnkiObject):
     def move_cards_to_deck(self, deck_id, move_from_dynamic_decks=False):
         """
         Move all cards for note with given id to specified deck.
-        :param collection:
         :param deck_id:
         :param move_from_dynamic_decks:
         :return:

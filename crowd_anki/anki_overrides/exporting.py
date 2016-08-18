@@ -42,6 +42,10 @@ def exporter_changed(self, exporter_id):
 
 
 def accept(self):
+    """
+    Disclaimer: I admit this one is ugly, but it was extracted from anki code (as contributions were not accepted)
+    and preserved moreless intact to make possible update easier.
+    """
     self.exporter.includeSched = (
         self.frm.includeSched.isChecked())
     self.exporter.includeMedia = (

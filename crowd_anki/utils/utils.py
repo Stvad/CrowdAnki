@@ -22,15 +22,15 @@ def add_column(db, table_name, column_name, default_value="\"\""):
         pprint(e)
 
 
-def add_absent_field(pobject, field_name, default_value=None):
+def add_absent_field(object_to_modify, field_name, default_value=None):
     """
     Add field to the object if it does not exist yet.
-    :param pobject:
+    :param object_to_modify:
     :param field_name:
     :param default_value:
     :return:
     """
-    setattr(pobject, field_name, getattr(pobject, field_name, default_value))
+    setattr(object_to_modify, field_name, getattr(object_to_modify, field_name, default_value))
 
 
 def json_compare(first, second):

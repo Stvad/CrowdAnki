@@ -3,7 +3,6 @@ import shutil
 from pathlib import Path
 
 import aqt
-import anki.hooks
 
 from crowd_anki.utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from crowd_anki.representation.deck import Deck

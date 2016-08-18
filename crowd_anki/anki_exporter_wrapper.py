@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import anki.hooks
 import anki.exporting
 import aqt.utils
 
@@ -25,6 +24,8 @@ class AnkiJsonExporterWrapper:
         self.collection = collection
         self.anki_json_exporter = AnkiJsonExporter(collection)
 
+    # required by anki exporting interface with it's non PEP-8 names
+    # noinspection PyPep8Naming
     def exportInto(self, directory_path):
         if self.did is None:
             aqt.utils.showWarning("CrowdAnki works only with specific decks.", title="Export failed")
