@@ -5,6 +5,7 @@ import anki.exporting
 import aqt.utils
 
 from crowd_anki.anki_exporter import AnkiJsonExporter
+from crowd_anki.anki_overrides import exporting
 
 
 class AnkiJsonExporterWrapper:
@@ -13,7 +14,7 @@ class AnkiJsonExporterWrapper:
     """
 
     key = "CrowdAnki Json representation"
-    ext = ""
+    ext = "directory"
     hideTags = True
     directory_export = True
 
@@ -33,6 +34,11 @@ class AnkiJsonExporterWrapper:
         self.anki_json_exporter.export_deck_to_directory(deck_name, Path(directory_path), self.includeMedia)
 
 
+def exporters_hook(exporters_list):
+    exporter_id = exporting.get_exporter_id(AnkiJsonExporterWrapper)
+    if exporter_id not in exporters_list:
+        exporters_list.append(exporter_id)
+
+
 anki.hooks.addHook("exportersList",
-                   lambda exporters_list: exporters_list.append(
-                       anki.exporting.get_exporter_id(AnkiJsonExporterWrapper)))
+                   exporters_hook)

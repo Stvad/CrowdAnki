@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from crowd_anki.anki_overrides.change_model import ChangeModelDialog
+from crowd_anki.anki_overrides.change_model_dialog import ChangeModelDialog
 from crowd_anki.utils import utils
 from .json_serializable import JsonSerializableAnkiDict
 
