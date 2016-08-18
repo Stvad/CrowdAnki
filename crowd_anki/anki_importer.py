@@ -24,8 +24,13 @@ class AnkiJsonImporter(object):
 
             if aqt.mw:
                 aqt.mw.backup()
+                aqt.mw.progress.start(immediate=True)
 
             deck.save_to_collection(self.collection)
+
+            if aqt.mw:
+                aqt.mw.progress.finish()
+                aqt.mw.deckBrowser.show()
 
     def load_from_directory(self, directory_path, import_media=True):
         """
