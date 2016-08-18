@@ -21,9 +21,12 @@ def on_import_action():
     exported_directory = Path(directory_path)
 
     importer = AnkiJsonImporter(mw.col)
-    importer.load_from_directory(exported_directory)
+    try:
+        importer.load_from_directory(exported_directory)
 
-    aqt.utils.showInfo("Import of {} deck was successful".format(exported_directory.name))
+        aqt.utils.showInfo("Import of {} deck was successful".format(exported_directory.name))
+    except ValueError as error:
+        aqt.utils.showWarning(error.args[0])
 
 
 def anki_import_init():

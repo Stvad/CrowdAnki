@@ -3,6 +3,7 @@ import shutil
 from pathlib import Path
 
 import aqt
+import aqt.utils
 
 from crowd_anki.utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from crowd_anki.representation.deck import Deck
@@ -17,19 +18,14 @@ class AnkiJsonImporter(object):
         Load deck from json file
         :type file_path: Path
         """
+        if not file_path.exists():
+            raise ValueError("There is no {} file inside of the selected directory".format(file_path.name))
+
         with file_path.open() as deck_file:
             deck_json = json.load(deck_file)
             deck = Deck.from_json(deck_json)
 
-            if aqt.mw:
-                aqt.mw.backup()
-                aqt.mw.progress.start(immediate=True)
-
             deck.save_to_collection(self.collection)
-
-            if aqt.mw:
-                aqt.mw.progress.finish()
-                aqt.mw.deckBrowser.show()
 
     def load_from_directory(self, directory_path, import_media=True):
         """
@@ -39,10 +35,17 @@ class AnkiJsonImporter(object):
         :param import_media: Should we copy media?
         :type directory_path: Path
         """
-        self.load_from_file(directory_path.joinpath(directory_path.name).with_suffix(DECK_FILE_EXTENSION))
+        if aqt.mw:
+            aqt.mw.backup()
+            aqt.mw.progress.start(immediate=True)
 
-        if not import_media:
-            return
+        try:
+            self.load_from_file(directory_path.joinpath(directory_path.name).with_suffix(DECK_FILE_EXTENSION))
 
-        for filename in directory_path.joinpath(MEDIA_SUBDIRECTORY_NAME).iterdir():
-            shutil.copy(str(filename.resolve()), self.collection.media.dir())
+            if import_media:
+                for filename in directory_path.joinpath(MEDIA_SUBDIRECTORY_NAME).iterdir():
+                    shutil.copy(str(filename.resolve()), self.collection.media.dir())
+        finally:
+            if aqt.mw:
+                aqt.mw.progress.finish()
+                aqt.mw.deckBrowser.show()
