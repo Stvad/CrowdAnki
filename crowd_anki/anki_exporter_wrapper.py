@@ -32,8 +32,8 @@ class AnkiJsonExporterWrapper:
             return 
 
         deck_name = self.collection.decks.get(self.did, default=False)["name"]
-        self.anki_json_exporter.export_deck_to_directory(deck_name, Path(directory_path), self.includeMedia)
-
+        self.anki_json_exporter.export_deck_to_directory(deck_name, Path(directory_path).parent, self.includeMedia)
+        # .parent because we receive name with random numbers at the end (hacking around internals of Anki) :(
 
 def exporters_hook(exporters_list):
     exporter_id = exporting.get_exporter_id(AnkiJsonExporterWrapper)
