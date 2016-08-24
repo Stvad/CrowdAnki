@@ -1,6 +1,6 @@
 import json
 import shutil
-from pathlib import Path
+from pathlib2 import Path
 
 import aqt
 import aqt.utils

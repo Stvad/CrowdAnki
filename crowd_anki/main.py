@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib2 import Path
 
 from crowd_anki import anki_exporter_wrapper  # To hook exporters list extension
 from crowd_anki.anki_importer import AnkiJsonImporter
