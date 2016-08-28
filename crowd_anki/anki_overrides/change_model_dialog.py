@@ -9,6 +9,7 @@ import aqt.utils
 class ChangeModelDialog(QDialog):
     """
     Dialog that allows user to create field and template maps from one note model to another
+    Extrated from main Anki codebase, largely untouched.
     """
 
     def __init__(self, collection, note_id_list, old_model=None, parent=None):
@@ -20,6 +21,7 @@ class ChangeModelDialog(QDialog):
             first_note = Note(collection, id=note_id_list[0])
             self.old_model = first_note.model()
 
+        # todo consider extracting UI file
         self.form = aqt.forms.changemodel.Ui_Dialog()
         self.form.setupUi(self)
         self.setWindowModality(Qt.WindowModal)
@@ -149,8 +151,10 @@ class ChangeModelDialog(QDialog):
         aqt.utils.saveGeom(self, "changeModel")
 
     def reject(self):
-        self.cleanup()
-        return QDialog.reject(self)
+        # self.cleanup()
+        # return QDialog.reject(self)
+        # Todo: bad, consider disabling button/modifying the ui
+        return self.accept()
 
     def accept(self):
         # check maps
@@ -168,6 +172,9 @@ class ChangeModelDialog(QDialog):
         self.cleanup()
 
         QDialog.accept(self)
+
+    def closeEvent(self, event):
+        event.ignore()
 
     @staticmethod
     def on_help():
