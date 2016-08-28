@@ -41,7 +41,10 @@ class NoteModel(JsonSerializableAnkiDict):
         new_model = note_model_dict["id"] is None
 
         self.anki_dict = utils.merge_dicts(note_model_dict, self.anki_dict)
-        collection.models.update(self.anki_dict)
+        if new_model:
+            collection.models.add(self.anki_dict)
+        else:
+            collection.models.update(self.anki_dict)
         collection.models.flush()
 
         if not new_model:
@@ -63,4 +66,4 @@ class NoteModel(JsonSerializableAnkiDict):
         # todo: check if we are in "ui mode"
         # todo: handle canceled
         # todo: think on "mixed update" handling
-        ChangeModelDialog(collection, collection.models.nids(old_model), old_model)
+        ChangeModelDialog(collection, collection.models.nids(old_model), old_model).exec_()
