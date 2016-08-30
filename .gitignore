@@ -134,3 +134,6 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+# Project specific stuff
+crowd_anki/thirdparty
