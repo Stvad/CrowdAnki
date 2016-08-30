@@ -1,6 +1,6 @@
-from pathlib2 import Path
+from thirdparty.pathlib import Path
 
-from crowd_anki import anki_exporter_wrapper  # To hook exporters list extension
+from crowd_anki import anki_exporter_wrapper  # Do not remove. To hook exporters list extension
 from crowd_anki.anki_importer import AnkiJsonImporter
 
 import aqt.utils
