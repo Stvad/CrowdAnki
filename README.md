@@ -2,6 +2,8 @@
 
 **CrowdAnki** is a plugin for http://ankisrs.net/ that allows users to import and export decks/notes and all relevant information in a hierarchical JSON format. The main purpose is to facilitate crowdsourcing for Anki decks and notes.
 
+AnkiWeb link for the plugin (may not contain the latest version): https://ankiweb.net/shared/info/1788670778?ok=1
+
 ## Suggested collaboration workflow
 The current workflow could be described as following:
 * User creates or imports a deck inside of Anki.
@@ -19,7 +21,7 @@ Select the deck (**note**: export of "All decks" is not supported, you need to s
 After pressing the Export button - select directory where the result should be stored.
 
 ## Import
-To perform the export go to menu File>"Import CrowdAnki Json" and select the directory where the deck is stored.
+To perform the import go to menu File>"Import CrowdAnki Json" and select the directory where the deck is stored.
 
 ### Things to note for the Import:
 * Automatic backup would be triggered prior to the import;
