@@ -47,11 +47,11 @@ def get_save_file(parent, title, dir_description, key, ext, fname=None):
             return os.path.join(directory, str(anki.utils.intTime()))
         return None
 
-    aqt.utils.getSaveFile_(parent, title, dir_description, key, ext, fname)
+    return aqt.utils.getSaveFile_old(parent, title, dir_description, key, ext, fname)
 
 ExportDialog.exporterChanged = anki.hooks.wrap(ExportDialog.exporterChanged, exporter_changed)
 
-aqt.utils.getSaveFile_ = aqt.utils.getSaveFile
-aqt.exporting.getSaveFile = get_save_file # Overriding instance imported with from style import
+aqt.utils.getSaveFile_old = aqt.utils.getSaveFile
+aqt.exporting.getSaveFile = get_save_file  # Overriding instance imported with from style import
 aqt.utils.getSaveFile = get_save_file
 
