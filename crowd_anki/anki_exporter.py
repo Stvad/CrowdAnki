@@ -18,12 +18,13 @@ class AnkiJsonExporter(object):
 
         deck = Deck.from_collection(self.collection, deck_name)
         deck_filename = deck_directory.joinpath(deck_name).with_suffix(DECK_FILE_EXTENSION)
-        with deck_filename.open(mode='w') as deck_file:
-            deck_file.write(unicode(json.dumps(deck,
-                                               default=Deck.default_json,
-                                               sort_keys=True,
-                                               indent=4,
-                                               ensure_ascii=False)))
+        with deck_filename.open(mode='w', encoding="utf8") as deck_file:
+            deck_file.write(json.dumps(deck,
+                                       default=Deck.default_json,
+                                       sort_keys=True,
+                                       indent=4,
+                                       ensure_ascii=False,
+                                       encoding="utf8"))
 
         self._save_changes()
 
