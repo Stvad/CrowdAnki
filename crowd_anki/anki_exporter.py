@@ -1,6 +1,9 @@
 import json
 import os
 import shutil
+
+import anki.utils
+
 from thirdparty.pathlib import Path
 
 from crowd_anki.utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
@@ -11,13 +14,26 @@ class AnkiJsonExporter(object):
     def __init__(self, collection):
         self.collection = collection
 
+    @staticmethod
+    def _get_filesystem_name(deck_name):
+        """
+        Get name that conforms to fs standards from deck name
+        :param deck_name:
+        :return:
+        """
+        for char in anki.utils.invalidFilenameChars:
+            deck_name = deck_name.replace(char, "_")
+
+        return deck_name
+
     def export_deck_to_directory(self, deck_name, output_dir=Path("."), copy_media=True):
-        deck_directory = output_dir.joinpath(deck_name)
+        deck_fsname = self._get_filesystem_name(deck_name)
+        deck_directory = output_dir.joinpath(deck_fsname)
 
         deck_directory.mkdir(parents=True, exist_ok=True)
 
         deck = Deck.from_collection(self.collection, deck_name)
-        deck_filename = deck_directory.joinpath(deck_name).with_suffix(DECK_FILE_EXTENSION)
+        deck_filename = deck_directory.joinpath(deck_fsname).with_suffix(DECK_FILE_EXTENSION)
         with deck_filename.open(mode='w', encoding="utf8") as deck_file:
             deck_file.write(json.dumps(deck,
                                        default=Deck.default_json,
@@ -48,5 +64,8 @@ class AnkiJsonExporter(object):
         media_directory.mkdir(parents=True, exist_ok=True)
 
         for file_src in deck.get_media_file_list():
-            shutil.copy(os.path.join(self.collection.media.dir(), file_src),
-                        str(media_directory.resolve()))
+            try:
+                shutil.copy(os.path.join(self.collection.media.dir(), file_src),
+                            str(media_directory.resolve()))
+            except IOError as ioerror:
+                print("Failed to copy a file {}. Full error: {}".format(file_src, ioerror))
