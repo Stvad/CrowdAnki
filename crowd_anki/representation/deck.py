@@ -45,9 +45,19 @@ class Deck(JsonSerializableAnkiDict):
         self.metadata = None
         self.deck_config_uuid = None
 
+    def flatten(self):
+        """
+        Specification in order to store only deck lowest level name in JSON
+        :return:
+        """
+        result = super(Deck, self).flatten()
+        if self.is_child:
+            result["name"] = result["name"].split(self.DECK_NAME_DELIMITER)[-1]
+
+        return result
+
     @classmethod
     def from_collection(cls, collection, name, deck_metadata=None, is_child=False):
-        # deck._update_db()
         anki_dict = collection.decks.byName(name)
 
         deck = Deck(anki_dict, is_child)
@@ -61,8 +71,12 @@ class Deck(JsonSerializableAnkiDict):
 
         deck.notes = Note.get_notes_from_collection(collection, deck.anki_dict["id"], deck.metadata.models)
 
-        deck.children = [cls.from_collection(collection, child_name, deck.metadata, True) for child_name, _ in
-                         collection.decks.children(deck.anki_dict["id"])]
+        direct_children = [child_name for child_name, _ in collection.decks.children(deck.anki_dict["id"])
+                           if Deck.DECK_NAME_DELIMITER
+                           not in child_name[len(name) + len(Deck.DECK_NAME_DELIMITER):]]
+
+        deck.children = [cls.from_collection(collection, child_name, deck.metadata, True)
+                         for child_name in direct_children]
 
         return deck
 
@@ -173,10 +187,7 @@ class Deck(JsonSerializableAnkiDict):
             note.save_to_collection(collection, self, model_map_cache)
 
     def _save_deck(self, collection, parent_name):
-        # Todo consider storing names without parent prefix
-        name = self.anki_dict["name"].split(self.DECK_NAME_DELIMITER)[-1]
-        if parent_name:
-            name = parent_name + self.DECK_NAME_DELIMITER + name
+        name = (parent_name + self.DECK_NAME_DELIMITER if parent_name else "") + self.anki_dict["name"]
 
         deck_dict = collection.decks.get_deck_by_uuid(self.get_uuid())
 
