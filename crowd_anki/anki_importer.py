@@ -43,8 +43,12 @@ class AnkiJsonImporter(object):
             self.load_from_file(directory_path.joinpath(directory_path.name).with_suffix(DECK_FILE_EXTENSION))
 
             if import_media:
-                for filename in directory_path.joinpath(MEDIA_SUBDIRECTORY_NAME).iterdir():
-                    shutil.copy(str(filename.resolve()), self.collection.media.dir())
+                media_directory = directory_path.joinpath(MEDIA_SUBDIRECTORY_NAME)
+                if media_directory.exists():
+                    for filename in media_directory.iterdir():
+                        shutil.copy(str(filename.resolve()), self.collection.media.dir())
+                else:
+                    print ("Warning: no media directory exists.")
         finally:
             if aqt.mw:
                 aqt.mw.progress.finish()
