@@ -5,9 +5,9 @@ CrowdAnki is a plugin for http://ankisrs.net/ that allows users to import and ex
 The current workflow could be described as following:
 
 <ul>
-<li>User creates or imports a deck inside of Anki.</li>
+<li>The user creates or imports a deck inside of Anki.</li>
 <li>Makes some modification to it (i.e. to notes, deck settings, deck structure or note models).</li>
-<li>Then user can export the deck in JSON format (accompanied by media directory with media files used in that deck) and share it with other users. For example by creating Github repo with it.</li>
+<li>Then the user can export the deck in JSON format (accompanied by media directory with media files used in that deck) and share it with other users. For example by creating Github repo with it.</li>
 <li>Other people then can either modify JSON directly or import the deck to their instance of Anki and then make some modifications to it.</li>
 <li>Original JSON then can be updated the with the changes, these people made (merging several changes together if necessary).</li>
 <li>After that original user (and other people) can import updated deck to integrate these new changes into their collection.</li>
@@ -27,8 +27,13 @@ To perform the import go to menu File>"Import CrowdAnki Json" and select the dir
 
 <ul>
 <li>Automatic backup would be triggered prior to the import;</li>
-<li>If note model for the note has changed, or if note model itself changed in a way that it's not easy to update it automatically: you would be prompted with the window, that will ask you to specify correspondence between old and new model (Don't close that dialog without selecting the resolution, it may result in the corruption of your Anki DB);</li>
+<li>If note model for the note has changed, or if note model itself changed in a way that it's not easy to update it automatically: you would be prompted with the window, that will ask you to specify correspondence between old and new model;</li>
 <li>If the note was moved to another deck in JSON file, on import all cards from that note (except the ones, that are in dynamic decks) will be moved to the specified deck.</li>
 </ul>
-
 To get more information or get in touch with author, please visit https://github.com/Stvad/CrowdAnki
+
+<b> Other </b>
+
+This plugin works with <a href="https://ankiweb.net/shared/info/116826216">AnkiHub plugin</a> (<a href="https://github.com/dayjaby/AnkiHub">Github</a>) to provide you better plugin management experience.
+
+With AnkiHub you can install plugins directly from Github and receive updates automatically.

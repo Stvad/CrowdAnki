@@ -25,7 +25,7 @@ To perform the import go to menu File>"Import CrowdAnki Json" and select the dir
 
 ### Things to note for the Import:
 * Automatic backup would be triggered prior to the import;
-* If note model for the note has changed, or if note model itself changed in a way that it's not easy to update it automatically: you would be prompted with the window, that will ask you to specify correspondence between old and new model (**Don't close that dialog without selecting the resolution, it may result in the corruption of your Anki DB**);
+* If note model for the note has changed, or if note model itself changed in a way that it's not easy to update it automatically: you would be prompted with the window, that will ask you to specify correspondence between old and new model;
 * If the note was moved to another deck in JSON file, on import all cards from that note (except the ones, that are in dynamic decks) will be moved to the specified deck.
 
 ## Other
