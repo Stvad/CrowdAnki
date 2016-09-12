@@ -53,3 +53,12 @@ class AnkiJsonImporter(object):
             if aqt.mw:
                 aqt.mw.progress.finish()
                 aqt.mw.deckBrowser.show()
+
+    @staticmethod
+    def import_deck(collection, directory_path, import_media=True):
+        importer = AnkiJsonImporter(collection)
+        try:
+            importer.load_from_directory(directory_path, import_media)
+            aqt.utils.showInfo("Import of {} deck was successful".format(directory_path.name))
+        except ValueError as error:
+            aqt.utils.showWarning(error.args[0])

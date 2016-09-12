@@ -19,15 +19,8 @@ def on_import_action():
     if not directory_path:
         return
 
-    exported_directory = Path(directory_path)
-
-    importer = AnkiJsonImporter(mw.col)
-    try:
-        importer.load_from_directory(exported_directory)
-
-        aqt.utils.showInfo("Import of {} deck was successful".format(exported_directory.name))
-    except ValueError as error:
-        aqt.utils.showWarning(error.args[0])
+    import_directory = Path(directory_path)
+    AnkiJsonImporter.import_deck(aqt.mw.col, import_directory)
 
 
 def anki_import_init():
