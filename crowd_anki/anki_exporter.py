@@ -21,7 +21,7 @@ class AnkiJsonExporter(object):
         :param deck_name:
         :return:
         """
-        for char in anki.utils.invalidFilenameChars:
+        for char in anki.utils.invalidFilenameChars + " ":
             deck_name = deck_name.replace(char, "_")
 
         return deck_name
