@@ -3,15 +3,17 @@ import zipfile
 import tempfile
 import StringIO
 
+from crowd_anki.utils import utils
 from crowd_anki.thirdparty.pathlib import Path
 from crowd_anki.anki_importer import AnkiJsonImporter
 
-import aqt
+import aqt.utils
 
 from aqt import QInputDialog
 
 BRANCH_NAME = "master"
 GITHUB_LINK = "https://github.com/{}/archive/" + BRANCH_NAME + ".zip"
+
 
 class GithubImporter(object):
     """
@@ -42,12 +44,11 @@ class GithubImporter(object):
             deck_base_name = repo.split("/")[-1]
             deck_directory_wb = Path(tempfile.tempdir).joinpath(deck_base_name + "-" + BRANCH_NAME)
             deck_directory = Path(tempfile.tempdir).joinpath(deck_base_name)
+            utils.fs_remove(deck_directory)
             deck_directory_wb.rename(deck_directory)
             # Todo progressbar on download
-            # Todo handle case if result already exists.
 
             AnkiJsonImporter.import_deck(self.collection, deck_directory)
 
         except (urllib2.URLError, urllib2.HTTPError, OSError) as error:
-            # todo message
-            print (error)
+            aqt.utils.showWarning("Error while trying to get deck from Github: {}".format(error))
