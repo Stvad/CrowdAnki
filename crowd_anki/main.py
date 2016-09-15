@@ -35,7 +35,8 @@ def anki_import_init():
 
 
 def anki_init():
-    anki_import_init()
+    if mw:
+        anki_import_init()
 
 
 if __name__ == "__main__":

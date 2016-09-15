@@ -6,4 +6,4 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y anki
 
-script: python crowd_anki/test/main.py
+script: python crowd_anki/test/test_main.py
