@@ -24,3 +24,9 @@ class FsRemoveTest(unittest.TestCase):
         utils.fs_remove(self.dirpath)
         self.assertFalse(self.dirpath.exists())
         self.assertFalse(self.filepath.exists())
+
+    def test_rm_nonexistant(self):
+        # Should not crash :)
+        nonexistant_path = Path("nonexistant_path")
+        self.assertFalse(nonexistant_path.exists())
+        utils.fs_remove(nonexistant_path)
