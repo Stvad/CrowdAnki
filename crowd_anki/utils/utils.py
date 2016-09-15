@@ -1,4 +1,6 @@
 import json
+import shutil
+import os
 from pprint import pprint
 from sqlite3 import OperationalError
 
@@ -38,3 +40,19 @@ def json_compare(first, second):
     Json comparison for complex objects. Should be JsonSerializable
     """
     return json.dumps(first, sort_keys=True) == json.dumps(second, sort_keys=True)
+
+
+def fs_remove(path):
+    """
+    Remove file or directory (recursively). Ignore if it did not exist before.
+    :param path:
+    :return:
+    """
+
+    if not path.exists():
+        return
+
+    if path.is_dir():
+        shutil.rmtree(str(path))
+    else:
+        os.remove(str(path))
