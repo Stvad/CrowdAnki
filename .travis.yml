@@ -6,6 +6,6 @@ python:
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y anki
+  - sudo apt-get install -y anki python-sip
 
 script: python crowd_anki/test/test_main.py
