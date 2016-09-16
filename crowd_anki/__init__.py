@@ -4,5 +4,3 @@ try:
     ankihub.update(['Stvad/CrowdAnki'])
 except:
     pass
-
-from . import main
