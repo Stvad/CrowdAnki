@@ -15,6 +15,7 @@ class AnkiJsonExporterWrapper:
     key = "CrowdAnki Json representation"
     ext = "directory"
     hideTags = True
+    includeTags = True
     directory_export = True
 
     def __init__(self, collection):
@@ -35,6 +36,7 @@ class AnkiJsonExporterWrapper:
         self.anki_json_exporter.export_deck_to_directory(deck_name, Path(directory_path).parent, self.includeMedia)
         # .parent because we receive name with random numbers at the end (hacking around internals of Anki) :(
 
+        self.count = self.anki_json_exporter.last_exported_count
 
 def exporters_hook(exporters_list):
     exporter_id = exporting.get_exporter_id(AnkiJsonExporterWrapper)

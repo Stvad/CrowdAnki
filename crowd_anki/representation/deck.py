@@ -80,6 +80,9 @@ class Deck(JsonSerializableAnkiDict):
 
         return deck
 
+    def get_note_count(self):
+        return len(self.notes) + sum(child.get_note_count() for child in self.children)
+
     def _update_db(self):
         # Introduce uuid field for unique identification of entities
         utils.add_column(self.collection.db, "notes", UUID_FIELD_NAME)

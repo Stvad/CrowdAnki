@@ -13,6 +13,7 @@ from crowd_anki.representation.deck import Deck
 class AnkiJsonExporter(object):
     def __init__(self, collection):
         self.collection = collection
+        self.last_exported_count = 0
 
     @staticmethod
     def _get_filesystem_name(deck_name):
@@ -33,6 +34,8 @@ class AnkiJsonExporter(object):
         deck_directory.mkdir(parents=True, exist_ok=True)
 
         deck = Deck.from_collection(self.collection, deck_name)
+        self.last_exported_count = deck.get_note_count()
+
         deck_filename = deck_directory.joinpath(deck_fsname).with_suffix(DECK_FILE_EXTENSION)
         with deck_filename.open(mode='w', encoding="utf8") as deck_file:
             deck_file.write(json.dumps(deck,
