@@ -40,8 +40,8 @@ class Deck(JsonSerializableAnkiDict):
         self.is_child = is_child
 
         self.collection = None
-        self.notes = None
-        self.children = None
+        self.notes = []
+        self.children = []
         self.metadata = None
         self.deck_config_uuid = None
 

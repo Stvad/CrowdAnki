@@ -9,7 +9,7 @@ import anki.exporting
 from anki.exporting import AnkiExporter
 from aqt.exporting import ExportDialog
 
-import crowd_anki.anki_exporter_wrapper
+import crowd_anki.utils.constants
 
 
 def get_files_for_models(self, model_ids, media_dir):
@@ -40,7 +40,7 @@ def exporter_changed(self, exporter_id):
 
 
 def get_save_file(parent, title, dir_description, key, ext, fname=None):
-    if ext == crowd_anki.anki_exporter_wrapper.AnkiJsonExporterWrapper.ext:
+    if ext == crowd_anki.utils.constants.ANKI_EXPORT_EXTENSION:
         directory = str(QFileDialog.getExistingDirectory(caption="Select Export Directory",
                                                          directory=fname))
         if directory:
