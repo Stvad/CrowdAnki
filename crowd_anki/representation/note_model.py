@@ -71,4 +71,7 @@ class NoteModel(JsonSerializableAnkiDict):
         # todo: check if we are in "ui mode"
         # todo: handle canceled
         # todo: think on "mixed update" handling
+
+        # todo signals instead of direct dialog creation?
+
         ChangeModelDialog(collection, collection.models.nids(old_model), old_model).exec_()

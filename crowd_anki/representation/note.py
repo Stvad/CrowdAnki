@@ -73,6 +73,7 @@ class Note(JsonSerializableAnkiObject):
                                      mapping.template_map)
         else:
             new_model.make_current(collection)
+            # todo signals instead of direct dialog creation?
             dialog = ChangeModelDialog(collection, [self.anki_object.id], self.anki_object.model())
 
             def on_accepted():
