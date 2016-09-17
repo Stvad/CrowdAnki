@@ -22,7 +22,12 @@ Select the deck (**note**: export of "All decks" is not supported, you need to s
 After pressing the Export button - select directory where the result should be stored.
 
 ## Import
-To perform the import go to menu File>"Import CrowdAnki Json" and select the directory where the deck is stored.
+To perform the import go to menu File>"CrowdAnki: Import from disk" and select the directory where the deck is stored.
+
+## Import from Github
+To get the deck from Github go to menu File>"CrowdAnki: Import from Github" and enter Github username and repository name in suggested format.
+
+So, for example, to get my [git deck](https://github.com/Stvad/Software_Engineering__git) you would need to enter Stvad/Software_Engineering__git.
 
 ### Things to note for the Import:
 * Automatic backup would be triggered prior to the import;
