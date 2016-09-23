@@ -6,14 +6,15 @@ import StringIO
 from crowd_anki.utils import utils
 from crowd_anki.thirdparty.pathlib import Path
 from crowd_anki.anki_importer import AnkiJsonImporter
+from git import Repo
 
 import aqt.utils
 
-from aqt import QInputDialog
+from aqt import QInputDialog, QErrorMessage
 
 BRANCH_NAME = "master"
 GITHUB_LINK = "https://github.com/{}/archive/" + BRANCH_NAME + ".zip"
-
+GITHUB_REPO = "https://github.com/{}.git"
 
 class GithubImporter(object):
     """
@@ -34,21 +35,35 @@ class GithubImporter(object):
         if repo and ok:
             self.download_and_import(repo)
 
-    def download_and_import(self, repo):
+    def download_and_import(self, github_repo):
+        deck_base_name = github_repo.split("/")[-1]
         try:
-            response = urllib2.urlopen(GITHUB_LINK.format(repo))
-            response_sio = StringIO.StringIO(response.read())
-            with zipfile.ZipFile(response_sio) as repo_zip:
-                repo_zip.extractall(tempfile.tempdir)
+            try:
+                repo = None
+                try:
+                    repo = Repo(Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", deck_base_name, "git"))
+                    repo.remote("origin").pull()
+                except git.exc.InvalidGitRepositoryError: # New repository
+                    repo = Repo.clone_from(GITHUB_REPO.format(github_repo), Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", deck_base_name, "git"))
+                AnkiJsonImporter.import_deck(self.collection, Path(repo.working_tree_dir))
+            
+            except git.exc.GitCommandNotFound: # Git not avaiable. Use .zip archive instead
+                QErrorMessage.qtHandler().showMessage('Error accessing the git executable.\n'
+                                                  'Please make sure git is installed and avaiable on your PATH.\n'
+                                                  'Downgrading to zip archive download.')
+                response = urllib2.urlopen(GITHUB_LINK.format(github_repo))
+                response_sio = StringIO.StringIO(response.read())
+                with zipfile.ZipFile(response_sio) as repo_zip:
+                    repo_zip.extractall(tempfile.tempdir)
+    
+                
+                deck_directory_wb = Path(tempfile.tempdir).joinpath(deck_base_name + "-" + BRANCH_NAME)
+                deck_directory = Path(tempfile.tempdir).joinpath(deck_base_name)
+                utils.fs_remove(deck_directory)
+                deck_directory_wb.rename(deck_directory)
+                # Todo progressbar on download
 
-            deck_base_name = repo.split("/")[-1]
-            deck_directory_wb = Path(tempfile.tempdir).joinpath(deck_base_name + "-" + BRANCH_NAME)
-            deck_directory = Path(tempfile.tempdir).joinpath(deck_base_name)
-            utils.fs_remove(deck_directory)
-            deck_directory_wb.rename(deck_directory)
-            # Todo progressbar on download
-
-            AnkiJsonImporter.import_deck(self.collection, deck_directory)
+                AnkiJsonImporter.import_deck(self.collection, deck_directory)
 
         except (urllib2.URLError, urllib2.HTTPError, OSError) as error:
             aqt.utils.showWarning("Error while trying to get deck from Github: {}".format(error))
