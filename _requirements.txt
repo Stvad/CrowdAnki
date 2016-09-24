@@ -1,4 +1,14 @@
+<<<<<<< HEAD
 pathlib
 gitpython
 #from default lib:
 contextlib 
+=======
+pathlib2
+six
+#from default lib:
+contextlib 
+ntpath
+genericpath
+uuid
+>>>>>>> ef0af66e70a4699dac3d3bfe04bc645942dd7b5f
