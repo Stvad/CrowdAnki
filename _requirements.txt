@@ -1,3 +1,7 @@
-pathlib
+pathlib2
+six
 #from default lib:
 contextlib 
+ntpath
+genericpath
+uuid
