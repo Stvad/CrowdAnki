@@ -8,20 +8,17 @@ AnkiWeb link for the plugin: https://ankiweb.net/shared/info/1788670778
 ## How to collaborate via Github
 This section illustrates collaboration workflow using [Github](http://github.com).
 
-Suppose you have a deck named DeckX and you want to collaborate on it's improvement with other people. In order to acheive this you will need to:
+Suppose you have a deck named DeckX and you want to collaborate on its improvement with other people. In order to achieve this you will need to:
 
 1. Export the DeckX. You can do that by going to Anki: File > Export > 
 Export format: "CrowdAnki Json Representation". Include: DeckX.
-[screenshot]
 2. Create a Github account for yourself and ask your collaborators to do the same (see: https://github.com/join).
-3. Create repository for your deck by following this guide https://guides.github.com/activities/hello-world/#repository. The name of the repository has to correspond to the name of the directory that was created during the export. In our case it would be named DeckX.
+3. Create a repository for your deck by following this guide https://guides.github.com/activities/hello-world/#repository. The name of the repository has to correspond to the name of the directory that was created during the export. In our case, it would be named DeckX.
 4. Add collaborators to the repository: https://help.github.com/articles/inviting-collaborators-to-a-personal-repository/.
 
-### GUI workflow
 ### CLI workflow
 #### Initiating collaboration
 4. Install git on your computer.
-In the command line:
 5. Go to the directory that resulted from export.
 6. Initialize repository with following commands:
     
@@ -30,18 +27,18 @@ In the command line:
     git remote add origin git@github.com:<username>/<repository>.git
     ```
 
-    Where <username> is your github username (in my case Stvad) and <repository> is the name of the repository (DeckX). So in our case the command will look like:
+    Where <username> is your Github username (in my case Stvad) and <repository> is the name of the repository (DeckX). So in our case the command will look like:
 
     ```
     git remote add origin git@github.com:Stvad/DeckX.git
     ```
-7. Add the content of you directory to the repository:
+7. Add the content of your directory to the repository:
 
     ```
     git add *
     git commit -m "initial export"
     ```
-8. Upload changes you've made to the github:
+8. Upload changes you've made to the Github:
 
     ```
     git push origin master
@@ -77,7 +74,7 @@ When you or one of your collaborators want to upload changes you've made to the 
     git add *
     git commit -m "new updates"
     ```
-5. Upload changes you've made to the github:
+5. Upload changes you've made to the Github:
 
     ```
     git push origin master
@@ -85,15 +82,6 @@ When you or one of your collaborators want to upload changes you've made to the 
 
 If you just want to **get latest changes from other people** - you need to perform only steps 1 and 2.
 
---If you're not afraid of command line the following workflow can be more convenient for you. [github import](#import-from-github)
-
-when do some changes - you need to export on top of existing directory
-
-to get changes from users - pull, reimport.
-
-posibilities - direct write/PR
-
-merge, merge conflicts?
 
 ## Generic collaboration workflow
 The current workflow could be described as following:
