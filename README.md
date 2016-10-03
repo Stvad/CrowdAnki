@@ -16,6 +16,43 @@ Export format: "CrowdAnki Json Representation". Include: DeckX.
 3. Create a repository for your deck by following this guide https://guides.github.com/activities/hello-world/#repository. The name of the repository has to correspond to the name of the directory that was created during the export. In our case, it would be named DeckX.
 4. Add collaborators to the repository: https://help.github.com/articles/inviting-collaborators-to-a-personal-repository/.
 
+### GUI workflow
+**Preface:**
+
+My goal here is to provide a user-friendly description of collaboration workflow. In order to do that, I looked through multiple GUI git clients. For our purposes here, I think **Github Desktop** is the best choice (as the most user-friendly client that works). There is one problem with Github Desktop, though - it doesn't have a Linux version. Which makes me particularly sad, as I use Linux as my main OS. I've considered using Gitkraken for this tutorial, but it has some problems that disqualify it for our purposes (but if you're Linux user or if you don't like Github Desktop for some reason - you may still want to consider using it).
+
+#### Initiating collaboration
+1. Install [Github Desktop](https://desktop.github.com/) for your computer.
+2. Log in to it with you Github account, created earlier.
+3. Create a new repository. "Local path" should point to the place you've imported your deck, the name of the repository should be the same as the name of exported directory.
+	![Image](misc/image/2.png?raw=true)
+4. Add the content of your directory to the repository, by selecting all of the files, adding some comment in comment field and pressing "Commit to master"
+	![Image](misc/image/4.png?raw=true)
+5. Upload the changes you've just made to the Github, by pressing button "Publish" and then "Publish \<RepositoryName\>". In this case, you don't need to create repository in advance, Github Desktop will create it for you.
+	![Image](misc/image/6.png?raw=true)
+
+#### To start working on the deck your collaborators need to:
+1. Install [Github Desktop](https://desktop.github.com/) for their computer.
+2. Clone the repository you've created. They can do that by going to the repository page on Github and pressing "Clone or download -> Open in Desktop".
+	![Image](misc/image/7.png?raw=true)
+3. [Import the deck](#import).
+
+If somebody **just wants to use the deck** you've uploaded to Github - they can [import decks directly from there](#import-from-github).
+
+#### How to upload changes
+
+When you or one of your collaborators want to upload changes you've made to the Github, you need to:
+
+1. Get the latest changes from the Github, by pressing "Sync" button in the top right corner.
+	![Image](misc/image/8.png?raw=true)
+2. [Import the deck](#import) to combine changes you've made with the changes other people have made.
+3. Export the deck the same directory where your repository is located so that export will overwrite media directory and json file in the repository. (As an alternative you can export it elsewhere and copy json file and media directory yourself to overwrite the ones that are in repository directory.)
+4. Add the changes you've made to the repository, by selecting all of the files, adding some comment in comment field and pressing "Commit to master"
+	![Image](misc/image/4.png?raw=true)
+5. Upload changes you've made to the Github, by pressing "Sync" button in the top right corner.
+
+If you just want to **get latest changes from other people** - you need to perform only steps 1 and 2.
+
 ### CLI workflow
 #### Initiating collaboration
 4. Install git on your computer.
