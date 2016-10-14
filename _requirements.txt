@@ -1,4 +1,5 @@
 pathlib2
+gitpython
 six
 #from default lib:
 contextlib 
