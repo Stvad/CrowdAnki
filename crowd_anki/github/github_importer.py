@@ -16,6 +16,7 @@ BRANCH_NAME = "master"
 GITHUB_LINK = "https://github.com/{}/archive/" + BRANCH_NAME + ".zip"
 GITHUB_REPO = "https://github.com/{}.git"
 
+
 class GithubImporter(object):
     """
     Provides functionality of installing shared deck from Github, by entering User and Repository names
@@ -34,13 +35,16 @@ class GithubImporter(object):
                                         'Path:', text='<name>/<repository>')
         if repo and ok:
             self.download_and_import(repo)
+
     def download_and_import_git(self, github_repo, deck_base_name):
         repo = None
         try:
             repo = Repo(Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", deck_base_name, "git"))
             repo.remote("origin").pull()
-        except git.exc.InvalidGitRepositoryError: # New repository
-            repo = Repo.clone_from(GITHUB_REPO.format(github_repo), Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", deck_base_name, "git"))
+        except git.exc.InvalidGitRepositoryError:  # New repository
+            repo = Repo.clone_from(GITHUB_REPO.format(github_repo),
+                                   Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", deck_base_name,
+                                                                              "git"))
         AnkiJsonImporter.import_deck(self.collection, Path(repo.working_tree_dir))
 
     def download_and_import_zip(self, github_repo, deck_base_name):
@@ -54,18 +58,19 @@ class GithubImporter(object):
         utils.fs_remove(deck_directory)
         deck_directory_wb.rename(deck_directory)
         # Todo progressbar on download
-        
+
         AnkiJsonImporter.import_deck(self.collection, deck_directory)
+
     def download_and_import(self, github_repo):
         deck_base_name = github_repo.split("/")[-1]
         try:
             try:
-                self.download_and_import_git(github_repo, deck_base_name
-            except git.exc.GitCommandNotFound: # Git not avaiable. Use .zip archive instead
-                print 'Error accessing the git executable.\n'\
-                        'Please make sure git is installed and avaiable on your PATH.\n'\
-                        'Downgrading to zip archive download.'
+                self.download_and_import_git(github_repo, deck_base_name)
+            except git.exc.GitCommandNotFound:  # Git not available. Use .zip archive instead
+                print('Error accessing the git executable.\n '
+                      'Please make sure git is installed and available on your PATH.\n'
+                      'Downgrading to zip archive download.')
                 self.download_and_import_zip(github_repo, deck_base_name)
-                                             
+
         except (urllib2.URLError, urllib2.HTTPError, OSError) as error:
             aqt.utils.showWarning("Error while trying to get deck from Github: {}".format(error))
