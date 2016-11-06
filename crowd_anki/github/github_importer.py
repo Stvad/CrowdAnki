@@ -52,3 +52,4 @@ class GithubImporter(object):
 
         except (urllib2.URLError, urllib2.HTTPError, OSError) as error:
             aqt.utils.showWarning("Error while trying to get deck from Github: {}".format(error))
+            raise

@@ -1,5 +1,6 @@
 import json
 import shutil
+import os
 from thirdparty.pathlib import Path
 
 import aqt
@@ -21,7 +22,7 @@ class AnkiJsonImporter(object):
         if not file_path.exists():
             raise ValueError("There is no {} file inside of the selected directory".format(file_path.name))
 
-        with file_path.open() as deck_file:
+        with file_path.open(encoding='utf8') as deck_file:
             deck_json = json.load(deck_file)
             deck = Deck.from_json(deck_json)
 
@@ -45,8 +46,14 @@ class AnkiJsonImporter(object):
             if import_media:
                 media_directory = directory_path.joinpath(MEDIA_SUBDIRECTORY_NAME)
                 if media_directory.exists():
-                    for filename in media_directory.iterdir():
-                        shutil.copy(str(filename.resolve()), self.collection.media.dir())
+                    # Needed to reserve to this, as pathlib2 is not handling unicode properly.
+                    # Todo Should switch back on migrating to python3
+                    unicode_media_directory = unicode(str(media_directory))
+                    src_files = os.listdir(unicode_media_directory)
+                    for filename in src_files:
+                        full_filename = os.path.join(unicode_media_directory, filename)
+                        if os.path.isfile(full_filename):
+                            shutil.copy(full_filename, self.collection.media.dir())
                 else:
                     print ("Warning: no media directory exists.")
         finally:
@@ -61,4 +68,6 @@ class AnkiJsonImporter(object):
             importer.load_from_directory(directory_path, import_media)
             aqt.utils.showInfo("Import of {} deck was successful".format(directory_path.name))
         except ValueError as error:
-            aqt.utils.showWarning(error.args[0])
+            aqt.utils.showWarning("Error: {}. While trying to import deck from directory {}".format(
+                error.args[0], directory_path))
+            raise
