@@ -1,1 +1,0 @@
-import crowd_anki.main
