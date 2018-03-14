@@ -11,7 +11,7 @@ __all__ = ['commonprefix', 'exists', 'getatime', 'getctime', 'getmtime',
 
 
 try:
-    _unicode = unicode
+    _unicode = str
 except NameError:
     # If Python is built without Unicode support, the unicode type
     # will not exist. Fake one.

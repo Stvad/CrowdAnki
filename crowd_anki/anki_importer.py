@@ -1,7 +1,7 @@
 import json
 import shutil
 import os
-from thirdparty.pathlib import Path
+from .thirdparty.pathlib import Path
 
 import aqt
 import aqt.utils
@@ -48,7 +48,7 @@ class AnkiJsonImporter(object):
                 if media_directory.exists():
                     # Needed to reserve to this, as pathlib2 is not handling unicode properly.
                     # Todo Should switch back on migrating to python3
-                    unicode_media_directory = unicode(str(media_directory))
+                    unicode_media_directory = str(str(media_directory))
                     src_files = os.listdir(unicode_media_directory)
                     for filename in src_files:
                         full_filename = os.path.join(unicode_media_directory, filename)

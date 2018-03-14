@@ -1,7 +1,7 @@
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import zipfile
 import tempfile
-import StringIO
+import io
 
 from crowd_anki.utils import utils
 from crowd_anki.thirdparty.pathlib import Path
@@ -36,8 +36,8 @@ class GithubImporter(object):
 
     def download_and_import(self, repo):
         try:
-            response = urllib2.urlopen(GITHUB_LINK.format(repo))
-            response_sio = StringIO.StringIO(response.read())
+            response = urllib.request.urlopen(GITHUB_LINK.format(repo))
+            response_sio = io.StringIO(response.read())
             with zipfile.ZipFile(response_sio) as repo_zip:
                 repo_zip.extractall(tempfile.tempdir)
 
@@ -50,6 +50,6 @@ class GithubImporter(object):
 
             AnkiJsonImporter.import_deck(self.collection, deck_directory)
 
-        except (urllib2.URLError, urllib2.HTTPError, OSError) as error:
+        except (urllib.error.URLError, urllib.error.HTTPError, OSError) as error:
             aqt.utils.showWarning("Error while trying to get deck from Github: {}".format(error))
             raise

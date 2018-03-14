@@ -1,1 +1,1 @@
-from pathlib2 import *
+from .pathlib2 import *

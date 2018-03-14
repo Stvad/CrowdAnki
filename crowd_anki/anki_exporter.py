@@ -4,7 +4,7 @@ import shutil
 
 import anki.utils
 
-from thirdparty.pathlib import Path
+from .thirdparty.pathlib import Path
 
 from crowd_anki.utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from crowd_anki.representation.deck import Deck
@@ -71,4 +71,4 @@ class AnkiJsonExporter(object):
                 shutil.copy(os.path.join(self.collection.media.dir(), file_src),
                             str(media_directory.resolve()))
             except IOError as ioerror:
-                print("Failed to copy a file {}. Full error: {}".format(file_src, ioerror))
+                print(("Failed to copy a file {}. Full error: {}".format(file_src, ioerror)))

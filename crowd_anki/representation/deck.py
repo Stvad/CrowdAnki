@@ -121,7 +121,7 @@ class Deck(JsonSerializableAnkiDict):
 
     def _get_media_from_models(self):
         anki_exporter = AnkiExporter(self.collection)
-        model_ids = [model.anki_dict["id"] for model in self.metadata.models.values()]
+        model_ids = [model.anki_dict["id"] for model in list(self.metadata.models.values())]
 
         return anki_exporter.get_files_for_models(model_ids, self.collection.media.dir())
 
@@ -169,11 +169,11 @@ class Deck(JsonSerializableAnkiDict):
                            save_note_models=True,
                            model_map_cache=None):
         if save_configs:  # Todo when update implemented multiple save can be harmless and code simpler
-            for config in self.metadata.deck_configs.values():
+            for config in list(self.metadata.deck_configs.values()):
                 config.save_to_collection(collection)
 
         if save_note_models:
-            for note_model in self.metadata.models.values():
+            for note_model in list(self.metadata.models.values()):
                 note_model.save_to_collection(collection)
 
         name = self._save_deck(collection, parent_name)

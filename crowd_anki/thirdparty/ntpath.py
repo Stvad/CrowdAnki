@@ -8,11 +8,11 @@ module as os.path.
 import os
 import sys
 import stat
-import genericpath
+from . import genericpath
 import warnings
 
-from genericpath import *
-from genericpath import _unicode
+from .genericpath import *
+from .genericpath import _unicode
 
 __all__ = ["normcase","isabs","join","splitdrive","split","splitext",
            "basename","dirname","commonprefix","getsize","getmtime",
@@ -415,7 +415,7 @@ def expandvars(path):
 def normpath(path):
     """Normalize path, eliminating double slashes, etc."""
     # Preserve unicode (if path is unicode)
-    backslash, dot = (u'\\', u'.') if isinstance(path, _unicode) else ('\\', '.')
+    backslash, dot = ('\\', '.') if isinstance(path, _unicode) else ('\\', '.')
     if path.startswith(('\\\\.\\', '\\\\?\\')):
         # in the case of paths with these prefixes:
         # \\.\ -> device names
@@ -473,7 +473,7 @@ except ImportError: # not running on Windows - mock up something sensible
         """Return the absolute version of a path."""
         if not isabs(path):
             if isinstance(path, _unicode):
-                cwd = os.getcwdu()
+                cwd = os.getcwd()
             else:
                 cwd = os.getcwd()
             path = join(cwd, path)
@@ -489,7 +489,7 @@ else:  # use native Windows method on Windows
             except WindowsError:
                 pass # Bad path - return unchanged.
         elif isinstance(path, _unicode):
-            path = os.getcwdu()
+            path = os.getcwd()
         else:
             path = os.getcwd()
         return normpath(path)

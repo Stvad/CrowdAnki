@@ -52,7 +52,7 @@ class JsonSerializable(object):
 
     def flatten(self):
         return {self.readable_names[key] if key in self.readable_names else key: value
-                for key, value in self.serialization_dict().items() if
+                for key, value in list(self.serialization_dict().items()) if
                 key not in self.export_filter_set}
 
     def serialization_dict(self):

@@ -53,6 +53,6 @@ def fs_remove(path):
         return
 
     if path.is_dir():
-        shutil.rmtree(unicode(str(path)))
+        shutil.rmtree(str(str(path)))
     else:
-        os.remove(unicode(str(path)))
+        os.remove(str(str(path)))

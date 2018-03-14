@@ -6,11 +6,11 @@ import ctypes
 import fnmatch
 import functools
 import io
-import ntpath
+from . import ntpath
 import os
 import posixpath
 import re
-import six
+from . import six
 import sys
 from collections import Sequence
 from errno import EINVAL, ENOENT, ENOTDIR, EEXIST, EPERM, EACCES
@@ -18,7 +18,7 @@ from operator import attrgetter
 from stat import (
     S_ISDIR, S_ISLNK, S_ISREG, S_ISSOCK, S_ISBLK, S_ISCHR, S_ISFIFO)
 try:
-    from urllib import quote as urlquote_from_bytes
+    from urllib.parse import quote as urlquote_from_bytes
 except ImportError:
     from urllib.parse import quote_from_bytes as urlquote_from_bytes
 
@@ -42,7 +42,7 @@ else:
 try:
     from os import scandir as os_scandir
 except ImportError:
-    from scandir import scandir as os_scandir
+    from .scandir import scandir as os_scandir
 
 __all__ = [
     "PurePath", "PurePosixPath", "PureWindowsPath",
@@ -212,10 +212,10 @@ class _Flavour(object):
             if sep in rel:
                 for x in reversed(rel.split(sep)):
                     if x and x != '.':
-                        parsed.append(intern(x))
+                        parsed.append(sys.intern(x))
             else:
                 if rel and rel != '.':
-                    parsed.append(intern(rel))
+                    parsed.append(sys.intern(rel))
             if drv or root:
                 if not drv:
                     # If no drive is present, try to find one in the previous

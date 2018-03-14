@@ -1,5 +1,5 @@
 import crowd_anki
-from thirdparty.pathlib import Path
+from .thirdparty.pathlib import Path
 
 import anki.exporting
 import aqt.utils

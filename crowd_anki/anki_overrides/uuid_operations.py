@@ -20,7 +20,7 @@ def get_note_bu_uuid(cls, collection, uuid):
 
 
 def get_from_dict_by_uuid(base_object, dict_name, uuid):
-    for value in (getattr(base_object, dict_name)).values():
+    for value in list((getattr(base_object, dict_name)).values()):
         if value.get(UUID_FIELD_NAME) == uuid:
             return value
 
