@@ -1,7 +1,7 @@
 from uuid import uuid1
 
-from crowd_anki.utils import utils
-from crowd_anki.utils.constants import UUID_FIELD_NAME
+from ..utils import utils
+from ..utils.constants import UUID_FIELD_NAME
 
 
 class JsonSerializable(object):

@@ -3,9 +3,9 @@ import zipfile
 import tempfile
 import io
 
-from crowd_anki.utils import utils
-from crowd_anki.thirdparty.pathlib import Path
-from crowd_anki.anki_importer import AnkiJsonImporter
+from ..utils import utils
+from ..thirdparty.pathlib import Path
+from ..anki_importer import AnkiJsonImporter
 
 import aqt.utils
 

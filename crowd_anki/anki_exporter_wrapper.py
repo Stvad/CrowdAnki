@@ -1,12 +1,12 @@
-import crowd_anki
+# import crowd_anki
 from .thirdparty.pathlib import Path
 
 import anki.exporting
 import aqt.utils
 
-import crowd_anki.utils.constants
-from crowd_anki.anki_exporter import AnkiJsonExporter
-from crowd_anki.anki_overrides import exporting
+from .utils import constants
+from .anki_exporter import AnkiJsonExporter
+from .anki_overrides import exporting
 
 
 class AnkiJsonExporterWrapper:
@@ -15,7 +15,7 @@ class AnkiJsonExporterWrapper:
     """
 
     key = "CrowdAnki Json representation"
-    ext = crowd_anki.utils.constants.ANKI_EXPORT_EXTENSION
+    ext = constants.ANKI_EXPORT_EXTENSION
     hideTags = True
     includeTags = True
     directory_export = True
@@ -32,7 +32,7 @@ class AnkiJsonExporterWrapper:
     def exportInto(self, directory_path):
         if self.did is None:
             aqt.utils.showWarning("CrowdAnki works only with specific decks.", title="Export failed")
-            return 
+            return
 
         deck_name = self.collection.decks.get(self.did, default=False)["name"]
         self.anki_json_exporter.export_deck_to_directory(deck_name, Path(directory_path).parent, self.includeMedia)

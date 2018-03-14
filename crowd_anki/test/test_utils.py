@@ -1,6 +1,6 @@
 import unittest
-from crowd_anki.thirdparty.pathlib import Path
-from crowd_anki.utils import utils
+from ..thirdparty.pathlib import Path
+from ..utils import utils
 
 
 class FsRemoveTest(unittest.TestCase):

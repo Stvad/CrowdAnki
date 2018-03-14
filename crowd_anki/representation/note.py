@@ -3,12 +3,12 @@ import anki.utils
 from anki.notes import Note as AnkiNote
 
 try:
-    from crowd_anki.anki_overrides.change_model_dialog import ChangeModelDialog
+    from ..anki_overrides.change_model_dialog import ChangeModelDialog
 except ImportError:
     # need this to decouple it from pyqt. To simplify running of the tests with Travis
     print("Failed to import ChangeModelDialog")
 
-from crowd_anki.utils.constants import UUID_FIELD_NAME
+from ..utils.constants import UUID_FIELD_NAME
 from .json_serializable import JsonSerializableAnkiObject
 from .note_model import NoteModel
 

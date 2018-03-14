@@ -1,6 +1,6 @@
 import unittest
 
-from crowd_anki.representation.deck import Deck
+from ..representation.deck import Deck
 
 
 class DeckRepresentationTest(unittest.TestCase):

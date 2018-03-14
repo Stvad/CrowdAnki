@@ -1,8 +1,8 @@
 from .thirdparty.pathlib import Path
 
-from crowd_anki import anki_exporter_wrapper  # Do not remove. To hook exporters list extension
-from crowd_anki.anki_importer import AnkiJsonImporter
-from crowd_anki.github.github_importer import GithubImporter
+from .import anki_exporter_wrapper  # Do not remove. To hook exporters list extension
+from .anki_importer import AnkiJsonImporter
+from .github.github_importer import GithubImporter
 
 import aqt.utils
 from aqt import mw, QAction, QFileDialog
