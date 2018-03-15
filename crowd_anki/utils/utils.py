@@ -3,7 +3,10 @@ import shutil
 import os
 from pprint import pprint
 from sqlite3 import OperationalError
-
+try:
+    unicode('')
+except NameError:
+    unicode = str
 
 def merge_dicts(*dict_args):
     """
@@ -53,6 +56,6 @@ def fs_remove(path):
         return
 
     if path.is_dir():
-        shutil.rmtree(unicode(str(path)))
+        shutil.rmtree(str(path))
     else:
-        os.remove(unicode(str(path)))
+        os.remove(str(path))

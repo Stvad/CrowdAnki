@@ -1,11 +1,16 @@
-import urllib2
+try:
+    from urllib.request import urlopen
+    from urllib.error import HTTPError, URLError
+except ImportError:
+    from urllib2 import urlopen, HTTPError, URLError
+
 import zipfile
 import tempfile
-import StringIO
+from io import BytesIO
 
-from crowd_anki.utils import utils
-from crowd_anki.thirdparty.pathlib import Path
-from crowd_anki.anki_importer import AnkiJsonImporter
+from ..utils import utils
+from ..thirdparty.pathlib import Path
+from ..anki_importer import AnkiJsonImporter
 
 import aqt.utils
 
@@ -36,8 +41,8 @@ class GithubImporter(object):
 
     def download_and_import(self, repo):
         try:
-            response = urllib2.urlopen(GITHUB_LINK.format(repo))
-            response_sio = StringIO.StringIO(response.read())
+            response = urlopen(GITHUB_LINK.format(repo))
+            response_sio = BytesIO(response.read())
             with zipfile.ZipFile(response_sio) as repo_zip:
                 repo_zip.extractall(tempfile.tempdir)
 
@@ -50,6 +55,6 @@ class GithubImporter(object):
 
             AnkiJsonImporter.import_deck(self.collection, deck_directory)
 
-        except (urllib2.URLError, urllib2.HTTPError, OSError) as error:
+        except (URLError, HTTPError, OSError) as error:
             aqt.utils.showWarning("Error while trying to get deck from Github: {}".format(error))
             raise

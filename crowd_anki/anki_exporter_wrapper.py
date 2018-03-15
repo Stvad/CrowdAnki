@@ -1,12 +1,12 @@
-import crowd_anki
-from thirdparty.pathlib import Path
+#from . import crowd_anki # Unnessecary?
+from .thirdparty.pathlib import Path
 
 import anki.exporting
 import aqt.utils
 
-import crowd_anki.utils.constants
-from crowd_anki.anki_exporter import AnkiJsonExporter
-from crowd_anki.anki_overrides import exporting
+from .utils import constants
+from .anki_exporter import AnkiJsonExporter
+from .anki_overrides import exporting
 
 
 class AnkiJsonExporterWrapper:
@@ -15,7 +15,7 @@ class AnkiJsonExporterWrapper:
     """
 
     key = "CrowdAnki Json representation"
-    ext = crowd_anki.utils.constants.ANKI_EXPORT_EXTENSION
+    ext = constants.ANKI_EXPORT_EXTENSION
     hideTags = True
     includeTags = True
     directory_export = True
