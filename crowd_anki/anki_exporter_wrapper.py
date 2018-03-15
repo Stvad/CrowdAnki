@@ -1,4 +1,4 @@
-#from . import crowd_anki # Unnessecary?
+#from . import crowd_anki # Unnecessary?
 from .thirdparty.pathlib import Path
 
 import anki.exporting
