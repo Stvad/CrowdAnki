@@ -1,7 +1,4 @@
-try:
-    from pathlib import Path
-except ImportError:
-    from .thirdparty.pathlib import Path
+from .utils.pathlib_wrapper import Path
 
 from . import anki_exporter_wrapper  # Do not remove. To hook exporters list extension
 from .anki_importer import AnkiJsonImporter

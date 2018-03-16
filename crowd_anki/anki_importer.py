@@ -1,7 +1,7 @@
 import json
 import shutil
 import os
-from .thirdparty.pathlib import Path
+from .utils.pathlib_wrapper import Path
 try:
     unicode('')
 except NameError:

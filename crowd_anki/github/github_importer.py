@@ -9,7 +9,7 @@ import tempfile
 from io import BytesIO
 
 from ..utils import utils
-from ..thirdparty.pathlib import Path
+from ..utils.pathlib_wrapper import Path
 from ..anki_importer import AnkiJsonImporter
 
 import aqt.utils

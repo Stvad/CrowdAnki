@@ -1,4 +1,4 @@
-from .thirdparty.pathlib import Path
+from .utils.pathlib_wrapper import Path
 
 import anki.exporting
 import aqt.utils
