@@ -1,4 +1,3 @@
-#from . import crowd_anki # Unnecessary?
 from .thirdparty.pathlib import Path
 
 import anki.exporting
@@ -32,7 +31,7 @@ class AnkiJsonExporterWrapper:
     def exportInto(self, directory_path):
         if self.did is None:
             aqt.utils.showWarning("CrowdAnki works only with specific decks.", title="Export failed")
-            return 
+            return
 
         deck_name = self.collection.decks.get(self.did, default=False)["name"]
         self.anki_json_exporter.export_deck_to_directory(deck_name, Path(directory_path).parent, self.includeMedia)
