@@ -32,9 +32,15 @@ class AnkiJsonExporterWrapper:
     def exportInto(self, directory_path):
         if self.did is None:
             aqt.utils.showWarning("CrowdAnki works only with specific decks.", title="Export failed")
-            return 
+            return
 
-        deck_name = self.collection.decks.get(self.did, default=False)["name"]
+        selected_deck = self.collection.decks.get(self.did, default=False)
+
+        if 'conf' not in selected_deck:
+            aqt.utils.showWarning("CrowdAnki does not support exporting filtered decks.", title="Export failed")
+            return
+
+        deck_name = selected_deck["name"]
         self.anki_json_exporter.export_deck_to_directory(deck_name, Path(directory_path).parent, self.includeMedia)
         # .parent because we receive name with random numbers at the end (hacking around internals of Anki) :(
 

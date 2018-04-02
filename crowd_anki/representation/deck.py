@@ -60,6 +60,10 @@ class Deck(JsonSerializableAnkiDict):
     def from_collection(cls, collection, name, deck_metadata=None, is_child=False):
         anki_dict = collection.decks.byName(name)
 
+        # Todo Maybe add support for exporting filtered decks?
+        if 'conf' not in anki_dict:
+            raise ValueError("Can't process a filtered deck.")
+
         deck = Deck(anki_dict, is_child)
 
         deck.collection = collection
@@ -75,8 +79,12 @@ class Deck(JsonSerializableAnkiDict):
                            if Deck.DECK_NAME_DELIMITER
                            not in child_name[len(name) + len(Deck.DECK_NAME_DELIMITER):]]
 
+        # Remove filtered decks from list
+        direct_children_filtered = [child_name for child_name in direct_children
+                                    if 'conf' in collection.decks.byName(child_name)]
+
         deck.children = [cls.from_collection(collection, child_name, deck.metadata, True)
-                         for child_name in direct_children]
+                         for child_name in direct_children_filtered]
 
         return deck
 
