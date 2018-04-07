@@ -3,7 +3,10 @@ import shutil
 import os
 from pprint import pprint
 from sqlite3 import OperationalError
-
+try:
+    unicode('')
+except NameError:
+    unicode = str
 
 def merge_dicts(*dict_args):
     """

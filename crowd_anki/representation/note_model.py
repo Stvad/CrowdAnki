@@ -6,7 +6,7 @@ except ImportError:
     # need this to decouple it from pyqt. To simplify running of the tests with Travis
     print("Failed to import ChangeModelDialog")
 
-from crowd_anki.utils import utils
+from ..utils import utils
 from .json_serializable import JsonSerializableAnkiDict
 
 

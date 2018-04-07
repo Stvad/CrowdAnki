@@ -4,10 +4,10 @@ import shutil
 
 import anki.utils
 
-from thirdparty.pathlib import Path
+from .utils.pathlib_wrapper import Path
 
-from crowd_anki.utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
-from crowd_anki.representation.deck import Deck
+from .utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
+from .representation.deck import Deck
 
 
 class AnkiJsonExporter(object):
@@ -42,8 +42,7 @@ class AnkiJsonExporter(object):
                                        default=Deck.default_json,
                                        sort_keys=True,
                                        indent=4,
-                                       ensure_ascii=False,
-                                       encoding="utf8"))
+                                       ensure_ascii=False))
 
         self._save_changes()
 

@@ -1,7 +1,7 @@
 from collections import namedtuple, defaultdict
 
-from crowd_anki.utils import utils
-from crowd_anki.utils.constants import UUID_FIELD_NAME
+from ..utils import utils
+from ..utils.constants import UUID_FIELD_NAME
 
 from anki.exporting import AnkiExporter
 from .deck_config import DeckConfig

@@ -1,13 +1,17 @@
 import json
 import shutil
 import os
-from thirdparty.pathlib import Path
+from .utils.pathlib_wrapper import Path
+try:
+    unicode('')
+except NameError:
+    unicode = str
 
 import aqt
 import aqt.utils
 
-from crowd_anki.utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
-from crowd_anki.representation.deck import Deck
+from .utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
+from .representation.deck import Deck
 
 
 class AnkiJsonImporter(object):
