@@ -1,10 +1,6 @@
 from collections import namedtuple
 
-try:
-    from crowd_anki.anki_overrides.change_model_dialog import ChangeModelDialog
-except ImportError:
-    # need this to decouple it from pyqt. To simplify running of the tests with Travis
-    print("Failed to import ChangeModelDialog")
+from ..anki_overrides.change_model_dialog import ChangeModelDialog
 
 from ..utils import utils
 from .json_serializable import JsonSerializableAnkiDict
