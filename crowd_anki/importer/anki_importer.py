@@ -21,7 +21,7 @@ class AnkiJsonImporter(object):
         :type file_path: Path
         """
         if not file_path.exists():
-            raise ValueError("There is no {} file inside of the selected directory".format(file_path.name))
+            raise ValueError("There is no {} file inside of the selected directory".format(file_path))
 
         with file_path.open(encoding='utf8') as deck_file:
             deck_json = json.load(deck_file)
