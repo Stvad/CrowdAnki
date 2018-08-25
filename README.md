@@ -5,6 +5,12 @@
 
 AnkiWeb link for the plugin: https://ankiweb.net/shared/info/1788670778
 
+---
+**Please consider supporting the plugin development by becoming a Patron - this helps me to dedicate more time and love to the project**
+
+[![Become a Patron!](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/bePatron?u=13102903)
+
+---
 ## How to collaborate via Github
 This section illustrates collaboration workflow using [Github](http://github.com).
 
