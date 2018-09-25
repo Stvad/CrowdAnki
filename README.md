@@ -1,10 +1,15 @@
 # CrowdAnki
-[![Build Status](https://travis-ci.org/Stvad/CrowdAnki.svg?branch=master)](https://travis-ci.org/Stvad/CrowdAnki)
 
 **CrowdAnki** is a plugin for http://ankisrs.net/ that allows users to import and export decks/notes and all relevant information in a hierarchical JSON format. The main purpose is to facilitate crowdsourcing for Anki decks and notes.
 
 AnkiWeb link for the plugin: https://ankiweb.net/shared/info/1788670778
 
+---
+**Please consider supporting the plugin development by becoming a Patron - this helps me to dedicate more time and love to the project**
+
+[![Become a Patron!](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/bePatron?u=13102903)
+
+---
 ## How to collaborate via Github
 This section illustrates collaboration workflow using [Github](http://github.com).
 
