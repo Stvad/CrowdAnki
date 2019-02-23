@@ -1,11 +1,10 @@
-from .utils.pathlib_wrapper import Path
+from pathlib import Path
 
 import anki.exporting
 import aqt.utils
-
-from .utils import constants
 from .anki_exporter import AnkiJsonExporter
 from .anki_overrides import exporting
+from .utils import constants
 
 
 class AnkiJsonExporterWrapper:

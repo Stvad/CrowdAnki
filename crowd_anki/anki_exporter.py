@@ -4,7 +4,7 @@ import shutil
 
 import anki.utils
 
-from .utils.pathlib_wrapper import Path
+from pathlib import Path
 
 from .utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from .representation.deck import Deck

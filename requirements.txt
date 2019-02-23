@@ -1,4 +1,3 @@
 #for travis
-pathlib2
 simplejson
 sqlalchemy

@@ -1,4 +1,4 @@
-from .utils.pathlib_wrapper import Path
+from pathlib import Path
 
 from . import anki_exporter_wrapper  # Do not remove. To hook exporters list extension
 from .anki_importer import AnkiJsonImporter

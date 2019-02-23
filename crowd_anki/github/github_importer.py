@@ -1,20 +1,14 @@
-try:
-    from urllib.request import urlopen
-    from urllib.error import HTTPError, URLError
-except ImportError:
-    from urllib2 import urlopen, HTTPError, URLError
-
-import zipfile
 import tempfile
+import zipfile
 from io import BytesIO
-
-from ..utils import utils
-from ..utils.pathlib_wrapper import Path
-from ..anki_importer import AnkiJsonImporter
+from pathlib import Path
+from urllib.error import HTTPError, URLError
+from urllib.request import urlopen
 
 import aqt.utils
-
 from aqt import QInputDialog
+from ..anki_importer import AnkiJsonImporter
+from ..utils import utils
 
 BRANCH_NAME = "master"
 GITHUB_LINK = "https://github.com/{}/archive/" + BRANCH_NAME + ".zip"
