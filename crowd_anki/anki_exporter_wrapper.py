@@ -3,7 +3,6 @@ from pathlib import Path
 import anki.exporting
 import aqt.utils
 from .anki_exporter import AnkiJsonExporter
-from .anki_overrides import exporting
 from .utils import constants
 
 
@@ -38,8 +37,13 @@ class AnkiJsonExporterWrapper:
 
         self.count = self.anki_json_exporter.last_exported_count
 
+
+def get_exporter_id(exporter):
+    return f"{exporter.key} (*{exporter.ext})", exporter
+
+
 def exporters_hook(exporters_list):
-    exporter_id = exporting.get_exporter_id(AnkiJsonExporterWrapper)
+    exporter_id = get_exporter_id(AnkiJsonExporterWrapper)
     if exporter_id not in exporters_list:
         exporters_list.append(exporter_id)
 

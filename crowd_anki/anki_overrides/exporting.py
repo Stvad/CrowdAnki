@@ -25,10 +25,6 @@ def get_files_for_models(self, model_ids, media_dir):
     return result
 
 
-def get_exporter_id(exporter):
-    return "{} (*{})".format(exporter.key, exporter.ext), exporter
-
-
 AnkiExporter.get_files_for_models = get_files_for_models
 
 # aqt part:
