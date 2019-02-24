@@ -48,5 +48,5 @@ def exporters_hook(exporters_list):
         exporters_list.append(exporter_id)
 
 
-anki.hooks.addHook("exportersList",
-                   exporters_hook)
+def add_exporter_hook():
+    anki.hooks.addHook("exportersList", exporters_hook)
