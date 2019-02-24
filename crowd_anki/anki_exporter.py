@@ -1,5 +1,6 @@
 import json
 import os
+
 import shutil
 from pathlib import Path
 from typing import Callable
@@ -10,7 +11,7 @@ from .utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from .utils.filesystem.name_sanitizer import sanitize_anki_deck_name
 
 
-class AnkiJsonExporter(object):
+class AnkiJsonExporter:
     def __init__(self, collection, deck_name_sanitizer: Callable[[str], str] = sanitize_anki_deck_name):
         self.collection = collection
         self.last_exported_count = 0

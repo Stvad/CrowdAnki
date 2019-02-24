@@ -1,11 +1,12 @@
 from .deck import Deck
 from .note import Note
+from ..anki_adapters.note_model_file_provider import NoteModelFileProvider
 
 
 def from_collection(collection, name, deck_metadata=None, is_child=False) -> Deck:
     anki_dict = collection.decks.byName(name)
 
-    deck = Deck(anki_dict, is_child)
+    deck = Deck(NoteModelFileProvider, anki_dict, is_child)
     deck.collection = collection
     deck._update_fields()
     deck.metadata = deck_metadata
@@ -25,7 +26,7 @@ def from_collection(collection, name, deck_metadata=None, is_child=False) -> Dec
 
 def from_json(json_dict, deck_metadata=None) -> Deck:
     """load metadata, load notes, load children"""
-    deck = Deck(json_dict)
+    deck = Deck(NoteModelFileProvider, json_dict)
     deck._update_fields()
     deck.metadata = deck_metadata
 

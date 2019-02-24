@@ -4,7 +4,7 @@ from ..utils import utils
 from ..utils.constants import UUID_FIELD_NAME
 
 
-class JsonSerializable(object):
+class JsonSerializable:
     readable_names = {}
     export_filter_set = {"mod",  # Modification time
                          "usn",  # Todo clarify
@@ -20,7 +20,8 @@ class JsonSerializable(object):
         if isinstance(object_to_serialize, JsonSerializable):
             return object_to_serialize.flatten()
 
-        raise TypeError
+        raise TypeError(f"Object of a type {JsonSerializable} expected. "
+                        f"Got {object_to_serialize} of a type {type(object_to_serialize)} instead")
 
     @staticmethod
     def json_object_hook(json_dict):

@@ -1,31 +1,14 @@
 import os
 
+import anki.exporting
 import anki.hooks
 import anki.utils
-import aqt.utils
 import aqt.exporting
+import aqt.utils
 from aqt import QFileDialog
-import anki.exporting
-from anki.exporting import AnkiExporter
 from aqt.exporting import ExportDialog
-
 from ..utils import constants
 
-
-def get_files_for_models(self, model_ids, media_dir):
-    result = set()
-    for file_name in os.listdir(media_dir):
-        if file_name.startswith("_"):
-            # Scan all models in model_ids for reference to file_name
-            for model in self.col.models.all():
-                if int(model['id']) in model_ids:
-                    if self._modelHasMedia(model, file_name):
-                        result.add(file_name)
-                        break
-    return result
-
-
-AnkiExporter.get_files_for_models = get_files_for_models
 
 # aqt part:
 
@@ -45,9 +28,9 @@ def get_save_file(parent, title, dir_description, key, ext, fname=None):
 
     return aqt.utils.getSaveFile_old(parent, title, dir_description, key, ext, fname)
 
+
 ExportDialog.exporterChanged = anki.hooks.wrap(ExportDialog.exporterChanged, exporter_changed)
 
 aqt.utils.getSaveFile_old = aqt.utils.getSaveFile
 aqt.exporting.getSaveFile = get_save_file  # Overriding instance imported with from style import
 aqt.utils.getSaveFile = get_save_file
-

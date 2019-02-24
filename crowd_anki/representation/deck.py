@@ -1,9 +1,11 @@
 from collections import namedtuple, defaultdict
 
-from anki.exporting import AnkiExporter
+from typing import Callable, Any, Iterable
+
 from .deck_config import DeckConfig
 from .json_serializable import JsonSerializableAnkiDict
 from .note_model import NoteModel
+from ..anki_adapters.file_provider import FileProvider
 from ..utils import utils
 from ..utils.constants import UUID_FIELD_NAME
 
@@ -13,17 +15,19 @@ class Deck(JsonSerializableAnkiDict):
     DECK_NAME_DELIMITER = "::"
 
     export_filter_set = JsonSerializableAnkiDict.export_filter_set | \
-                        {"collection",  # runtime-relevant
-                         "newToday",
-                         "revToday",
-                         "timeToday",
-                         "lrnToday",
-                         "metadata",
-                         "browserCollapsed",
-                         "collapsed",
-                         "is_child",  # runtime-relevant
-                         "conf"  # uuid
-                         }
+                        {
+                            "collection",  # runtime-relevant
+                            "newToday",
+                            "revToday",
+                            "timeToday",
+                            "lrnToday",
+                            "metadata",
+                            "browserCollapsed",
+                            "collapsed",
+                            "is_child",  # runtime-relevant
+                            "conf",  # uuid
+                            "file_provider_supplier"
+                        }
 
     import_filter_set = JsonSerializableAnkiDict.import_filter_set | \
                         {"note_models",
@@ -32,8 +36,13 @@ class Deck(JsonSerializableAnkiDict):
                          "media_files",
                          "notes"}
 
-    def __init__(self, anki_deck=None, is_child=False):
+    def __init__(self,
+                 file_provider_supplier: Callable[[Any, Iterable[int]], FileProvider],
+                 anki_deck=None,
+                 is_child=False):
         super().__init__(anki_deck)
+
+        self.file_provider_supplier = file_provider_supplier
         self.is_child = is_child
 
         self.collection = None
@@ -93,10 +102,10 @@ class Deck(JsonSerializableAnkiDict):
         return media | (self._get_media_from_models() if data_from_models else set())
 
     def _get_media_from_models(self):
-        anki_exporter = AnkiExporter(self.collection)
         model_ids = [model.anki_dict["id"] for model in self.metadata.models.values()]
+        file_provider = self.file_provider_supplier(self.collection, model_ids)
 
-        return anki_exporter.get_files_for_models(model_ids, self.collection.media.dir())
+        return file_provider.get_files()
 
     def _load_metadata_from_json(self, json_dict):
         if not self.metadata:
