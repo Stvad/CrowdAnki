@@ -4,6 +4,7 @@ import shutil
 from pathlib import Path
 from typing import Callable
 
+from .representation import deck_initializer
 from .representation.deck import Deck
 from .utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from .utils.filesystem.name_sanitizer import sanitize_anki_deck_name
@@ -21,7 +22,7 @@ class AnkiJsonExporter(object):
 
         deck_directory.mkdir(parents=True, exist_ok=True)
 
-        deck = Deck.from_collection(self.collection, deck_name)
+        deck = deck_initializer.from_collection(self.collection, deck_name)
         self.last_exported_count = deck.get_note_count()
 
         deck_filename = deck_directory.joinpath(deck_fsname).with_suffix(DECK_FILE_EXTENSION)

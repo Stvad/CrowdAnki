@@ -1,13 +1,13 @@
 import json
-import shutil
 import os
+
+import shutil
 from pathlib import Path
 
 import aqt
 import aqt.utils
-
+from .representation import deck_initializer
 from .utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
-from .representation.deck import Deck
 
 
 class AnkiJsonImporter(object):
@@ -24,7 +24,7 @@ class AnkiJsonImporter(object):
 
         with file_path.open(encoding='utf8') as deck_file:
             deck_json = json.load(deck_file)
-            deck = Deck.from_json(deck_json)
+            deck = deck_initializer.from_json(deck_json)
 
             deck.save_to_collection(self.collection)
 
