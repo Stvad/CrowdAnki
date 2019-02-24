@@ -1,3 +1,0 @@
-#for travis
-simplejson
-sqlalchemy

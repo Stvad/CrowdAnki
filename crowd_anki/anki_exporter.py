@@ -1,34 +1,22 @@
 import json
 import os
 import shutil
-
-import anki.utils
-
 from pathlib import Path
+from typing import Callable
 
-from .utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from .representation.deck import Deck
+from .utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
+from .utils.filesystem.name_sanitizer import sanitize_anki_deck_name
 
 
 class AnkiJsonExporter(object):
-    def __init__(self, collection):
+    def __init__(self, collection, deck_name_sanitizer: Callable[[str], str] = sanitize_anki_deck_name):
         self.collection = collection
         self.last_exported_count = 0
-
-    @staticmethod
-    def _get_filesystem_name(deck_name):
-        """
-        Get name that conforms to fs standards from deck name
-        :param deck_name:
-        :return:
-        """
-        for char in anki.utils.invalidFilenameChars + " ":
-            deck_name = deck_name.replace(char, "_")
-
-        return deck_name
+        self.deck_name_sanitizer = deck_name_sanitizer
 
     def export_deck_to_directory(self, deck_name, output_dir=Path("."), copy_media=True):
-        deck_fsname = self._get_filesystem_name(deck_name)
+        deck_fsname = self.deck_name_sanitizer(deck_name)
         deck_directory = output_dir.joinpath(deck_fsname)
 
         deck_directory.mkdir(parents=True, exist_ok=True)

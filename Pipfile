@@ -1,0 +1,21 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+expects = "*"
+mamba = "*"
+hypothesis = "*"
+
+[packages]
+PyFunctional = "*"
+dulwich = "*"
+typing = "*"
+dataclasses = "*"
+
+[requires]
+python_version = "3.6"
+
+# Current packaging command
+# pipenv run pip install --upgrade --no-binary :all: -r <(pipenv lock -r | sed -E "s/(^dulwich==.+$)/\1 --global-option=--pure/")  --target dist/
