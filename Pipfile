@@ -13,6 +13,7 @@ PyFunctional = "*"
 dulwich = "*"
 typing = "*"
 dataclasses = "*"
+pygtrie = "*"
 
 [requires]
 python_version = "3.6"
