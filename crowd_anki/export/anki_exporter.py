@@ -5,25 +5,27 @@ import shutil
 from pathlib import Path
 from typing import Callable
 
-from .representation import deck_initializer
-from .representation.deck import Deck
-from .utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
-from .utils.filesystem.name_sanitizer import sanitize_anki_deck_name
+from .deck_exporter import DeckExporter
+from ..anki_adapters.anki_deck import AnkiDeck
+from ..representation import deck_initializer
+from ..representation.deck import Deck
+from ..utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
+from ..utils.filesystem.name_sanitizer import sanitize_anki_deck_name
 
 
-class AnkiJsonExporter:
+class AnkiJsonExporter(DeckExporter):
     def __init__(self, collection, deck_name_sanitizer: Callable[[str], str] = sanitize_anki_deck_name):
         self.collection = collection
         self.last_exported_count = 0
         self.deck_name_sanitizer = deck_name_sanitizer
 
-    def export_deck_to_directory(self, deck_name, output_dir=Path("."), copy_media=True):
-        deck_fsname = self.deck_name_sanitizer(deck_name)
+    def export_to_directory(self, deck: AnkiDeck, output_dir=Path("."), copy_media=True) -> Path:
+        deck_fsname = self.deck_name_sanitizer(deck.name)
         deck_directory = output_dir.joinpath(deck_fsname)
 
         deck_directory.mkdir(parents=True, exist_ok=True)
 
-        deck = deck_initializer.from_collection(self.collection, deck_name)
+        deck = deck_initializer.from_collection(self.collection, deck.name)
         self.last_exported_count = deck.get_note_count()
 
         deck_filename = deck_directory.joinpath(deck_fsname).with_suffix(DECK_FILE_EXTENSION)
@@ -38,6 +40,8 @@ class AnkiJsonExporter:
 
         if copy_media:
             self._copy_media(deck, deck_directory)
+
+        return deck_directory
 
     def _save_changes(self):
         """Save updates that were maid during the export. E.g. UUID fields"""

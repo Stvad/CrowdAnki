@@ -1,7 +1,7 @@
 from mamba import description, it, before
 from unittest.mock import MagicMock
 
-from crowd_anki.history.archiver.Archiver import AllDeckArchiver
+from crowd_anki.history.archiver import AllDeckArchiver
 
 with description(AllDeckArchiver) as self:
     with before.each:

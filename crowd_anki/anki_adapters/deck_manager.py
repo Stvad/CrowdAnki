@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from pygtrie import StringTrie
 from typing import Iterable, Any
 
-from crowd_anki.anki_adapters.anki_deck import AnkiDeck
-from crowd_anki.utils.trie import keys_without_children
+from ..anki_adapters.anki_deck import AnkiDeck
+from ..utils.trie import keys_without_children
 
 
 class DeckManager(ABC):

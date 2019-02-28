@@ -2,7 +2,8 @@ from pathlib import Path
 
 import anki.exporting
 import aqt.utils
-from .anki_exporter import AnkiJsonExporter
+from .anki_adapters.anki_deck import AnkiDeck
+from .export.anki_exporter import AnkiJsonExporter
 from .utils import constants
 
 
@@ -31,8 +32,8 @@ class AnkiJsonExporterWrapper:
             aqt.utils.showWarning("CrowdAnki works only with specific decks.", title="Export failed")
             return
 
-        deck_name = self.collection.decks.get(self.did, default=False)["name"]
-        self.anki_json_exporter.export_deck_to_directory(deck_name, Path(directory_path).parent, self.includeMedia)
+        deck = AnkiDeck(self.collection.decks.get(self.did, default=False))
+        self.anki_json_exporter.export_to_directory(deck, Path(directory_path).parent, self.includeMedia)
         # .parent because we receive name with random numbers at the end (hacking around internals of Anki) :(
 
         self.count = self.anki_json_exporter.last_exported_count

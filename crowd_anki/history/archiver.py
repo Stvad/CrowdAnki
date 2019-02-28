@@ -3,12 +3,12 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Callable, Iterable
 
-from ...anki_adapters.deck_manager import DeckManager
+from ..anki_adapters.deck_manager import DeckManager
 
 
 class Archiver(ABC):
     @abstractmethod
-    def archive(self, decks: Iterable = tuple()):
+    def archive(self, decks: Iterable = tuple(), reason=None):
         pass
 
 
@@ -17,6 +17,6 @@ class AllDeckArchiver(Archiver):
     decks: DeckManager
     deck_archiver_supplier: Callable[[str], Archiver]
 
-    def archive(self, overrides: Iterable = tuple()):
+    def archive(self, overrides: Iterable = tuple(), reason=None):
         for deck in self.decks.leaf_decks(overrides):
-            self.deck_archiver_supplier(deck).archive()
+            self.deck_archiver_supplier(deck).archive(reason)
