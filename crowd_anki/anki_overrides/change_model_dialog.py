@@ -1,9 +1,8 @@
-import aqt
 import anki.hooks
+import aqt
+import aqt.utils
 from anki.notes import Note
 from aqt.qt import QDialog, Qt, QHBoxLayout, QWidget, QGridLayout, QComboBox, QLabel
-
-import aqt.utils
 
 
 class ChangeModelDialog(QDialog):
@@ -160,8 +159,8 @@ class ChangeModelDialog(QDialog):
         # check maps
         field_map = self.get_field_map()
         templates_map = self.get_template_map()
-        if any(True for template in list(templates_map.values()) if template is None):
-            if not aqt.utils.askUser(_(
+        if any(True for template in list(templates_map.values()) if template is None) and \
+                not aqt.utils.askUser(_(
                     "Any cards mapped to nothing will be deleted. "
                     "If a note has no remaining cards, it will be lost. "
                     "Are you sure you want to continue?")):

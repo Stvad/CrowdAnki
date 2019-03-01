@@ -9,9 +9,10 @@ from ..anki_adapters.file_provider import FileProvider
 from ..utils import utils
 from ..utils.constants import UUID_FIELD_NAME
 
+DeckMetadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
+
 
 class Deck(JsonSerializableAnkiDict):
-    Metadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
     DECK_NAME_DELIMITER = "::"
 
     export_filter_set = JsonSerializableAnkiDict.export_filter_set | \
@@ -71,7 +72,7 @@ class Deck(JsonSerializableAnkiDict):
 
     def _load_metadata(self):
         if not self.metadata:
-            self.metadata = Deck.Metadata({}, {})
+            self.metadata = DeckMetadata({}, {})
 
         self._load_deck_config()
 
@@ -109,7 +110,7 @@ class Deck(JsonSerializableAnkiDict):
 
     def _load_metadata_from_json(self, json_dict):
         if not self.metadata:
-            self.metadata = self.Metadata({}, {})
+            self.metadata = DeckMetadata({}, {})
 
         note_models_list = [NoteModel.from_json(model) for model in json_dict.get("note_models", [])]
         new_models = utils.merge_dicts(self.metadata.models,
@@ -121,7 +122,7 @@ class Deck(JsonSerializableAnkiDict):
         new_deck_configs = utils.merge_dicts(self.metadata.deck_configs,
                                              {deck_config.get_uuid(): deck_config for deck_config in deck_config_list})
 
-        self.metadata = Deck.Metadata(new_deck_configs, new_models)
+        self.metadata = DeckMetadata(new_deck_configs, new_models)
 
     def save_to_collection(self,
                            collection,
