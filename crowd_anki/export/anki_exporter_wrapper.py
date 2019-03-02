@@ -2,9 +2,9 @@ from pathlib import Path
 
 import anki.exporting
 import aqt.utils
-from .anki_adapters.anki_deck import AnkiDeck
-from .export.anki_exporter import AnkiJsonExporter
-from .utils import constants
+from .anki_exporter import AnkiJsonExporter
+from ..anki_adapters.anki_deck import AnkiDeck
+from ..utils import constants
 
 
 class AnkiJsonExporterWrapper:
