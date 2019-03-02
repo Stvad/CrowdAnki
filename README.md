@@ -153,11 +153,3 @@ So, for example, to get my [git deck](https://github.com/Stvad/Software_Engineer
 * Automatic backup would be triggered prior to the import;
 * If note model for the note has changed, or if note model itself changed in a way that it's not easy to update it automatically: you would be prompted with the window, that will ask you to specify correspondence between old and new model;
 * If the note was moved to another deck in JSON file, on import all cards from that note (except the ones, that are in dynamic decks) will be moved to the specified deck.
-
-
-## Other
-
-This plugin works with [AnkiHub plugin](https://ankiweb.net/shared/info/116826216) ([Github](https://github.com/dayjaby/AnkiHub)) to provide you better plugin management experience. 
-
-With AnkiHub you can install plugins directly from Github and receive updates automatically.
-
