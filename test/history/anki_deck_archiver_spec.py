@@ -21,7 +21,7 @@ with description(AnkiDeckArchiver) as self:
 
         deck_exporter_mock.export_to_directory.assert_called_once_with(deck, base_path)
         repo_mock.init.assert_called_once()
-        repo_mock.add_all.assert_called_once()
+        repo_mock.stage_all.assert_called_once()
         repo_mock.commit.assert_called_once_with(archival_reason)
 
     with _it("should delete all existing content of the repo before adding new one"):

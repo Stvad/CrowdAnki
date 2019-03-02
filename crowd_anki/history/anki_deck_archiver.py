@@ -20,5 +20,5 @@ class AnkiDeckArchiver(Archiver):
 
         repo = self.repo_provider(deck_path)
         repo.init()
-        repo.add_all()
+        repo.stage_all()
         repo.commit(reason)
