@@ -17,7 +17,7 @@ with description(AnkiDeckArchiver) as self:
         deck = AnkiDeck({})
         archival_reason = "whee"
 
-        AnkiDeckArchiver(deck_exporter_mock, lambda _: repo_mock, deck, base_path).archive(reason=archival_reason)
+        AnkiDeckArchiver(deck, base_path, deck_exporter_mock, lambda _: repo_mock).archive(reason=archival_reason)
 
         deck_exporter_mock.export_to_directory.assert_called_once_with(deck, base_path)
         repo_mock.init.assert_called_once()

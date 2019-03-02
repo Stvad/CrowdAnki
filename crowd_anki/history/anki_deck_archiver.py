@@ -10,10 +10,10 @@ from ..export.deck_exporter import DeckExporter
 
 @dataclass
 class AnkiDeckArchiver(Archiver):
-    deck_exporter: DeckExporter
-    repo_provider: Callable[[Path], AnkiRepo]
     deck: AnkiDeck
     output_directory: Path
+    deck_exporter: DeckExporter
+    repo_provider: Callable[[Path], AnkiRepo]
 
     def archive(self, decks: Iterable = tuple(), reason=None):
         deck_path = self.deck_exporter.export_to_directory(self.deck, self.output_directory)

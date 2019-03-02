@@ -28,7 +28,7 @@ class DulwichAnkiRepo(AnkiRepo):
         self.dulwich_repo.stage(status.untracked + status.unstaged)
 
     def commit(self, message: str = None):
-        porcelain.commit(self.dulwich_repo, message=message or str(self.status))
+        porcelain.commit(self.dulwich_repo, message=message or str(self.status()))
 
     def status(self):
         return porcelain.status(self.dulwich_repo)
