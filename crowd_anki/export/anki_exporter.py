@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Callable
 
 from .deck_exporter import DeckExporter
-from ..anki_adapters.anki_deck import AnkiDeck
+from ..anki.adapters.anki_deck import AnkiDeck
 from ..representation import deck_initializer
 from ..representation.deck import Deck
 from ..utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME

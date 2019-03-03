@@ -4,7 +4,7 @@ from typing import Iterable, Callable
 
 from .anki_repo import AnkiRepo
 from .archiver import Archiver
-from ..anki_adapters.anki_deck import AnkiDeck
+from ..anki.adapters.anki_deck import AnkiDeck
 from ..export.deck_exporter import DeckExporter
 
 

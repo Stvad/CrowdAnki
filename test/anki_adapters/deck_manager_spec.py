@@ -3,8 +3,8 @@ from mamba import description, it, before
 from typing import Iterable
 from unittest.mock import MagicMock
 
-from crowd_anki.anki_adapters.anki_deck import AnkiDeck
-from crowd_anki.anki_adapters.deck_manager import AnkiStaticDeckManager
+from crowd_anki.anki.adapters.anki_deck import AnkiDeck
+from crowd_anki.anki.adapters.deck_manager import AnkiStaticDeckManager
 
 dynamic_deck = AnkiDeck({'dyn': True})
 static_deck = AnkiDeck({'dyn': False})

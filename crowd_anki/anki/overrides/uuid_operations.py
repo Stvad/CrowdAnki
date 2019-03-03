@@ -1,7 +1,7 @@
-from anki.notes import Note as AnkiNote
 from anki.decks import DeckManager
 from anki.models import ModelManager
-from ..utils.constants import UUID_FIELD_NAME
+from anki.notes import Note as AnkiNote
+from ...utils.constants import UUID_FIELD_NAME
 
 
 # AnkiNote

@@ -5,7 +5,7 @@ from typing import Callable, Any, Iterable
 from .deck_config import DeckConfig
 from .json_serializable import JsonSerializableAnkiDict
 from .note_model import NoteModel
-from ..anki_adapters.file_provider import FileProvider
+from ..anki.adapters.file_provider import FileProvider
 from ..utils import utils
 from ..utils.constants import UUID_FIELD_NAME
 

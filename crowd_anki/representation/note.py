@@ -3,7 +3,7 @@ import anki.utils
 from anki.notes import Note as AnkiNote
 from .json_serializable import JsonSerializableAnkiObject
 from .note_model import NoteModel
-from ..anki_overrides.change_model_dialog import ChangeModelDialog
+from ..anki.overrides.change_model_dialog import ChangeModelDialog
 from ..utils.constants import UUID_FIELD_NAME
 
 

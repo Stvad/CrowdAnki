@@ -2,7 +2,7 @@ from abc import abstractmethod, ABC
 
 from pathlib import Path
 
-from ..anki_adapters.anki_deck import AnkiDeck
+from ..anki.adapters.anki_deck import AnkiDeck
 
 
 class DeckExporter(ABC):

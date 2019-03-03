@@ -5,9 +5,9 @@ from functional import seq
 from pygtrie import StringTrie
 from typing import Iterable, Any
 
-from ..anki_adapters.anki_deck import AnkiDeck
-from ..utils.trie import keys_without_children
-from ..utils.trie import remove_children_of
+from ..adapters.anki_deck import AnkiDeck
+from ...utils.trie import keys_without_children
+from ...utils.trie import remove_children_of
 
 
 class DeckManager(ABC):

@@ -1,6 +1,6 @@
 from .deck import Deck
 from .note import Note
-from ..anki_adapters.note_model_file_provider import NoteModelFileProvider
+from ..anki.adapters.note_model_file_provider import NoteModelFileProvider
 
 
 def from_collection(collection, name, deck_metadata=None, is_child=False) -> Deck:

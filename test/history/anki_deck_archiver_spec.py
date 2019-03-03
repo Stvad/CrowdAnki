@@ -2,7 +2,7 @@ from mamba import description, it, _it
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from crowd_anki.anki_adapters.anki_deck import AnkiDeck
+from crowd_anki.anki.adapters.anki_deck import AnkiDeck
 from crowd_anki.history.anki_deck_archiver import AnkiDeckArchiver
 
 with description(AnkiDeckArchiver) as self:

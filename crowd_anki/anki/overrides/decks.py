@@ -1,5 +1,5 @@
-from anki.decks import DeckManager
 import anki.utils
+from anki.decks import DeckManager
 
 
 def get_card_ids(self, did, children=False, include_from_dynamic=False):

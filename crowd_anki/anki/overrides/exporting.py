@@ -7,7 +7,7 @@ import aqt.exporting
 import aqt.utils
 from aqt import QFileDialog
 from aqt.exporting import ExportDialog
-from ..utils import constants
+from ...utils import constants
 
 
 # aqt part:

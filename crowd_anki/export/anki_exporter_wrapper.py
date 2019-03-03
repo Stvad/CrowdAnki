@@ -3,7 +3,7 @@ from pathlib import Path
 import anki.exporting
 import aqt.utils
 from .anki_exporter import AnkiJsonExporter
-from ..anki_adapters.anki_deck import AnkiDeck
+from ..anki.adapters.anki_deck import AnkiDeck
 from ..utils import constants
 
 
