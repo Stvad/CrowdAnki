@@ -19,6 +19,5 @@ class AnkiDeckArchiver(Archiver):
         deck_path = self.deck_exporter.export_to_directory(self.deck, self.output_directory)
 
         repo = self.repo_provider(deck_path)
-        repo.init()
         repo.stage_all()
         repo.commit(reason)

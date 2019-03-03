@@ -15,7 +15,7 @@ class DulwichAnkiRepo(AnkiRepo):
     repo_path: Path
     dulwich_repo: Repo = field(init=False)
 
-    def init(self):
+    def __post_init__(self):
         path_string = str(self.repo_path.resolve())
         try:
             self.dulwich_repo = porcelain.init(path_string)

@@ -11,7 +11,6 @@ from crowd_anki.history.dulwich_repo import DulwichAnkiRepo
 
 def assert_repo_exists_at_given_path_after_init(repository_path):
     repository = DulwichAnkiRepo(repository_path)
-    repository.init()
 
     expect(repository.dulwich_repo).to(not_(be_none))
     expect(repository.dulwich_repo.path).to(equal(str(repository_path.resolve())))
@@ -23,7 +22,6 @@ def repo_with_new_file(directory):
     new_file.touch()
 
     repository = DulwichAnkiRepo(repository_path)
-    repository.init()
     repository.stage_all()
 
     return repository, new_file
@@ -65,3 +63,6 @@ with description(DulwichAnkiRepo) as self:
                 repo.stage_all()
 
                 expect(staged_files(repo)).to(contain(str(file.name).encode()))
+
+    with it('commits only if there are changes present'):
+        pass
