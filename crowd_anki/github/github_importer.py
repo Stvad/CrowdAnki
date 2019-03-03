@@ -1,13 +1,14 @@
 import tempfile
 import zipfile
-from io import BytesIO
-from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
+from io import BytesIO
+from pathlib import Path
+
 import aqt.utils
 from aqt import QInputDialog
-from ..anki_importer import AnkiJsonImporter
+from ..importer.anki_importer import AnkiJsonImporter
 from ..utils import utils
 
 BRANCH_NAME = "master"

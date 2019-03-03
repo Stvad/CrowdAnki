@@ -6,8 +6,8 @@ from pathlib import Path
 
 import aqt
 import aqt.utils
-from .representation import deck_initializer
-from .utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
+from ..representation import deck_initializer
+from ..utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 
 
 class AnkiJsonImporter(object):

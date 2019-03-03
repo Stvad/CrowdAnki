@@ -6,7 +6,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "dist"))
 from pathlib import Path
 
 from .export.anki_exporter_wrapper import add_exporter_hook
-from .anki_importer import AnkiJsonImporter
+from .importer.anki_importer import AnkiJsonImporter
 from .github.github_importer import GithubImporter
 
 import aqt.utils
