@@ -3,6 +3,7 @@ import os
 
 import shutil
 from pathlib import Path
+from typing import Callable, Optional
 
 import aqt
 import aqt.utils
@@ -62,7 +63,7 @@ class AnkiJsonImporter(object):
                 aqt.mw.deckBrowser.show()
 
     @staticmethod
-    def import_deck(collection, directory_path, import_media=True):
+    def import_deck_from_path(collection, directory_path, import_media=True):
         importer = AnkiJsonImporter(collection)
         try:
             importer.load_from_directory(directory_path, import_media)
@@ -71,3 +72,9 @@ class AnkiJsonImporter(object):
             aqt.utils.showWarning("Error: {}. While trying to import deck from directory {}".format(
                 error.args[0], directory_path))
             raise
+
+    @staticmethod
+    def import_deck(collection, directory_provider: Callable[[str], Optional[str]]):
+        directory_path = str(directory_provider("Select Deck Directory"))
+        if directory_path:
+            AnkiJsonImporter.import_deck_from_path(collection, Path(directory_path))

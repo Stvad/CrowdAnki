@@ -48,7 +48,7 @@ class GithubImporter(object):
             deck_directory_wb.rename(deck_directory)
             # Todo progressbar on download
 
-            AnkiJsonImporter.import_deck(self.collection, deck_directory)
+            AnkiJsonImporter.import_deck_from_path(self.collection, deck_directory)
 
         except (URLError, HTTPError, OSError) as error:
             aqt.utils.showWarning("Error while trying to get deck from Github: {}".format(error))

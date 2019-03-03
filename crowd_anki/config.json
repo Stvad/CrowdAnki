@@ -1,4 +1,3 @@
 {
-  "deck_repositories_path": "user_files",
-  "edit_history_recording_enabled": true
+  "snapshot_on_sync": false
 }

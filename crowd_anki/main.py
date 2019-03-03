@@ -1,45 +1,33 @@
 import os
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "dist"))
-
-from pathlib import Path
-
-from .export.anki_exporter_wrapper import add_exporter_hook
-from .importer.anki_importer import AnkiJsonImporter
-from .github.github_importer import GithubImporter
-
-import aqt.utils
 from aqt import mw, QAction, QFileDialog
 
+sys.path.append(os.path.join(os.path.dirname(__file__), "dist"))
 
-def on_import_action():
-    directory_path = str(QFileDialog.getExistingDirectory(caption="Select Deck Directory"))
-    if not directory_path:
-        return
-
-    import_directory = Path(directory_path)
-    AnkiJsonImporter.import_deck(aqt.mw.col, import_directory)
+from .utils.log import setup_log
+from .anki.ui.action_vendor import ActionVendor
+from .export.anki_exporter_wrapper import add_exporter_hook
 
 
-def anki_import_init():
-    import_action = QAction("CrowdAnki: Import from disk", mw)
-    import_action.triggered.connect(on_import_action)
-
-    github_import_action = QAction("CrowdAnki: Import from Github", mw)
-    github_import_action.triggered.connect(lambda: GithubImporter.on_github_import_action(mw.col))
+def anki_actions_init(window):
+    action_vendor = ActionVendor(window, QAction, lambda caption: QFileDialog.getExistingDirectory(caption=caption))
 
     # -2 supposed to give the separator after import/export section, so button should be at the end of this section
-    mw.form.menuCol.insertActions(mw.form.menuCol.actions()[-2], [import_action, github_import_action])
+    window.form.menuCol.insertActions(window.form.menuCol.actions()[-2],
+                                      action_vendor.actions())
 
 
-def anki_init():
-    if mw:
-        add_exporter_hook()
-        anki_import_init()
+def anki_init(window):
+    if not window:
+        return
+
+    add_exporter_hook()
+    anki_actions_init(window)
+    setup_log()
 
 
-anki_init()
+anki_init(mw)
 
 """
 Warning:
