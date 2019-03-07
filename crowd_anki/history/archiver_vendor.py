@@ -31,5 +31,11 @@ class ArchiverVendor:
         return Path(self.config.get('snapshot_path', str(USER_FILES_PATH.resolve())))
 
     def do_manual_snapshot(self):
+        self.do_snapshot('Manual snapshot')
+
+    def snapshot_on_sync(self):
+        self.do_snapshot('Snapshot on sync')
+
+    def do_snapshot(self, reason):
         with progress_indicator(self.window, 'Taking CrowdAnki snapshot of all decks'):
-            self.all_deck_archiver().archive(reason='Manual snapshot')
+            self.all_deck_archiver().archive(reason=reason)

@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import anki.exporting
 import aqt.utils
 from .anki_exporter import AnkiJsonExporter
 from ..anki.adapters.anki_deck import AnkiDeck
@@ -47,7 +46,3 @@ def exporters_hook(exporters_list):
     exporter_id = get_exporter_id(AnkiJsonExporterWrapper)
     if exporter_id not in exporters_list:
         exporters_list.append(exporter_id)
-
-
-def add_exporter_hook():
-    anki.hooks.addHook("exportersList", exporters_hook)

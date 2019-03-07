@@ -5,16 +5,16 @@ from aqt import mw, QAction, QFileDialog
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "dist"))
 
-from .utils.log import setup_log
+from .anki.hook_vendor import HookVendor
 from .anki.ui.action_vendor import ActionVendor
-from .export.anki_exporter_wrapper import add_exporter_hook
+from .utils.log import setup_log
 
 
 def anki_actions_init(window):
     action_vendor = ActionVendor(window, QAction, lambda caption: QFileDialog.getExistingDirectory(caption=caption))
 
-    # -2 supposed to give the separator after import/export section, so button should be at the end of this section
-    window.form.menuCol.insertActions(window.form.menuCol.actions()[-2],
+    after_export_action_position = -2
+    window.form.menuCol.insertActions(window.form.menuCol.actions()[after_export_action_position],
                                       action_vendor.actions())
 
 
@@ -22,7 +22,7 @@ def anki_init(window):
     if not window:
         return
 
-    add_exporter_hook()
+    HookVendor(window).setup_hooks()
     anki_actions_init(window)
     setup_log()
 
