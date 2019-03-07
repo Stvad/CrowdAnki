@@ -1,4 +1,4 @@
-from dataclasses import field
+from dataclasses import field, dataclass
 from pathlib import Path
 from typing import Any
 
@@ -7,7 +7,6 @@ from .archiver import AllDeckArchiver
 from .dulwich_repo import DulwichAnkiRepo
 from ..anki.adapters.deck_manager import AnkiStaticDeckManager
 from ..anki.ui.utils import progress_indicator
-from ..dist.dataclasses import dataclass
 from ..export.anki_exporter import AnkiJsonExporter
 from ..utils.constants import USER_FILES_PATH
 
