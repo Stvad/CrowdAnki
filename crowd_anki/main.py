@@ -7,7 +7,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "dist"))
 
 from .anki.hook_vendor import HookVendor
 from .anki.ui.action_vendor import ActionVendor
-from .utils.log import setup_log
 
 
 def anki_actions_init(window):
@@ -24,7 +23,6 @@ def anki_init(window):
 
     HookVendor(window).setup_hooks()
     anki_actions_init(window)
-    setup_log()
 
 
 anki_init(mw)
