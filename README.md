@@ -1,7 +1,11 @@
 # CrowdAnki
 [![Build Status](https://travis-ci.org/Stvad/CrowdAnki.svg?branch=master)](https://travis-ci.org/Stvad/CrowdAnki)
 
-**CrowdAnki** is a plugin for http://ankisrs.net/ that allows users to import and export decks/notes and all relevant information in a hierarchical JSON format. The main purpose is to facilitate crowdsourcing for Anki decks and notes.
+**CrowdAnki** is a plugin for http://ankisrs.net/ that allows users to import and export decks/notes and all relevant information in a JSON format. The main purpose is to facilitate crowd-sourcing for Anki decks and notes.
+
+Starting with version 0.6 it also features a close integration with Git. 
+Providing you with an ability to **automatically maintain history of edits** for your decks.   
+See more details [below][#snapshots]. 
 
 AnkiWeb link for the plugin: https://ankiweb.net/shared/info/1788670778
 
@@ -153,3 +157,13 @@ So, for example, to get my [git deck](https://github.com/Stvad/Software_Engineer
 * Automatic backup would be triggered prior to the import;
 * If note model for the note has changed, or if note model itself changed in a way that it's not easy to update it automatically: you would be prompted with the window, that will ask you to specify correspondence between old and new model;
 * If the note was moved to another deck in JSON file, on import all cards from that note (except the ones, that are in dynamic decks) will be moved to the specified deck.
+
+## Snapshots
+
+**CrowdAnki** can help you preserve **the history of edits for your decks**.  
+It does this by exporting them in a specified location and creating a git commit each time you do a snapshot.
+
+You can take snapshots manually via `File > CrowdAnki: Snapshot` menu action.  
+Or you can enable automated snapshots in plugin configuration. You can find more details on how to do it [here](crowd_anki/config.md) 
+
+Other things you can [configure](crowd_anki/config.md) is the location of the snapshot and what decks should be included into it. 
