@@ -5,7 +5,7 @@ from functional import seq
 from pygtrie import StringTrie
 from typing import Iterable, Any
 
-from ..adapters.anki_deck import AnkiDeck
+from ..adapters.anki_deck import AnkiDeck, NamedLazyDeck
 from ...utils.trie import keys_without_children
 from ...utils.trie import remove_children_of
 
@@ -17,6 +17,10 @@ class DeckManager(ABC):
 
     @abstractmethod
     def leaf_decks(self, overrides: Iterable[AnkiDeck] = tuple()) -> Iterable[AnkiDeck]:
+        pass
+
+    @abstractmethod
+    def for_names(self, names: Iterable[str]):
         pass
 
     def decks_by_name(self):
@@ -44,3 +48,10 @@ class AnkiStaticDeckManager(DeckManager):
 
     def deck_trie(self):
         return StringTrie(**self.decks_by_name(), separator=AnkiDeck.deck_name_separator)
+
+    def for_names(self, names: Iterable[str]):
+        """
+        The returned decks are lazy initialized with the actual internal content.
+        """
+        return [NamedLazyDeck(name, lambda name: self.internal_deck_manager.byName)
+                for name in names]

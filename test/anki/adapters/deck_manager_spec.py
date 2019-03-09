@@ -1,4 +1,4 @@
-from expects import expect, contain_only
+from expects import expect, contain_only, equal
 from mamba import description, it, before
 from typing import Iterable
 from unittest.mock import MagicMock
@@ -48,10 +48,19 @@ with description(AnkiStaticDeckManager) as self:
     with it('returns only decks without children, when asked for leaf_decks'):
         expect(self.static_deck_manager.leaf_decks()).to(contain_only(*leaf_decks))
 
-    with it('when overrides are supplied - it returns them as leaf nodes, and does not return their children'):
+    with it('when overrides are supplied'
+            'it returns them as leaf nodes, and does not return their children'):
         expect(self.static_deck_manager.leaf_decks(override_decks)) \
             .to(contain_only(*(override_decks + dummy_deck_for_names(non_overridden_decks))))
 
     with it('ignores non-existent overrides'):
-        expect(self.static_deck_manager.leaf_decks(override_decks + [deck_for_name('non_existent_deck')])) \
+        expect(self.static_deck_manager
+               .leaf_decks(override_decks + [deck_for_name('non_existent_deck')])) \
             .to(contain_only(*(override_decks + dummy_deck_for_names(non_overridden_decks))))
+
+    with it('for_names returns lazy decks without calling internal deck manager'):
+        test_name = 'test_name'
+        result_decks = self.static_deck_manager.for_names([test_name])
+
+        self.internal_manager.assert_not_called()
+        expect(result_decks[0].name).to(equal(test_name))
