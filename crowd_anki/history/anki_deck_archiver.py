@@ -15,7 +15,7 @@ class AnkiDeckArchiver(Archiver):
     deck_exporter: DeckExporter
     repo_provider: Callable[[Path], AnkiRepo]
 
-    def archive(self, decks: Iterable = tuple(), reason=None):
+    def archive(self, _: Iterable = tuple(), reason=None):
         deck_path = self.deck_exporter.export_to_directory(self.deck, self.output_directory)
 
         repo = self.repo_provider(deck_path)
