@@ -86,7 +86,7 @@ class Deck(JsonSerializableAnkiDict):
     def serialization_dict(self):
         return utils.merge_dicts(
             super(Deck, self).serialization_dict(),
-            {"media_files": list(self.get_media_file_list(include_children=False))},
+            {"media_files": list(sorted(self.get_media_file_list(include_children=False)))},
             {"note_models": list(self.metadata.models.values()),
              "deck_configurations": list(self.metadata.deck_configs.values())} if not self.is_child else {})
 
