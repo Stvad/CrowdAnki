@@ -1,9 +1,5 @@
-try:
-    # Register for https://github.com/dayjaby/AnkiHub plugin system.
-    import ankihub
-
-    ankihub.update(['Stvad/CrowdAnki'])
-except:
-    pass
-
-from . import main
+if __name__ != "crowd_anki":
+    """
+    This is to avoid doing init when calling things from tests
+    """
+    from . import main

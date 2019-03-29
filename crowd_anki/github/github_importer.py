@@ -1,20 +1,15 @@
-try:
-    from urllib.request import urlopen
-    from urllib.error import HTTPError, URLError
-except ImportError:
-    from urllib2 import urlopen, HTTPError, URLError
-
-import zipfile
 import tempfile
-from io import BytesIO
+import zipfile
+from urllib.error import HTTPError, URLError
+from urllib.request import urlopen
 
-from ..utils import utils
-from ..utils.pathlib_wrapper import Path
-from ..anki_importer import AnkiJsonImporter
+from io import BytesIO
+from pathlib import Path
 
 import aqt.utils
-
 from aqt import QInputDialog
+from ..importer.anki_importer import AnkiJsonImporter
+from ..utils import utils
 
 BRANCH_NAME = "master"
 GITHUB_LINK = "https://github.com/{}/archive/" + BRANCH_NAME + ".zip"
@@ -53,7 +48,7 @@ class GithubImporter(object):
             deck_directory_wb.rename(deck_directory)
             # Todo progressbar on download
 
-            AnkiJsonImporter.import_deck(self.collection, deck_directory)
+            AnkiJsonImporter.import_deck_from_path(self.collection, deck_directory)
 
         except (URLError, HTTPError, OSError) as error:
             aqt.utils.showWarning("Error while trying to get deck from Github: {}".format(error))

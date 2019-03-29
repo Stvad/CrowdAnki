@@ -1,32 +1,34 @@
 from collections import namedtuple, defaultdict
 
+from typing import Callable, Any, Iterable
+
+from .deck_config import DeckConfig
+from .json_serializable import JsonSerializableAnkiDict
+from .note_model import NoteModel
+from ..anki.adapters.file_provider import FileProvider
 from ..utils import utils
 from ..utils.constants import UUID_FIELD_NAME
 
-from anki.exporting import AnkiExporter
-from .deck_config import DeckConfig
-from .json_serializable import JsonSerializableAnkiDict
-from .note import Note
-from .note_model import NoteModel
+DeckMetadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
 
 
 class Deck(JsonSerializableAnkiDict):
-    Metadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
     DECK_NAME_DELIMITER = "::"
 
-    # todo super(Deck, self)
     export_filter_set = JsonSerializableAnkiDict.export_filter_set | \
-                        {"collection",  # runtime-relevant
-                         "newToday",
-                         "revToday",
-                         "timeToday",
-                         "lrnToday",
-                         "metadata",
-                         "browserCollapsed",
-                         "collapsed",
-                         "is_child",  # runtime-relevant
-                         "conf"  # uuid
-                         }
+                        {
+                            "collection",  # runtime-relevant
+                            "newToday",
+                            "revToday",
+                            "timeToday",
+                            "lrnToday",
+                            "metadata",
+                            "browserCollapsed",
+                            "collapsed",
+                            "is_child",  # runtime-relevant
+                            "conf",  # uuid
+                            "file_provider_supplier"
+                        }
 
     import_filter_set = JsonSerializableAnkiDict.import_filter_set | \
                         {"note_models",
@@ -35,8 +37,13 @@ class Deck(JsonSerializableAnkiDict):
                          "media_files",
                          "notes"}
 
-    def __init__(self, anki_deck=None, is_child=False):
-        super(Deck, self).__init__(anki_deck)
+    def __init__(self,
+                 file_provider_supplier: Callable[[Any, Iterable[int]], FileProvider],
+                 anki_deck=None,
+                 is_child=False):
+        super().__init__(anki_deck)
+
+        self.file_provider_supplier = file_provider_supplier
         self.is_child = is_child
 
         self.collection = None
@@ -56,30 +63,6 @@ class Deck(JsonSerializableAnkiDict):
 
         return result
 
-    @classmethod
-    def from_collection(cls, collection, name, deck_metadata=None, is_child=False):
-        anki_dict = collection.decks.byName(name)
-
-        deck = Deck(anki_dict, is_child)
-
-        deck.collection = collection
-
-        deck._update_fields()
-
-        deck.metadata = deck_metadata
-        deck._load_metadata()
-
-        deck.notes = Note.get_notes_from_collection(collection, deck.anki_dict["id"], deck.metadata.models)
-
-        direct_children = [child_name for child_name, _ in collection.decks.children(deck.anki_dict["id"])
-                           if Deck.DECK_NAME_DELIMITER
-                           not in child_name[len(name) + len(Deck.DECK_NAME_DELIMITER):]]
-
-        deck.children = [cls.from_collection(collection, child_name, deck.metadata, True)
-                         for child_name in direct_children]
-
-        return deck
-
     def get_note_count(self):
         return len(self.notes) + sum(child.get_note_count() for child in self.children)
 
@@ -89,7 +72,7 @@ class Deck(JsonSerializableAnkiDict):
 
     def _load_metadata(self):
         if not self.metadata:
-            self.metadata = Deck.Metadata({}, {})
+            self.metadata = DeckMetadata({}, {})
 
         self._load_deck_config()
 
@@ -103,7 +86,7 @@ class Deck(JsonSerializableAnkiDict):
     def serialization_dict(self):
         return utils.merge_dicts(
             super(Deck, self).serialization_dict(),
-            {"media_files": list(self.get_media_file_list(include_children=False))},
+            {"media_files": list(sorted(self.get_media_file_list(include_children=False)))},
             {"note_models": list(self.metadata.models.values()),
              "deck_configurations": list(self.metadata.deck_configs.values())} if not self.is_child else {})
 
@@ -120,14 +103,14 @@ class Deck(JsonSerializableAnkiDict):
         return media | (self._get_media_from_models() if data_from_models else set())
 
     def _get_media_from_models(self):
-        anki_exporter = AnkiExporter(self.collection)
         model_ids = [model.anki_dict["id"] for model in self.metadata.models.values()]
+        file_provider = self.file_provider_supplier(self.collection, model_ids)
 
-        return anki_exporter.get_files_for_models(model_ids, self.collection.media.dir())
+        return file_provider.get_files()
 
     def _load_metadata_from_json(self, json_dict):
         if not self.metadata:
-            self.metadata = self.Metadata({}, {})
+            self.metadata = DeckMetadata({}, {})
 
         note_models_list = [NoteModel.from_json(model) for model in json_dict.get("note_models", [])]
         new_models = utils.merge_dicts(self.metadata.models,
@@ -139,28 +122,7 @@ class Deck(JsonSerializableAnkiDict):
         new_deck_configs = utils.merge_dicts(self.metadata.deck_configs,
                                              {deck_config.get_uuid(): deck_config for deck_config in deck_config_list})
 
-        self.metadata = Deck.Metadata(new_deck_configs, new_models)
-
-    @classmethod
-    def from_json(cls, json_dict, deck_metadata=None):
-        """load metadata, load notes, load children"""
-        deck = Deck(json_dict)
-        deck._update_fields()
-        deck.metadata = deck_metadata
-
-        if not deck.metadata:  # Todo mental check. The idea is that children don't have metadata
-            deck._load_metadata_from_json(json_dict)
-
-        deck.deck_config_uuid = json_dict["deck_config_uuid"]
-
-        deck.notes = [Note.from_json(json_note) for json_note in json_dict["notes"]]
-
-        deck.children = [cls.from_json(child, deck.metadata) for child in json_dict["children"]]
-
-        # Todo should I call this here?
-        deck.post_import_filter()
-
-        return deck
+        self.metadata = DeckMetadata(new_deck_configs, new_models)
 
     def save_to_collection(self,
                            collection,

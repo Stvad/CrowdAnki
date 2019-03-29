@@ -1,11 +1,16 @@
-sudo: required
-dist: trusty
 language: python
 python:
-  - "2.7"
+  - "3.6"
 
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y anki python-sip
+addons:
+  sonarcloud:
+    organization: "stvad-github"
 
-script: python crowd_anki/test/test_main.py
+install:
+  - pip install pipenv
+  - pipenv install --dev
+
+script:
+  - pipenv run mamba --enable-coverage ./
+  - coverage xml -i -o build/coverage.xml
+  - sonar-scanner

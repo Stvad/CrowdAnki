@@ -1,9 +1,8 @@
 from collections import namedtuple
 
-from ..anki_overrides.change_model_dialog import ChangeModelDialog
-
-from ..utils import utils
 from .json_serializable import JsonSerializableAnkiDict
+from ..anki.overrides.change_model_dialog import ChangeModelDialog
+from ..utils import utils
 
 
 class NoteModel(JsonSerializableAnkiDict):

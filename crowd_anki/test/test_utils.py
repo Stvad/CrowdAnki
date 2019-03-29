@@ -1,5 +1,6 @@
 import unittest
-from crowd_anki.utils.pathlib_wrapper import Path
+from pathlib import Path
+
 from crowd_anki.utils import utils
 
 
