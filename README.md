@@ -1,6 +1,8 @@
 # CrowdAnki
 [![Build Status](https://travis-ci.org/Stvad/CrowdAnki.svg?branch=master)](https://travis-ci.org/Stvad/CrowdAnki)
 
+[[中文版介绍](README.zh_CN.md)]
+
 **CrowdAnki** is a plugin for http://ankisrs.net/ that allows users to import and export decks/notes and all relevant information in a JSON format. The main purpose is to facilitate crowd-sourcing for Anki decks and notes.
 
 Starting with version 0.6 it also features a close integration with Git. 
@@ -68,7 +70,7 @@ If you just want to **get latest changes from other people** - you need to perfo
 4. Install git on your computer.
 5. Go to the directory that resulted from export.
 6. Initialize repository with following commands:
-    
+   
     ```
     git init
     git remote add origin git@github.com:<username>/<repository>.git
@@ -109,7 +111,7 @@ If somebody **just wants to use the deck** you've uploaded to Github - they can 
 When you or one of your collaborators want to upload changes you've made to the Github, you need to:
 
 1. Get the latest changes from the Github:
-    
+   
     ```
     git pull
     ```
