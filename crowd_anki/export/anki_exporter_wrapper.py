@@ -1,9 +1,11 @@
 from pathlib import Path
 
-import aqt.utils
 from .anki_exporter import AnkiJsonExporter
 from ..anki.adapters.anki_deck import AnkiDeck
 from ..utils import constants
+from ..utils.notifier import AnkiUiNotifier, Notifier
+
+EXPORT_FAILED_TITLE = "Export failed"
 
 
 class AnkiJsonExporterWrapper:
@@ -17,23 +19,34 @@ class AnkiJsonExporterWrapper:
     includeTags = True
     directory_export = True
 
-    def __init__(self, collection):
+    def __init__(self, collection,
+                 deck_id: int = None,
+                 json_exporter: AnkiJsonExporter = None,
+                 notifier: Notifier = None):
         self.includeMedia = True
-        self.did = None
+        self.did = deck_id
         self.count = 0  # Todo?
         self.collection = collection
-        self.anki_json_exporter = AnkiJsonExporter(collection)
+        self.anki_json_exporter = json_exporter or AnkiJsonExporter(collection)
+        self.notifier = notifier or AnkiUiNotifier()
 
     # required by anki exporting interface with it's non PEP-8 names
     # noinspection PyPep8Naming
     def exportInto(self, directory_path):
         if self.did is None:
-            aqt.utils.showWarning("CrowdAnki works only with specific decks.", title="Export failed")
+            self.notifier.warning(EXPORT_FAILED_TITLE, "CrowdAnki export works only for specific decks. "
+                                                       "Please use CrowdAnki snapshot if you want to export "
+                                                       "the whole collection.")
             return
 
         deck = AnkiDeck(self.collection.decks.get(self.did, default=False))
-        self.anki_json_exporter.export_to_directory(deck, Path(directory_path).parent, self.includeMedia)
+        if deck.is_dynamic:
+            self.notifier.warning(EXPORT_FAILED_TITLE, "CrowdAnki does not support export for dynamic decks.")
+            return
+
         # .parent because we receive name with random numbers at the end (hacking around internals of Anki) :(
+        export_path = Path(directory_path).parent
+        self.anki_json_exporter.export_to_directory(deck, export_path, self.includeMedia)
 
         self.count = self.anki_json_exporter.last_exported_count
 
