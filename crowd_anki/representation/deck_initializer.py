@@ -1,10 +1,16 @@
+from functional import seq
+
 from .deck import Deck
 from .note import Note
+from ..anki.adapters.anki_deck import AnkiDeck
 from ..anki.adapters.note_model_file_provider import NoteModelFileProvider
 
 
 def from_collection(collection, name, deck_metadata=None, is_child=False) -> Deck:
     anki_dict = collection.decks.byName(name)
+
+    if AnkiDeck(anki_dict).is_dynamic:
+        return None
 
     deck = Deck(NoteModelFileProvider, anki_dict, is_child)
     deck.collection = collection
@@ -18,8 +24,9 @@ def from_collection(collection, name, deck_metadata=None, is_child=False) -> Dec
                        if Deck.DECK_NAME_DELIMITER
                        not in child_name[len(name) + len(Deck.DECK_NAME_DELIMITER):]]
 
-    deck.children = [from_collection(collection, child_name, deck.metadata, True)
-                     for child_name in direct_children]
+    deck.children = seq(direct_children) \
+        .map(lambda child_name: from_collection(collection, child_name, deck.metadata, True)) \
+        .filter(lambda it: it is not None).to_list()
 
     return deck
 

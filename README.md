@@ -144,8 +144,12 @@ The current workflow could be described as following:
 ## Export
 To perform the export go to menu File>Export
 
-Select the deck (**note**: export of "All decks" is not supported, you need to select a specific deck) and the export format "CrowdAnki JSON representation".
+Select the deck and the export format "CrowdAnki JSON representation".
 After pressing the Export button - select directory where the result should be stored.
+
+### Limitations:
+* CrowdAnki won't allow you to do export of "All decks", you should use CrowdAnki snapshot instead.   
+* Export of a filtered deck is not supported, export the main deck instead and filter it again after importing. You don't have to delete existing filtered decks, as all cards are still part of the main deck. When exporting nested decks, filtered sub-decks are just ignored.
 
 ## Import
 To perform the import go to menu File>"CrowdAnki: Import from disk" and select the directory where the deck is stored.
