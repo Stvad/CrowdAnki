@@ -22,8 +22,8 @@ This section illustrates collaboration workflow using [Github](http://github.com
 
 Suppose you have a deck named DeckX and you want to collaborate on its improvement with other people. In order to achieve this you will need to:
 
-1. Export the DeckX. You can do that by going to Anki: File > Export > 
-Export format: "CrowdAnki Json Representation". Include: DeckX.
+1. Export the DeckX. You can do that by going to Anki: `File > Export > `
+`Export format: CrowdAnki Json Representation`. Include: DeckX.
 2. Create a Github account for yourself and ask your collaborators to do the same (see: https://github.com/join).
 3. Create a repository for your deck by following this guide https://guides.github.com/activities/hello-world/#repository. The name of the repository has to correspond to the name of the directory that was created during the export. In our case, it would be named DeckX.
 4. Add collaborators to the repository: https://help.github.com/articles/inviting-collaborators-to-a-personal-repository/.
@@ -142,7 +142,7 @@ The current workflow could be described as following:
 * After that original user (and other people) can import updated deck to integrate these new changes into their collection.
 
 ## Export
-To perform the export go to menu File>Export
+To perform the export go to menu `File > Export`
 
 Select the deck and the export format "CrowdAnki JSON representation".
 After pressing the Export button - select directory where the result should be stored.
@@ -152,10 +152,10 @@ After pressing the Export button - select directory where the result should be s
 * Export of a filtered deck is not supported, export the main deck instead and filter it again after importing. You don't have to delete existing filtered decks, as all cards are still part of the main deck. When exporting nested decks, filtered sub-decks are just ignored.
 
 ## Import
-To perform the import go to menu File>"CrowdAnki: Import from disk" and select the directory where the deck is stored.
+To perform the import go to menu `File > CrowdAnki: Import from disk` and select the directory where the deck is stored.
 
 ## Import from Github
-To get the deck from Github go to menu File>"CrowdAnki: Import from Github" and enter Github username and repository name in suggested format.
+To get the deck from Github go to menu `File > CrowdAnki: Import from Github` and enter Github username and repository name in suggested format.
 
 So, for example, to get my [git deck](https://github.com/Stvad/Software_Engineering__git) you would need to enter Stvad/Software_Engineering__git.
 
