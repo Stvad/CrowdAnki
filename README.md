@@ -7,7 +7,7 @@
 
 Starting with version 0.6 it also features a close integration with Git. 
 Providing you with an ability to **automatically maintain history of edits** for your decks.   
-See more details [below][#snapshots]. 
+See more details [below](#snapshots). 
 
 AnkiWeb link for the plugin: https://ankiweb.net/shared/info/1788670778
 
