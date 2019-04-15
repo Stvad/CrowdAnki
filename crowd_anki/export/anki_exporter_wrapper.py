@@ -13,7 +13,7 @@ class AnkiJsonExporterWrapper:
     Wrapper designed to work with standard export dialog in anki.
     """
 
-    key = "CrowdAnki Json representation"
+    key = "CrowdAnki JSON representation"
     ext = constants.ANKI_EXPORT_EXTENSION
     hideTags = True
     includeTags = True

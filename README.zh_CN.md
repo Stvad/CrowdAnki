@@ -19,7 +19,7 @@ AnkiWeb 上此插件的链接： https://ankiweb.net/shared/info/1788670778
 
 假设你有一个名为牌组X的牌组，并且你想与其它人协作改进它。为了实现这一目标，你需要：
 
-1. 导出牌组X。你可以在 Anki 上：文件>导出>导出格式：CrowdAnki Json Representation (*directory)、包含：牌组X
+1. 导出牌组X。你可以在 Anki 上：文件>导出>导出格式：CrowdAnki JSON Representation (*directory)、包含：牌组X
 2. 为你自己创建一个 GitHub 账号，并请你的协作者们也这么做 (参见：https://github.com/join)。
 3. 根据这个[指南](https://guides.github.com/activities/hello-world/#repository)为你的牌组创建仓库。仓库的名称必须与牌组导出时创建的目录的名称相对应。在本案例下，仓库应该被命名为牌组X。(译者注：其实没必要两者名称相同，况且中文无法作为仓库名)
 4. 为这个仓库添加协作者：https://help.github.com/articles/inviting-collaborators-to-a-personal-repository/。
@@ -27,10 +27,10 @@ AnkiWeb 上此插件的链接： https://ankiweb.net/shared/info/1788670778
 ### 图形界面工作流程
 **前言**：
 
-我的目标是提供一个便于用户理解的协作工作流程描述。为了做到这一点，我试了很多图形界面的 Git 客户端。为了我们的目的，我认为 **GitHub Desktop** 是最好的选择(作为对用户最为友好的客户端)。但是 GitHub Desktop 存在一个问题—— 它没有 Linux 版本。这令我特别难过，因为我主要使用 Linux 作为我的操作系统。我曾考虑过在本教程中使用 Gitkraken ，但是它存在一些问题而不符合我们的目的。(但如果你是 Linux 用户或者由于某种原因你不喜欢 GitHub Desktop  —— 你仍可以考虑使用它)
+我的目标是提供一个便于用户理解的协作工作流程描述。为了做到这一点，我试了很多图形界面的 Git 客户端。为了我们的目的，我认为 **GitHub Desktop** 是最好的选择(作为对用户最为友好的客户端)。但是 GitHub Desktop 存在一个问题—— 它没有 Linux 版本。这令我特别难过，因为我主要使用 Linux 作为我的操作系统。我曾考虑过在本教程中使用 GitKraken ，但是它存在一些问题而不符合我们的目的。(但如果你是 Linux 用户或者由于某种原因你不喜欢 GitHub Desktop  —— 你仍可以考虑使用它)
 
 #### 协作准备
-1. 在电脑上安装 [Github Desktop](https://desktop.github.com/) 。
+1. 在电脑上安装 [GitHub Desktop](https://desktop.github.com/) 。
 2. 登录之前你创建的 GitHub 账号。
 3. 创建一个新仓库：File>Create a new repository. "Local path" 应该指向你导出牌组的地方，"repository name"应该与导出的文件夹名称相同。(译者注：考虑到中文不能作为仓库名，大家可以参考我的项目：[L-M-Sherlock/Ankigaokao-ScienceComprehensive-Biology-MoleculesAndCells](https://github.com/L-M-Sherlock/Ankigaokao-ScienceComprehensive-Biology-MoleculesAndCells)，先用 GitHub Desktop 在任意文件夹创建一个仓库，仓库名为英文，然后把导出的文件夹中的 media 文件夹和牌组X.json 文件移至该仓库，即与 .git 文件夹和 .gitattributes 文件同目录。)
   ![Image](misc/image/2.png?raw=true)
@@ -40,7 +40,7 @@ AnkiWeb 上此插件的链接： https://ankiweb.net/shared/info/1788670778
   ![Image](misc/image/6.png?raw=true)
 
 #### 为了开始在此牌组工作，你的协作者需要：
-1. 在他们的电脑安装 [Github Desktop](https://desktop.github.com/) 。
+1. 在他们的电脑安装 [GitHub Desktop](https://desktop.github.com/) 。
 2. 克隆你已经创建的仓库。他们可以通过在 GitHub 仓库页面点击 "Clone or download -> Open in Desktop" 做到这一点。
 	![Image](misc/image/7.png?raw=true)
 3. [导入牌组](#导入).
@@ -147,7 +147,7 @@ AnkiWeb 上此插件的链接： https://ankiweb.net/shared/info/1788670778
 导入请到菜单：文件>"CrowdAnki: Import from disk" 并选择牌组储存的目录。 
 
 ## 从 GitHub 导入
-从 GitHub 导入牌组请到菜单：文件>"CrowdAnki: Import from Github" 并以建议的格式输入 GitHub 用户名和仓库名。
+从 GitHub 导入牌组请到菜单：文件>"CrowdAnki: Import from GitHub" 并以建议的格式输入 GitHub 用户名和仓库名。
 
 以我的仓库为例，为了获取我的[Ankigaokao-理科-理综-生物-分子与细胞](https://github.com/L-M-Sherlock/Ankigaokao-ScienceComprehensive-Biology-MoleculesAndCells)，你需要输入
 

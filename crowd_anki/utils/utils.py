@@ -36,7 +36,7 @@ def add_absent_field(object_to_modify, field_name, default_value=None):
 
 def json_compare(first, second):
     """
-    Json comparison for complex objects. Should be JsonSerializable
+    JSON comparison for complex objects. Should be JsonSerializable
     """
     return json.dumps(first, sort_keys=True) == json.dumps(second, sort_keys=True)
 
