@@ -1,6 +1,6 @@
 from functional import seq
 
-invalid_filename_chars = set(":*?\"<>|/\\ ")
+invalid_filename_chars = set(":*?\"<>|/\\ \n")
 
 
 def sanitize_anki_deck_name(name: str, replace_char='_'):

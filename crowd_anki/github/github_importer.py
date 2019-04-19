@@ -17,7 +17,7 @@ GITHUB_LINK = "https://github.com/{}/archive/" + BRANCH_NAME + ".zip"
 
 class GithubImporter(object):
     """
-    Provides functionality of installing shared deck from Github, by entering User and Repository names
+    Provides functionality of installing shared deck from GitHub, by entering User and Repository names
     """
 
     def __init__(self, collection):
@@ -51,5 +51,5 @@ class GithubImporter(object):
             AnkiJsonImporter.import_deck_from_path(self.collection, deck_directory)
 
         except (URLError, HTTPError, OSError) as error:
-            aqt.utils.showWarning("Error while trying to get deck from Github: {}".format(error))
+            aqt.utils.showWarning("Error while trying to get deck from GitHub: {}".format(error))
             raise
