@@ -42,7 +42,7 @@ class AnkiJsonImporter(object):
             aqt.mw.progress.start(immediate=True)
 
         try:
-            self.load_from_file(directory_path.joinpath(directory_path.name).with_suffix(DECK_FILE_EXTENSION))
+            self.load_from_file(directory_path.joinpath('deck').with_suffix(DECK_FILE_EXTENSION))
 
             if import_media:
                 media_directory = directory_path.joinpath(MEDIA_SUBDIRECTORY_NAME)
