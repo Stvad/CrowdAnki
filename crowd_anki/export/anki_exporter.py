@@ -9,7 +9,7 @@ from .deck_exporter import DeckExporter
 from ..anki.adapters.anki_deck import AnkiDeck
 from ..representation import deck_initializer
 from ..representation.deck import Deck
-from ..utils.constants import DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
+from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from ..utils.filesystem.name_sanitizer import sanitize_anki_deck_name
 
 
@@ -28,7 +28,7 @@ class AnkiJsonExporter(DeckExporter):
         deck = deck_initializer.from_collection(self.collection, deck.name)
         self.last_exported_count = deck.get_note_count()
 
-        deck_filename = deck_directory.joinpath('deck').with_suffix(DECK_FILE_EXTENSION)
+        deck_filename = deck_directory.joinpath(DECK_FILE_NAME).with_suffix(DECK_FILE_EXTENSION)
         with deck_filename.open(mode='w', encoding="utf8") as deck_file:
             deck_file.write(json.dumps(deck,
                                        default=Deck.default_json,
