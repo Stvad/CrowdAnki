@@ -14,21 +14,23 @@ from ..utils.filesystem.name_sanitizer import sanitize_anki_deck_name
 
 
 class AnkiJsonExporter(DeckExporter):
-    def __init__(self, collection, deck_name_sanitizer: Callable[[str], str] = sanitize_anki_deck_name):
+    def __init__(self, collection,
+                 deck_name_sanitizer: Callable[[str], str] = sanitize_anki_deck_name,
+                 deck_file_name: str = DECK_FILE_NAME):
         self.collection = collection
         self.last_exported_count = 0
         self.deck_name_sanitizer = deck_name_sanitizer
+        self.deck_file_name = deck_file_name
 
     def export_to_directory(self, deck: AnkiDeck, output_dir=Path("."), copy_media=True) -> Path:
-        deck_fsname = self.deck_name_sanitizer(deck.name)
-        deck_directory = output_dir.joinpath(deck_fsname)
+        deck_directory = output_dir.joinpath(self.deck_name_sanitizer(deck.name))
 
         deck_directory.mkdir(parents=True, exist_ok=True)
 
         deck = deck_initializer.from_collection(self.collection, deck.name)
         self.last_exported_count = deck.get_note_count()
 
-        deck_filename = deck_directory.joinpath(DECK_FILE_NAME).with_suffix(DECK_FILE_EXTENSION)
+        deck_filename = deck_directory.joinpath(self.deck_file_name).with_suffix(DECK_FILE_EXTENSION)
         with deck_filename.open(mode='w', encoding="utf8") as deck_file:
             deck_file.write(json.dumps(deck,
                                        default=Deck.default_json,
