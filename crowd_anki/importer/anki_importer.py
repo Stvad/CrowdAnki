@@ -11,9 +11,10 @@ from ..representation import deck_initializer
 from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 
 
-class AnkiJsonImporter(object):
-    def __init__(self, collection):
+class AnkiJsonImporter:
+    def __init__(self, collection, deck_file_name: str = DECK_FILE_NAME):
         self.collection = collection
+        self.deck_file_name = deck_file_name
 
     def load_from_file(self, file_path):
         """
@@ -42,16 +43,11 @@ class AnkiJsonImporter(object):
             aqt.mw.progress.start(immediate=True)
 
         try:
-            try:
-                self.load_from_file(directory_path.joinpath(DECK_FILE_NAME).with_suffix(DECK_FILE_EXTENSION))
-            except ValueError:
-                self.load_from_file(directory_path.joinpath(directory_path.name).with_suffix(DECK_FILE_EXTENSION))
+            self.load_from_file(self.get_deck_path(directory_path))
 
             if import_media:
                 media_directory = directory_path.joinpath(MEDIA_SUBDIRECTORY_NAME)
                 if media_directory.exists():
-                    # Needed to reserve to this, as pathlib2 is not handling unicode properly.
-                    # Todo Should switch back on migrating to python3
                     unicode_media_directory = str(media_directory)
                     src_files = os.listdir(unicode_media_directory)
                     for filename in src_files:
@@ -64,6 +60,18 @@ class AnkiJsonImporter(object):
             if aqt.mw:
                 aqt.mw.progress.finish()
                 aqt.mw.deckBrowser.show()
+
+    def get_deck_path(self, directory_path):
+        """
+        Provides compatibility layer between deck file naming conventions.
+        """
+
+        def path_for_name(name):
+            return directory_path.joinpath(name).with_suffix(DECK_FILE_EXTENSION)
+
+        convention_path = path_for_name(self.deck_file_name)
+        inferred_path = path_for_name(directory_path.name)
+        return convention_path if convention_path.exists() else inferred_path
 
     @staticmethod
     def import_deck_from_path(collection, directory_path, import_media=True):
