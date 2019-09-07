@@ -18,7 +18,7 @@ The dependency management is implemented using https://pipenv.org/
 1. Run `fetch_dependencies.sh` - this will download the dependencies required for CrowdAnki to 
 operate and put them into the `crowd_anki/dist` directory.
 1. Add a symlink to the Anki plugins directory (you can find it via `Tools>Add-ons>View Files`)
-pointing to `crowd_anki` directory.
+pointing to `crowd_anki` directory (**you should not** name the symlink `crowd_anki` though, see #62).
 
 At this point if you start Anki - it'd be using your development version of CrowdAnki.  
 If you made some changes to the plugin while Anki is running and want to test them - you need to 
