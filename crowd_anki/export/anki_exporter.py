@@ -11,6 +11,7 @@ from ..representation import deck_initializer
 from ..representation.deck import Deck
 from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from ..utils.filesystem.name_sanitizer import sanitize_anki_deck_name
+from ..utils.config import EXPORT_DECK_SORTING_METHOD
 
 
 class AnkiJsonExporter(DeckExporter):
@@ -28,6 +29,7 @@ class AnkiJsonExporter(DeckExporter):
         deck_directory.mkdir(parents=True, exist_ok=True)
 
         deck = deck_initializer.from_collection(self.collection, deck.name)
+        deck.notes = self.sort_notes(deck.notes)
         self.last_exported_count = deck.get_note_count()
 
         deck_filename = deck_directory.joinpath(self.deck_file_name).with_suffix(DECK_FILE_EXTENSION)
@@ -67,3 +69,15 @@ class AnkiJsonExporter(DeckExporter):
                             str(media_directory.resolve()))
             except IOError as ioerror:
                 print("Failed to copy a file {}. Full error: {}".format(file_src, ioerror))
+
+    def sort_notes(self, notes):
+        print([note.anki_object.guid for note in notes])
+
+        sort_method = "guid"#self.config.get(EXPORT_DECK_SORTING_METHOD, False)
+
+        if sort_method == "guid":
+            notes = sorted(notes, key=lambda i: i.anki_object.guid)
+
+        print([note.anki_object.guid for note in notes])
+
+        return notes
