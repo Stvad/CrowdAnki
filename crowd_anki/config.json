@@ -1,4 +1,8 @@
 {
   "automated_snapshot": false,
+  "export_deck_sort": {
+    "method": "none",
+    "reversed": false
+  },
   "snapshot_root_decks": []
 }
