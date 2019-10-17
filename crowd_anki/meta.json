@@ -1,1 +1,1 @@
-{"config": {"automated_snapshot": false, "export_deck_sort": {"method": "none", "reversed": false}, "snapshot_root_decks": []}}
+{"config": {"automated_snapshot": false, "export_deck_sort": {"method": ["notemodels", "firstfield", "guid"], "reversed": false}, "snapshot_root_decks": []}}

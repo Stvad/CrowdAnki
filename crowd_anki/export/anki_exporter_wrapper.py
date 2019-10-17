@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from aqt import mw
 from .anki_exporter import AnkiJsonExporter
 from ..anki.adapters.anki_deck import AnkiDeck
 from ..utils import constants
@@ -27,7 +28,7 @@ class AnkiJsonExporterWrapper:
         self.did = deck_id
         self.count = 0  # Todo?
         self.collection = collection
-        self.anki_json_exporter = json_exporter or AnkiJsonExporter(collection)
+        self.anki_json_exporter = json_exporter or AnkiJsonExporter(collection, mw.addonManager.getConfig(__name__))
         self.notifier = notifier or AnkiUiNotifier()
 
     # required by anki exporting interface with it's non PEP-8 names
