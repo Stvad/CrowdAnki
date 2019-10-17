@@ -7,7 +7,6 @@ verify_ssl = true
 expects = "*"
 mamba = "*"
 hypothesis = "*"
-pylint = "*"
 
 [packages]
 PyFunctional = "*"
