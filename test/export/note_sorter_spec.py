@@ -5,7 +5,7 @@ from test_utils.anki import mock_anki_modules
 
 mock_anki_modules()
 
-from crowd_anki.export.anki_exporter import AnkiJsonExporter
+from crowd_anki.export.note_sorter import sort_notes
 
 DUMMY_EXPORT_DIRECTORY = "/tmp"
 
