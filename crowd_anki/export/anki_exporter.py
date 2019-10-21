@@ -13,7 +13,6 @@ from ..representation.deck import Deck
 from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from ..utils.filesystem.name_sanitizer import sanitize_anki_deck_name
 from .note_sorter import NoteSorter
-from ..utils.config import EXPORT_DECK_SORT
 
 
 class AnkiJsonExporter(DeckExporter):
@@ -25,7 +24,7 @@ class AnkiJsonExporter(DeckExporter):
         self.last_exported_count = 0
         self.deck_name_sanitizer = deck_name_sanitizer
         self.deck_file_name = deck_file_name
-        self.note_sorter = NoteSorter.from_config(self.config.get(EXPORT_DECK_SORT, False))
+        self.note_sorter = NoteSorter.from_config(config)
     
     def export_to_directory(self, deck: AnkiDeck, output_dir=Path("."), copy_media=True) -> Path:
         deck_directory = output_dir.joinpath(self.deck_name_sanitizer(deck.name))
@@ -75,4 +74,3 @@ class AnkiJsonExporter(DeckExporter):
                             str(media_directory.resolve()))
             except IOError as ioerror:
                 print("Failed to copy a file {}. Full error: {}".format(file_src, ioerror))
-
