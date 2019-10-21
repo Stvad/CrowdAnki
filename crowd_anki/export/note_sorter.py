@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from ..config.config_settings import ConfigSettings
 
-DEBUG = True
+DEBUG = False
 
 @dataclass
 class NoteSorter():

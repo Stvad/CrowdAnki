@@ -9,12 +9,13 @@ from ...importer.anki_importer import AnkiJsonImporter
 @dataclass
 class ActionVendor:
     window: Any
+    config: object
     action_supplier: Callable[[str, Any], Any]
     directory_vendor: Callable[[str], Optional[str]]
     archiver_vendor: ArchiverVendor = field(init=False)
 
     def __post_init__(self):
-        self.archiver_vendor = ArchiverVendor(self.window)
+        self.archiver_vendor = ArchiverVendor(self.window, self.config)
 
     def action(self, name, handler):
         action = self.action_supplier(name, self.window)

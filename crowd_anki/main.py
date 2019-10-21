@@ -8,6 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "dist"))
 from .anki.hook_vendor import HookVendor
 from .anki.ui.action_vendor import ActionVendor
 from .config.config_dialog import ConfigDialog
+from .config.config_settings import ConfigSettings
 
 
 def invoke_config_window():
@@ -26,8 +27,8 @@ def initialize_config_window():
     mw.addonManager.setConfigAction(__name__, invoke_config_window)
 
 
-def anki_actions_init(window):
-    action_vendor = ActionVendor(window, QAction, lambda caption: QFileDialog.getExistingDirectory(caption=caption))
+def anki_actions_init(window, config):
+    action_vendor = ActionVendor(window, config, action_supplier=QAction, directory_vendor=lambda caption: QFileDialog.getExistingDirectory(caption=caption))
 
     after_export_action_position = -2
     window.form.menuCol.insertActions(window.form.menuCol.actions()[after_export_action_position],
@@ -38,8 +39,10 @@ def anki_init(window):
     if not window:
         return
 
-    HookVendor(window).setup_hooks()
-    anki_actions_init(window)
+    config = ConfigSettings()
+
+    HookVendor(window, config).setup_hooks()
+    anki_actions_init(window, config)
     initialize_config_window()
 
 

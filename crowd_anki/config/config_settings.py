@@ -32,9 +32,10 @@ class ConfigSettings():
     export_deck_sort_methods: list
 
 
-    def __init__(self):
-        self.config_file = mw.addonManager.getConfig(__name__)
-        self.get_all_values()
+    def __init__(self, get_settings = True):
+        if get_settings:
+            self.config_file = mw.addonManager.getConfig(__name__)
+            self.get_all_values()
 
     def get_all_values(self):
         self.snapshot_path = self.config_file.get(self.Properties.SNAPSHOT_PATH.value, str(USER_FILES_PATH.resolve()))
@@ -66,7 +67,7 @@ class ConfigSettings():
         return invalid_methods
     
     def handle_empty_textboxes(self):
-        if not self.export_deck_sort_methods:
+        if not self.export_deck_sort_methods[0]:
             self.export_deck_sort_methods = [self.DeckExportSortMethods.NO_SORTING.value]
         
         if not self.snapshot_path:

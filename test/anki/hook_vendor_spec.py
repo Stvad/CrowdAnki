@@ -6,14 +6,26 @@ from test_utils.anki import mock_anki_modules
 mock_anki_modules()
 
 from crowd_anki.anki.hook_vendor import HookVendor
-from crowd_anki.utils.config import AUTOMATED_SNAPSHOT
+from crowd_anki.config.config_settings import ConfigSettings
 
 with description(HookVendor):
-    with it('should only setup snapshot hooks if plugin config says so'):
+    with it('should not setup the snapshot hooks when the config setting is false'):
         hook_manager = MagicMock()
-        vendor = HookVendor(MagicMock(), hook_manager)
-        vendor.config = {AUTOMATED_SNAPSHOT: False}
+        config = ConfigSettings(False)
+        config.automated_snapshot = False
+        vendor = HookVendor(window=MagicMock(), config=config, hook_manager=hook_manager)
 
         vendor.setup_snapshot_hooks()
 
         hook_manager.hook.assert_not_called()
+
+with description(HookVendor):
+    with it('should setup the snapshot hooks when the config setting is true'):
+        hook_manager = MagicMock()
+        config = ConfigSettings(False)
+        config.automated_snapshot = True
+        vendor = HookVendor(window=MagicMock(), config=config, hook_manager=hook_manager)
+
+        vendor.setup_snapshot_hooks()
+
+        hook_manager.hook.assert_called()

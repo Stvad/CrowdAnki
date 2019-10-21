@@ -8,16 +8,14 @@ from .dulwich_repo import DulwichAnkiRepo
 from ..anki.adapters.deck_manager import AnkiStaticDeckManager, DeckManager
 from ..anki.ui.utils import progress_indicator
 from ..export.anki_exporter import AnkiJsonExporter
-from ..utils.config import SNAPSHOT_ROOT_DECKS
-from ..utils.constants import USER_FILES_PATH
 from ..utils.notifier import Notifier, AnkiUiNotifier
 
 
 @dataclass
 class ArchiverVendor:
     window: Any
+    config: object
     notifier: Notifier = field(default_factory=AnkiUiNotifier)
-    config: dict = field(init=False)
 
     def __post_init__(self):
         self.config = self.window.addonManager.getConfig(__name__)
@@ -31,11 +29,11 @@ class ArchiverVendor:
             self.deck_manager,
             lambda deck: AnkiDeckArchiver(deck,
                                           self.snapshot_path().joinpath(self.window.pm.name),
-                                          AnkiJsonExporter(self.window.col),
+                                          AnkiJsonExporter(self.window.col, self.config),
                                           DulwichAnkiRepo))
 
     def snapshot_path(self):
-        return Path(self.config.get('snapshot_path', str(USER_FILES_PATH.resolve())))
+        return Path(self.config.snapshot_path)
 
     def do_manual_snapshot(self):
         self.do_snapshot('CrowdAnki: Manual snapshot')
@@ -51,4 +49,4 @@ class ArchiverVendor:
                                f"The CrowdAnki snapshot to {self.snapshot_path().resolve()} successfully completed")
 
     def overrides(self):
-        return self.deck_manager.for_names(self.config.get(SNAPSHOT_ROOT_DECKS))
+        return self.deck_manager.for_names(self.config.snapshot_root_decks)
