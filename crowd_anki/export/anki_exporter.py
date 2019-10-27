@@ -13,10 +13,11 @@ from ..representation.deck import Deck
 from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from ..utils.filesystem.name_sanitizer import sanitize_anki_deck_name
 from .note_sorter import NoteSorter
+from ..config.config_settings import ConfigSettings
 
 
 class AnkiJsonExporter(DeckExporter):
-    def __init__(self, collection, config,
+    def __init__(self, collection, config: ConfigSettings,
                  deck_name_sanitizer: Callable[[str], str] = sanitize_anki_deck_name,
                  deck_file_name: str = DECK_FILE_NAME):
         self.config = config

@@ -4,12 +4,13 @@ from typing import Callable, Any, Optional
 from ...github.github_importer import GithubImporter
 from ...history.archiver_vendor import ArchiverVendor
 from ...importer.anki_importer import AnkiJsonImporter
+from ...config.config_settings import ConfigSettings
 
 
 @dataclass
 class ActionVendor:
     window: Any
-    config: object
+    config: ConfigSettings
     action_supplier: Callable[[str, Any], Any]
     directory_vendor: Callable[[str], Optional[str]]
     archiver_vendor: ArchiverVendor = field(init=False)

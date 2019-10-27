@@ -1,4 +1,3 @@
-import re
 from dataclasses import dataclass
 
 from ..config.config_settings import ConfigSettings

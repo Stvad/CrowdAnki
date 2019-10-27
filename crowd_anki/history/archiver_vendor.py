@@ -9,16 +9,14 @@ from ..anki.adapters.deck_manager import AnkiStaticDeckManager, DeckManager
 from ..anki.ui.utils import progress_indicator
 from ..export.anki_exporter import AnkiJsonExporter
 from ..utils.notifier import Notifier, AnkiUiNotifier
+from ..config.config_settings import ConfigSettings
 
 
 @dataclass
 class ArchiverVendor:
     window: Any
-    config: object
+    config: ConfigSettings
     notifier: Notifier = field(default_factory=AnkiUiNotifier)
-
-    def __post_init__(self):
-        self.config = self.window.addonManager.getConfig(__name__)
 
     @property
     def deck_manager(self) -> DeckManager:

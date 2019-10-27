@@ -1,1 +1,1 @@
-{"config": {"automated_snapshot": false, "snapshot_root_decks": [], "export_deck_sort_reversed": false, "export_deck_sort_method": ["none"], "snapshot_path": "/home/jmo/Development/CrowdAnki/crowd_anki/user_files"}}
+{"config": {"automated_snapshot": false, "snapshot_root_decks": [], "export_deck_sort_reversed": false, "export_deck_sort_method": ["guid"], "snapshot_path": "/home/jmo/Development/CrowdAnki/crowd_anki/user_files"}}
