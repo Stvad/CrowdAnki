@@ -5,7 +5,7 @@ from aqt import mw
 from ..utils.constants import USER_FILES_PATH
 
 @dataclass
-class ConfigSettings():
+class ConfigSettings:
     class Properties(Enum):
         SNAPSHOT_PATH = "snapshot_path"
         AUTOMATED_SNAPSHOT = "automated_snapshot"
@@ -15,14 +15,14 @@ class ConfigSettings():
 
 
     class DeckExportSortMethods(Enum):
+        FIELD1 = "field1"
+        FIELD2 = "field2"
         NO_SORTING = "none"
         GUID = "guid"
         FLAG = "flag"
         TAG = "tag"
-        NOTEMODEL = "notemodel"
-        NOTEMODELID = "notemodelid"
-        FIELD1 = "field1"
-        FIELD2 = "field2"
+        NOTE_MODEL = "notemodel"
+        NOTE_MODEL_ID = "notemodelid"
 
     snapshot_path: str
     automated_snapshot: bool
@@ -34,20 +34,20 @@ class ConfigSettings():
 
     def __init__(self, get_settings = True):
         if get_settings:
-            self.config_file = mw.addonManager.getConfig(__name__)
+            self._config = mw.addonManager.getConfig(__name__)
             self.get_all_values()
 
     def get_all_values(self):
-        self.snapshot_path = self.config_file.get(self.Properties.SNAPSHOT_PATH.value, str(USER_FILES_PATH.resolve()))
-        self.automated_snapshot = self.config_file.get(self.Properties.AUTOMATED_SNAPSHOT.value, False)
-        self.snapshot_root_decks = self.config_file.get(self.Properties.SNAPSHOT_ROOT_DECKS.value, [])
+        self.snapshot_path = self._config.get(self.Properties.SNAPSHOT_PATH.value, str(USER_FILES_PATH.resolve()))
+        self.automated_snapshot = self._config.get(self.Properties.AUTOMATED_SNAPSHOT.value, False)
+        self.snapshot_root_decks = self._config.get(self.Properties.SNAPSHOT_ROOT_DECKS.value, [])
 
-        self.export_deck_sort_reversed = self.config_file.get(self.Properties.EXPORT_DECK_SORT_REVERSED.value, False)
-        self.export_deck_sort_methods = self.config_file.get(self.Properties.EXPORT_DECK_SORT_METHODS.value, [self.DeckExportSortMethods.NO_SORTING.value])
+        self.export_deck_sort_reversed = self._config.get(self.Properties.EXPORT_DECK_SORT_REVERSED.value, False)
+        self.export_deck_sort_methods = self._config.get(self.Properties.EXPORT_DECK_SORT_METHODS.value, [self.DeckExportSortMethods.NO_SORTING.value])
 
 
-    def set_all_values(self):
-        self.config_file.update({
+    def save_values_to_anki(self):
+        self._config.update({
             self.Properties.SNAPSHOT_PATH.value: self.snapshot_path,
             self.Properties.AUTOMATED_SNAPSHOT.value: self.automated_snapshot,
             self.Properties.EXPORT_DECK_SORT_REVERSED.value: self.export_deck_sort_reversed,
@@ -56,15 +56,15 @@ class ConfigSettings():
             self.Properties.EXPORT_DECK_SORT_METHODS.value: self.export_deck_sort_methods
         })
 
-    def write_values_to_anki(self):
-        mw.addonManager.writeConfig(__name__, self.config_file)
+        mw.addonManager.writeConfig(__name__, self._config)
     
     def find_invalid_config_values(self):
         self.handle_empty_textboxes()
         
-        invalid_methods = [method for method in self.export_deck_sort_methods if method not in self.DeckExportSortMethods._value2member_map_]
-
-        return invalid_methods
+        return [
+            method for method in self.export_deck_sort_methods 
+            if method not in self.DeckExportSortMethods._value2member_map_
+        ]
     
     def handle_empty_textboxes(self):
         if not self.export_deck_sort_methods[0]:

@@ -23,18 +23,15 @@ class ConfigDialog(QDialog):
     def accept(self):
         invalid_values = self.config.find_invalid_config_values()
         if invalid_values:
-            print(invalid_values)
             self.error_message_popup = QMessageBox(self)
             message_text = "\" , \"".join(invalid_values)
             self.error_message_popup.setText(f"Invalid config values: \"{message_text}\"")
             self.error_message_popup.open()
         else:
-            self.config.set_all_values()
-            self.config.write_values_to_anki()
+            self.config.save_values_to_anki()
             super().accept()
 
     def reject(self):
-        print("Reject")
         super().reject()
 
     def ui_initial_setup(self):
@@ -44,13 +41,17 @@ class ConfigDialog(QDialog):
         self.form.cb_automated_snapshot.setChecked(self.config.automated_snapshot)
         self.form.cb_automated_snapshot.stateChanged.connect(self.toggle_automated_snapshot)
 
-        self.form.textedit_snapshot_root_decks.appendPlainText(self.get_formatted_comma_separated_string(self.config.snapshot_root_decks))
+        self.form.textedit_snapshot_root_decks.appendPlainText(
+            self.get_formatted_comma_separated_string(self.config.snapshot_root_decks)
+        )
         self.form.textedit_snapshot_root_decks.textChanged.connect(self.changed_textedit_snapshot_root_decks)
 
         self.form.cb_reverse_sort.setChecked(self.config.export_deck_sort_reversed)
         self.form.cb_reverse_sort.stateChanged.connect(self.toggle_reverse_sort)
     
-        self.form.textedit_deck_sort_methods.appendPlainText(self.get_formatted_comma_separated_string(self.config.export_deck_sort_methods))
+        self.form.textedit_deck_sort_methods.appendPlainText(
+            self.get_formatted_comma_separated_string(self.config.export_deck_sort_methods)
+        )
         self.form.textedit_deck_sort_methods.textChanged.connect(self.changed_textedit_deck_sort_methods)
 
     def toggle_automated_snapshot(self):

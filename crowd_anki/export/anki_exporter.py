@@ -17,7 +17,8 @@ from ..config.config_settings import ConfigSettings
 
 
 class AnkiJsonExporter(DeckExporter):
-    def __init__(self, collection, config: ConfigSettings,
+    def __init__(self, collection,
+                 config: ConfigSettings,
                  deck_name_sanitizer: Callable[[str], str] = sanitize_anki_deck_name,
                  deck_file_name: str = DECK_FILE_NAME):
         self.config = config
@@ -25,7 +26,7 @@ class AnkiJsonExporter(DeckExporter):
         self.last_exported_count = 0
         self.deck_name_sanitizer = deck_name_sanitizer
         self.deck_file_name = deck_file_name
-        self.note_sorter = NoteSorter.from_config(config)
+        self.note_sorter = NoteSorter(config)
     
     def export_to_directory(self, deck: AnkiDeck, output_dir=Path("."), copy_media=True) -> Path:
         deck_directory = output_dir.joinpath(self.deck_name_sanitizer(deck.name))

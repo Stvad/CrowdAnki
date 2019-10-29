@@ -10,7 +10,7 @@ from crowd_anki.export.note_sorter import NoteSorter
 from crowd_anki.config.config_settings import ConfigSettings
 
 
-test_guids = ["aaabbbccc", "bbbcccddd", "cccdddeee", "dddeeefff", "eeefffggg", "fffggghhh"]
+test_guids = ["abc", "bcd", "cde", "def", "efg", "fgh"]
 test_flags = [0, 1, 2, 3, 4, 5]
 test_tags = ["adjectives", "directions", "interesting", "nouns", "verbs", "zzzzFinal"]
 test_notemodels = ["Default", "LL Noun", "LL Sentence", "LL Verb", "LL Word", "Zulu"]
@@ -32,16 +32,17 @@ class NoteSorterTester():
         note.anki_object.flags = test_flags[i]
         note.anki_object.tags = test_tags[i]
 
-        note.anki_object._model = {}
-        note.anki_object._model.setdefault("name", test_notemodels[i])
-        note.anki_object._model.setdefault("crowdanki_uuid", test_notemodelids[i])
+        note.anki_object._model = {
+            "name": test_notemodels[i],
+            "crowdanki_uuid": test_notemodelids[i]
+        }
 
         note.anki_object.fields = [test_fields[i], test_fields[i]]
 
         return note
 
     def setup_notes(self):
-        random_range = list(range(0, 6))
+        random_range = list(range(0, len(test_guids)))
         shuffle(random_range)
         notes_list = [self.get_single_note_mock(i) for i in random_range]
 
@@ -50,14 +51,10 @@ class NoteSorterTester():
     def set_sort_method(self, set_to):
         self.config.export_deck_sort_methods = set_to
     
-    def setup_note_sorter(self):
-        self.notesorter = NoteSorter.from_config(self.config)
+    def setup(self):
+        self.notesorter = NoteSorter(self.config)
         self.sorted_notes = self.notesorter.sort_notes(self.notes)
     
-
-    def assert_sorted_notes(self, equals):
-        assert(self.sorted_notes == equals)
-
 with describe(NoteSorterTester) as self:
     with before.each:
         self.tester = NoteSorterTester()
@@ -67,56 +64,56 @@ with describe(NoteSorterTester) as self:
         with it("do not sort / sort by none"):
             self.tester.set_sort_method([ConfigSettings.DeckExportSortMethods.NO_SORTING.value])
 
-            self.tester.setup_note_sorter()
+            self.tester.setup()
 
-            self.tester.assert_sorted_notes(self.tester.notes)
+            assert(self.tester.sorted_notes == self.tester.notes)
 
         with it("sort by guid"):
             self.tester.set_sort_method([ConfigSettings.DeckExportSortMethods.GUID.value])
             
-            self.tester.setup_note_sorter()
+            self.tester.setup()
 
             assert([note.anki_object.guid for note in self.tester.sorted_notes] == test_guids)
 
         with it("sort by flag"):
             self.tester.set_sort_method([ConfigSettings.DeckExportSortMethods.FLAG.value])
 
-            self.tester.setup_note_sorter()
+            self.tester.setup()
 
             assert([note.anki_object.flags for note in self.tester.sorted_notes] == test_flags)
 
         with it("sort by tag"):
             self.tester.set_sort_method([ConfigSettings.DeckExportSortMethods.TAG.value])
 
-            self.tester.setup_note_sorter()
+            self.tester.setup()
 
             assert([note.anki_object.tags for note in self.tester.sorted_notes] == test_tags)
 
         with it("sort by notemodel"):
-            self.tester.set_sort_method([ConfigSettings.DeckExportSortMethods.NOTEMODEL.value])
+            self.tester.set_sort_method([ConfigSettings.DeckExportSortMethods.NOTE_MODEL.value])
 
-            self.tester.setup_note_sorter()
+            self.tester.setup()
 
             assert([note.anki_object._model["name"] for note in self.tester.sorted_notes] == test_notemodels)
 
         with it("sort by notemodelid"):
-            self.tester.set_sort_method([ConfigSettings.DeckExportSortMethods.NOTEMODELID.value])
+            self.tester.set_sort_method([ConfigSettings.DeckExportSortMethods.NOTE_MODEL_ID.value])
 
-            self.tester.setup_note_sorter()
+            self.tester.setup()
 
             assert([note.anki_object._model["crowdanki_uuid"] for note in self.tester.sorted_notes] == test_notemodelids)
 
         with it("sort by field1"):
             self.tester.set_sort_method([ConfigSettings.DeckExportSortMethods.FIELD1.value])
 
-            self.tester.setup_note_sorter()
+            self.tester.setup()
 
             assert([note.anki_object.fields[0] for note in self.tester.sorted_notes] == test_fields)
 
         with it("sort by field2"):
             self.tester.set_sort_method([ConfigSettings.DeckExportSortMethods.FIELD2.value])
 
-            self.tester.setup_note_sorter()
+            self.tester.setup()
 
             assert([note.anki_object.fields[1] for note in self.tester.sorted_notes] == test_fields)
 
