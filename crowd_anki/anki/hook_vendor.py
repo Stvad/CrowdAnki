@@ -1,6 +1,7 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
+from ..config.config_settings import ConfigSettings
 from ..anki.adapters.hook_manager import AnkiHookManager
 from ..export.anki_exporter_wrapper import exporters_hook
 from ..history.archiver_vendor import ArchiverVendor
@@ -9,7 +10,7 @@ from ..history.archiver_vendor import ArchiverVendor
 @dataclass
 class HookVendor:
     window: Any
-    config: object
+    config: ConfigSettings
     hook_manager: AnkiHookManager = AnkiHookManager()
 
     def setup_hooks(self):

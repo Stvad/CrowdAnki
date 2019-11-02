@@ -1,7 +1,7 @@
 from ..config.config_settings import ConfigSettings
 
 
-class NoteSorter():
+class NoteSorter:
     sorting_definitions = {
         ConfigSettings.DeckExportSortMethods.NO_SORTING: None,
         ConfigSettings.DeckExportSortMethods.GUID: lambda i: i.anki_object.guid,

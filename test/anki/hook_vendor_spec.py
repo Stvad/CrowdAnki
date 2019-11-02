@@ -8,13 +8,15 @@ mock_anki_modules()
 from crowd_anki.anki.hook_vendor import HookVendor
 from crowd_anki.config.config_settings import ConfigSettings
 
+
 def setup_vendor(automated_snapshot):
-    hook_manager = MagicMock()
+    h = MagicMock()
     config = ConfigSettings(False)
     config.automated_snapshot = automated_snapshot
-    vendor = HookVendor(window=MagicMock(), config=config, hook_manager=hook_manager)
+    v = HookVendor(window=MagicMock(), config=config, hook_manager=h)
 
-    return vendor, hook_manager
+    return v, h
+
 
 with description(HookVendor):
     with it('should not setup the snapshot hooks when the config setting is false'):

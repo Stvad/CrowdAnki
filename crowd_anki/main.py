@@ -28,7 +28,10 @@ def initialize_config_window():
 
 
 def anki_actions_init(window, config):
-    action_vendor = ActionVendor(window, config, action_supplier=QAction, directory_vendor=lambda caption: QFileDialog.getExistingDirectory(caption=caption))
+    action_vendor = ActionVendor(window, config,
+                                 action_supplier=QAction,
+                                 directory_vendor=lambda caption: QFileDialog.getExistingDirectory(caption=caption)
+                                 )
 
     after_export_action_position = -2
     window.form.menuCol.insertActions(window.form.menuCol.actions()[after_export_action_position],
@@ -44,8 +47,6 @@ def anki_init(window):
     HookVendor(window, config).setup_hooks()
     anki_actions_init(window, config)
     initialize_config_window()
-
-
 
 
 anki_init(mw)
