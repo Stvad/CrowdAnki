@@ -1,6 +1,5 @@
 from collections import namedtuple
 from enum import Enum
-from dataclasses import dataclass
 
 from aqt import mw
 from ..utils.constants import USER_FILES_PATH
@@ -19,15 +18,7 @@ class NoteSortingMethods(Enum):
     NOTE_MODEL_ID = "notemodelid"
 
 
-@dataclass
 class ConfigSettings:
-    snapshot_path: str
-    automated_snapshot: bool
-    snapshot_root_decks: list
-
-    export_notes_reverse_order: bool
-    export_note_sort_methods: list
-
     class Properties(Enum):
         SNAPSHOT_PATH = ConfigEntry("snapshot_path", str(USER_FILES_PATH.resolve()))
         AUTOMATED_SNAPSHOT = ConfigEntry("automated_snapshot", False)
@@ -35,10 +26,9 @@ class ConfigSettings:
         EXPORT_NOTE_SORT_METHODS = ConfigEntry("export_note_sort_methods", [NoteSortingMethods.NO_SORTING.value])
         EXPORT_NOTES_REVERSE_ORDER = ConfigEntry("export_notes_reverse_order", False)
 
-    def __init__(self, get_settings=True):
-        if get_settings:
-            self._config = mw.addonManager.getConfig(__name__)
-            self.load_values()
+    def __init__(self):
+        self._config = mw.addonManager.getConfig(__name__)
+        self.load_values()
 
     def _get(self, prop: Properties):
         return self._config.get(prop.value.config_name, prop.value.default_value)
@@ -57,13 +47,16 @@ class ConfigSettings:
         self.handle_empty_textboxes()
 
         return [
-            method for method in self.export_note_sort_methods
+            method for method in getattr(self, self.Properties.EXPORT_NOTE_SORT_METHODS.value.config_name)
             if method not in NoteSortingMethods._value2member_map_
         ]
 
     def handle_empty_textboxes(self):
-        if not self.export_note_sort_methods[0]:
-            self.export_note_sort_methods = self.Properties.EXPORT_NOTE_SORT_METHODS.value.default_value
+        if not getattr(self, self.Properties.EXPORT_NOTE_SORT_METHODS.value.config_name)[0]:
+            self.set_property_to_default_value(self.Properties.EXPORT_NOTE_SORT_METHODS)
 
-        if not self.snapshot_path:
-            self.snapshot_path = self.Properties.SNAPSHOT_PATH.value.default_value
+        if not getattr(self, self.Properties.SNAPSHOT_PATH.value.config_name):
+            self.set_property_to_default_value(self.Properties.SNAPSHOT_PATH)
+
+    def set_property_to_default_value(self, prop):
+        setattr(self, prop.value.config_name, prop.value.default_value)
