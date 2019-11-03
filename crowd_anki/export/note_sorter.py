@@ -1,27 +1,27 @@
-from ..config.config_settings import ConfigSettings
+from ..config.config_settings import ConfigSettings, NoteSortingMethods
 
 
 class NoteSorter:
     sorting_definitions = {
-        ConfigSettings.DeckExportSortMethods.NO_SORTING: None,
-        ConfigSettings.DeckExportSortMethods.GUID: lambda i: i.anki_object.guid,
-        ConfigSettings.DeckExportSortMethods.FLAG: lambda i: i.anki_object.flags,
-        ConfigSettings.DeckExportSortMethods.TAG: lambda i: i.anki_object.tags,
-        ConfigSettings.DeckExportSortMethods.NOTE_MODEL: lambda i: i.anki_object._model["name"],
-        ConfigSettings.DeckExportSortMethods.NOTE_MODEL_ID: lambda i: i.anki_object._model["crowdanki_uuid"],
-        ConfigSettings.DeckExportSortMethods.FIELD1: lambda i: i.anki_object.fields[0],
-        ConfigSettings.DeckExportSortMethods.FIELD2: lambda i: i.anki_object.fields[1]
+        NoteSortingMethods.NO_SORTING: None,
+        NoteSortingMethods.GUID: lambda i: i.anki_object.guid,
+        NoteSortingMethods.FLAG: lambda i: i.anki_object.flags,
+        NoteSortingMethods.TAG: lambda i: i.anki_object.tags,
+        NoteSortingMethods.NOTE_MODEL: lambda i: i.anki_object._model["name"],
+        NoteSortingMethods.NOTE_MODEL_ID: lambda i: i.anki_object._model["crowdanki_uuid"],
+        NoteSortingMethods.FIELD1: lambda i: i.anki_object.fields[0],
+        NoteSortingMethods.FIELD2: lambda i: i.anki_object.fields[1]
     }
     
     def __init__(self, config: ConfigSettings):
         self.sort_methods = [
-            ConfigSettings.DeckExportSortMethods(method)
-            for method in config.export_deck_sort_methods
+            NoteSortingMethods(method)
+            for method in config.export_note_sort_methods
         ]
-        self.is_reversed = config.export_deck_sort_reversed
+        self.is_reversed = config.export_notes_reverse_order
 
     def should_skip_sorting(self):
-        return self.sort_methods[0] == ConfigSettings.DeckExportSortMethods.NO_SORTING and not self.is_reversed
+        return self.sort_methods[0] == NoteSortingMethods.NO_SORTING and not self.is_reversed
 
     def sort_notes(self, notes):
         if not self.should_skip_sorting():

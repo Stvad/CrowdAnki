@@ -42,11 +42,11 @@ class ConfigDialog(QDialog):
         )
         self.form.textedit_snapshot_root_decks.textChanged.connect(self.changed_textedit_snapshot_root_decks)
 
-        self.form.cb_reverse_sort.setChecked(self.config.export_deck_sort_reversed)
+        self.form.cb_reverse_sort.setChecked(self.config.export_notes_reverse_order)
         self.form.cb_reverse_sort.stateChanged.connect(self.toggle_reverse_sort)
 
         self.form.textedit_deck_sort_methods.appendPlainText(
-            self.list_to_cs_string(self.config.export_deck_sort_methods)
+            self.list_to_cs_string(self.config.export_note_sort_methods)
         )
         self.form.textedit_deck_sort_methods.textChanged.connect(self.changed_textedit_deck_sort_methods)
 
@@ -54,10 +54,10 @@ class ConfigDialog(QDialog):
         self.config.automated_snapshot = not self.config.automated_snapshot
 
     def toggle_reverse_sort(self):
-        self.config.export_deck_sort_reversed = not self.config.export_deck_sort_reversed
+        self.config.export_notes_reverse_order = not self.config.export_notes_reverse_order
 
     def changed_textedit_deck_sort_methods(self):
-        self.config.export_deck_sort_methods = self.string_cs_to_list(
+        self.config.export_note_sort_methods = self.string_cs_to_list(
             self.form.textedit_deck_sort_methods.toPlainText()
         )
 
