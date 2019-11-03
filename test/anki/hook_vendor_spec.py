@@ -11,7 +11,7 @@ from crowd_anki.config.config_settings import ConfigSettings
 
 def setup_vendor(automated_snapshot):
     h = MagicMock()
-    config = ConfigSettings(False)
+    config = ConfigSettings()
     config.automated_snapshot = automated_snapshot
     v = HookVendor(window=MagicMock(), config=config, hook_manager=h)
 

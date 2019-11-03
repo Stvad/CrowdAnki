@@ -1,4 +1,6 @@
-from mamba import describe, it, context, before
+import logging
+
+from mamba import describe, it, context
 from unittest.mock import MagicMock
 from random import shuffle
 
@@ -16,6 +18,16 @@ test_notemodels = ["Default", "LL Noun", "LL Sentence", "LL Verb", "LL Word", "Z
 test_notemodelids = test_guids
 test_fields = test_tags
 
+note_sorting_single_result_pairs = [
+    (NoteSortingMethods.GUID, test_guids),
+    (NoteSortingMethods.FLAG, test_flags),
+    (NoteSortingMethods.TAG, test_tags),
+    (NoteSortingMethods.NOTE_MODEL, test_notemodels),
+    (NoteSortingMethods.NOTE_MODEL_ID, test_notemodelids),
+    (NoteSortingMethods.FIELD1, test_fields),
+    (NoteSortingMethods.FIELD2, test_fields)
+]
+
 
 class NoteSorterTester:
     def __init__(self):
@@ -23,8 +35,7 @@ class NoteSorterTester:
         self.notes = self.setup_notes()
         self.sorted_notes = []
 
-        self.config = ConfigSettings(False)
-        self.config.export_notes_reverse_order = False
+        self.config = ConfigSettings()
 
     @staticmethod
     def get_single_note_mock(i):
@@ -48,75 +59,44 @@ class NoteSorterTester:
         shuffle(random_range)
         notes_list = [self.get_single_note_mock(i) for i in random_range]
 
+        logging.info("Shuffled list: ", notes_list)
+
         return notes_list
 
-    def set_sort_method(self, set_to):
-        self.config.export_note_sort_methods = set_to
-
-    def setup(self):
+    def sort_with(self, sort_methods, reverse_sort):
+        self.config.export_note_sort_methods = sort_methods
+        self.config.export_notes_reverse_order = reverse_sort
         self.note_sorter = NoteSorter(self.config)
         self.sorted_notes = self.note_sorter.sort_notes(self.notes)
 
 
 with describe(NoteSorterTester) as self:
-    with before.each:
-        self.tester = NoteSorterTester()
-
     with context("user sorts by each sort option"):
         with it("do not sort / sort by none"):
-            self.tester.set_sort_method([NoteSortingMethods.NO_SORTING.value])
-
-            self.tester.setup()
+            self.tester = NoteSorterTester()
+            self.tester.sort_with([NoteSortingMethods.NO_SORTING.value], False)
 
             assert (self.tester.sorted_notes == self.tester.notes)
 
-        with it("sort by guid"):
-            self.tester.set_sort_method([NoteSortingMethods.GUID.value])
+        with it("do not sort / sort by none, reversed"):
+            self.tester = NoteSorterTester()
+            self.tester.sort_with([NoteSortingMethods.NO_SORTING.value], True)
 
-            self.tester.setup()
+            assert (self.tester.sorted_notes == list(reversed(self.tester.notes)))
 
-            assert ([note.anki_object.guid for note in self.tester.sorted_notes] == test_guids)
+        with it("sorts by all sorting methods"):
+            for method, result in note_sorting_single_result_pairs:
+                self.tester = NoteSorterTester()
 
-        with it("sort by flag"):
-            self.tester.set_sort_method([NoteSortingMethods.FLAG.value])
+                self.tester.sort_with([method], False)
 
-            self.tester.setup()
+                assert ([NoteSorter.sorting_definitions[method](note) for note in self.tester.sorted_notes] == result)
 
-            assert ([note.anki_object.flags for note in self.tester.sorted_notes] == test_flags)
+        with it("sorts by all sorting methods, reversed"):
+            for method, result in note_sorting_single_result_pairs:
+                self.tester = NoteSorterTester()
 
-        with it("sort by tag"):
-            self.tester.set_sort_method([NoteSortingMethods.TAG.value])
+                self.tester.sort_with([method], True)
 
-            self.tester.setup()
-
-            assert ([note.anki_object.tags for note in self.tester.sorted_notes] == test_tags)
-
-        with it("sort by notemodel"):
-            self.tester.set_sort_method([NoteSortingMethods.NOTE_MODEL.value])
-
-            self.tester.setup()
-
-            assert ([note.anki_object._model["name"] for note in self.tester.sorted_notes] == test_notemodels)
-
-        with it("sort by notemodelid"):
-            self.tester.set_sort_method([NoteSortingMethods.NOTE_MODEL_ID.value])
-
-            self.tester.setup()
-
-            assert ([note.anki_object._model["crowdanki_uuid"]
-                     for note in self.tester.sorted_notes] == test_notemodelids
-                    )
-
-        with it("sort by field1"):
-            self.tester.set_sort_method([NoteSortingMethods.FIELD1.value])
-
-            self.tester.setup()
-
-            assert ([note.anki_object.fields[0] for note in self.tester.sorted_notes] == test_fields)
-
-        with it("sort by field2"):
-            self.tester.set_sort_method([NoteSortingMethods.FIELD2.value])
-
-            self.tester.setup()
-
-            assert ([note.anki_object.fields[1] for note in self.tester.sorted_notes] == test_fields)
+                assert ([NoteSorter.sorting_definitions[method](note) for note in self.tester.sorted_notes
+                         ] == list(reversed(result)))

@@ -16,16 +16,18 @@ class NoteSorter:
     def __init__(self, config: ConfigSettings):
         self.sort_methods = [
             NoteSortingMethods(method)
-            for method in config.export_note_sort_methods
+            for method in getattr(config, ConfigSettings.Properties.EXPORT_NOTE_SORT_METHODS.value.config_name)
         ]
-        self.is_reversed = config.export_notes_reverse_order
+        self.is_reversed = getattr(config, ConfigSettings.Properties.EXPORT_NOTES_REVERSE_ORDER.value.config_name)
 
     def should_skip_sorting(self):
-        return self.sort_methods[0] == NoteSortingMethods.NO_SORTING and not self.is_reversed
+        return self.sort_methods[0] == NoteSortingMethods.NO_SORTING
 
     def sort_notes(self, notes):
         if not self.should_skip_sorting():
             notes = sorted(notes, key=self.get_sort_key, reverse=self.is_reversed)
+        elif self.is_reversed:
+            notes = list(reversed(notes))
 
         return notes
 
