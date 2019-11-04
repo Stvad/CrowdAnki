@@ -19,6 +19,19 @@ class NoteSortingMethods(Enum):
 
 
 class ConfigSettings:
+    snapshot_path: str
+    automated_snapshot: bool
+    snapshot_root_decks: list
+    export_notes_reverse_order: bool
+    export_note_sort_methods: list
+
+    @property
+    def formatted_export_note_sort_methods(self) -> list:
+        return [
+            NoteSortingMethods(method)
+            for method in self.export_note_sort_methods
+        ]
+
     class Properties(Enum):
         SNAPSHOT_PATH = ConfigEntry("snapshot_path", str(USER_FILES_PATH.resolve()))
         AUTOMATED_SNAPSHOT = ConfigEntry("automated_snapshot", False)
@@ -37,7 +50,7 @@ class ConfigSettings:
         for prop in self.Properties:
             setattr(self, prop.value.config_name, self._get(prop))
 
-    def save_values_to_anki(self):
+    def save(self):
         for prop in self.Properties:
             self._config[prop.value.config_name] = getattr(self, prop.value.config_name)
 
@@ -46,22 +59,20 @@ class ConfigSettings:
     def find_invalid_config_values(self):
         self.handle_empty_textboxes()
 
-        return [
-            method for method in getattr(self, self.Properties.EXPORT_NOTE_SORT_METHODS.value.config_name)
-            if method not in NoteSortingMethods._value2member_map_
-        ]
+        incorrect_sort_methods = []
+        for method in self.export_note_sort_methods:
+            try:
+                NoteSortingMethods(method)
+            except ValueError:
+                incorrect_sort_methods.append(method)
 
-    def get_note_sort_methods(self):
-        return [
-            NoteSortingMethods(method)
-            for method in getattr(self, ConfigSettings.Properties.EXPORT_NOTE_SORT_METHODS.value.config_name)
-        ]
+        return incorrect_sort_methods
 
     def handle_empty_textboxes(self):
-        if not getattr(self, self.Properties.EXPORT_NOTE_SORT_METHODS.value.config_name)[0]:
+        if not self.export_note_sort_methods[0]:
             self.set_property_to_default_value(self.Properties.EXPORT_NOTE_SORT_METHODS)
 
-        if not getattr(self, self.Properties.SNAPSHOT_PATH.value.config_name):
+        if not self.snapshot_path:
             self.set_property_to_default_value(self.Properties.SNAPSHOT_PATH)
 
     def set_property_to_default_value(self, prop):

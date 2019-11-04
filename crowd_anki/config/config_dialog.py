@@ -27,7 +27,7 @@ class ConfigDialog(QDialog):
             error_message_popup.setText(f"Invalid config values: \"{message_text}\"")
             error_message_popup.open()
         else:
-            self.config.save_values_to_anki()
+            self.config.save()
             super().accept()
 
     def ui_initial_setup(self):

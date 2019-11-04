@@ -14,8 +14,8 @@ class NoteSorter:
     }
     
     def __init__(self, config: ConfigSettings):
-        self.sort_methods = config.get_note_sort_methods()
-        self.is_reversed = getattr(config, ConfigSettings.Properties.EXPORT_NOTES_REVERSE_ORDER.value.config_name)
+        self.sort_methods = config.formatted_export_note_sort_methods
+        self.is_reversed = config.export_notes_reverse_order
 
     def should_sort(self):
         return self.sort_methods[0] != NoteSortingMethods.NO_SORTING
