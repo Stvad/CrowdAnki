@@ -39,7 +39,7 @@ class ConfigSettings:
 
     def save_values_to_anki(self):
         for prop in self.Properties:
-            self._config.update({prop.value.config_name: getattr(self, prop.value.config_name)})
+            self._config[prop.value.config_name] = getattr(self, prop.value.config_name)
 
         mw.addonManager.writeConfig(__name__, self._config)
 
@@ -49,6 +49,12 @@ class ConfigSettings:
         return [
             method for method in getattr(self, self.Properties.EXPORT_NOTE_SORT_METHODS.value.config_name)
             if method not in NoteSortingMethods._value2member_map_
+        ]
+
+    def get_note_sort_methods(self):
+        return [
+            NoteSortingMethods(method)
+            for method in getattr(self, ConfigSettings.Properties.EXPORT_NOTE_SORT_METHODS.value.config_name)
         ]
 
     def handle_empty_textboxes(self):

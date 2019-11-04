@@ -3,7 +3,7 @@ from ..config.config_settings import ConfigSettings, NoteSortingMethods
 
 class NoteSorter:
     sorting_definitions = {
-        NoteSortingMethods.NO_SORTING: None,
+        NoteSortingMethods.NO_SORTING: lambda i: i,
         NoteSortingMethods.GUID: lambda i: i.anki_object.guid,
         NoteSortingMethods.FLAG: lambda i: i.anki_object.flags,
         NoteSortingMethods.TAG: lambda i: i.anki_object.tags,
@@ -14,19 +14,17 @@ class NoteSorter:
     }
     
     def __init__(self, config: ConfigSettings):
-        self.sort_methods = [
-            NoteSortingMethods(method)
-            for method in getattr(config, ConfigSettings.Properties.EXPORT_NOTE_SORT_METHODS.value.config_name)
-        ]
+        self.sort_methods = config.get_note_sort_methods()
         self.is_reversed = getattr(config, ConfigSettings.Properties.EXPORT_NOTES_REVERSE_ORDER.value.config_name)
 
-    def should_skip_sorting(self):
-        return self.sort_methods[0] == NoteSortingMethods.NO_SORTING
+    def should_sort(self):
+        return self.sort_methods[0] != NoteSortingMethods.NO_SORTING
 
     def sort_notes(self, notes):
-        if not self.should_skip_sorting():
-            notes = sorted(notes, key=self.get_sort_key, reverse=self.is_reversed)
-        elif self.is_reversed:
+        if self.should_sort():
+            notes = sorted(notes, key=self.get_sort_key)
+
+        if self.is_reversed:
             notes = list(reversed(notes))
 
         return notes

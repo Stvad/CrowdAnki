@@ -10,12 +10,12 @@ from crowd_anki.config.config_settings import ConfigSettings
 
 
 def setup_vendor(automated_snapshot):
-    h = MagicMock()
+    hook_manager_mock = MagicMock()
     config = ConfigSettings()
     config.automated_snapshot = automated_snapshot
-    v = HookVendor(window=MagicMock(), config=config, hook_manager=h)
+    vendor_mock = HookVendor(window=MagicMock(), config=config, hook_manager=hook_manager_mock)
 
-    return v, h
+    return vendor_mock, hook_manager_mock
 
 
 with description(HookVendor):
