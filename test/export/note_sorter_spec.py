@@ -28,11 +28,13 @@ note_sorting_single_result_pairs = [
     (NoteSortingMethods.FIELD2, test_fields)
 ]
 
+test_multikey_notemodel_guid = [(notemodel, guid) for notemodel in test_notemodels for guid in test_guids]
+
 
 class NoteSorterTester:
     def __init__(self):
         self.note_sorter = None
-        self.notes = self.setup_notes()
+        self.notes = []
         self.sorted_notes = []
 
         self.config = ConfigSettings()
@@ -54,16 +56,34 @@ class NoteSorterTester:
 
         return note
 
-    def setup_notes(self):
-        random_range = list(range(0, len(test_guids)))
+    @staticmethod
+    def get_multikey_note_mock(i):
+        note = MagicMock()
+
+        note.anki_object.guid = test_multikey_notemodel_guid[i][1]
+
+        note.anki_object._model = {
+            "name": test_multikey_notemodel_guid[i][0]
+        }
+
+        return note
+
+    def setup_notes(self, is_multi_key: bool):
+        random_range = list(range(0, len(test_multikey_notemodel_guid if is_multi_key else test_guids)))
         shuffle(random_range)
-        notes_list = [self.get_single_note_mock(i) for i in random_range]
+
+        if is_multi_key:
+            notes_list = [self.get_multikey_note_mock(i) for i in random_range]
+        else:
+            notes_list = [self.get_single_note_mock(i) for i in random_range]
 
         logging.info("Shuffled list: ", notes_list)
 
-        return notes_list
+        self.notes = notes_list
 
-    def sort_with(self, sort_methods, reverse_sort):
+    def sort_with(self, sort_methods, reverse_sort, is_multi_key=False):
+        self.setup_notes(is_multi_key)
+
         self.config.export_note_sort_methods = sort_methods
         self.config.export_notes_reverse_order = reverse_sort
         self.note_sorter = NoteSorter(self.config)
@@ -92,7 +112,7 @@ with describe(NoteSorterTester) as self:
 
                 assert ([NoteSorter.sorting_definitions[method](note) for note in self.tester.sorted_notes] == result)
 
-        with it("sorts by all sorting methods, reversed"):
+        with it("sorts by all single sorting methods, reversed"):
             for method, result in note_sorting_single_result_pairs:
                 self.tester = NoteSorterTester()
 
@@ -100,3 +120,29 @@ with describe(NoteSorterTester) as self:
 
                 assert ([NoteSorter.sorting_definitions[method](note) for note in self.tester.sorted_notes
                          ] == list(reversed(result)))
+
+        with it("sorts by two sorting methods, notemodels+guids"):
+            self.tester = NoteSorterTester()
+
+            self.tester.sort_with([NoteSortingMethods.NOTE_MODEL, NoteSortingMethods.GUID], False, is_multi_key=True)
+
+            return_object = [
+                (NoteSorter.sorting_definitions[NoteSortingMethods.NOTE_MODEL](note),
+                 NoteSorter.sorting_definitions[NoteSortingMethods.GUID](note))
+                for note in self.tester.sorted_notes
+            ]
+
+            assert (return_object == test_multikey_notemodel_guid)
+
+        with it("sorts by two sorting methods, notemodels+guids, reversed"):
+            self.tester = NoteSorterTester()
+
+            self.tester.sort_with([NoteSortingMethods.NOTE_MODEL, NoteSortingMethods.GUID], True, is_multi_key=True)
+
+            return_object = [
+                (NoteSorter.sorting_definitions[NoteSortingMethods.NOTE_MODEL](note),
+                 NoteSorter.sorting_definitions[NoteSortingMethods.GUID](note))
+                for note in self.tester.sorted_notes
+            ]
+
+            assert (return_object == list(reversed(test_multikey_notemodel_guid)))
