@@ -12,10 +12,17 @@ If you want to add new library dependency - add them to the `Pipfile`.
 The dependency management is implemented using https://pipenv.org/
 
 ## UI Files
-The config is build using QTDesigner, which you can get by running `sudo apt install qtcreator` on Linux, or simply download from `https://build-system.fman.io/qt-designer-download`
+The config window is build using QTDesigner, which you can get by running 
+`sudo apt install qtcreator` 
+on Linux, or simply download from `https://build-system.fman.io/qt-designer-download`
 
-In QT Designer you can create UI files using a simple GUI, then use the `pyuic5` module to convert them to python:
+In QT Designer you can create UI files using a simple GUI, then use the `pyuic5` module to convert them to python by:
+
 `pyuic5 ui_files/config.ui -o crowd_anki/config/config_ui.py`
+
+This step is automatically done on packaging the extension in `package_plugin.sh`
+but needs to be done manually if the UI files are changed in the dev environment.
+Lastly, any new UI files should be added into the packaging script.
 
 # Testing 
 ## Testing you changes in Anki
