@@ -17,6 +17,10 @@ class NoteSortingMethods(Enum):
     NOTE_MODEL = "notemodel"
     NOTE_MODEL_ID = "notemodelid"
 
+    @classmethod
+    def values(cls):
+        return set(it.value for it in cls)
+
 
 class ConfigSettings:
     snapshot_path: str
@@ -59,12 +63,9 @@ class ConfigSettings:
     def find_invalid_config_values(self):
         self.handle_empty_textboxes()
 
-        incorrect_sort_methods = []
-        for method in self.export_note_sort_methods:
-            try:
-                NoteSortingMethods(method)
-            except ValueError:
-                incorrect_sort_methods.append(method)
+        incorrect_sort_methods = [method
+                                  for method in self.export_note_sort_methods
+                                  if method not in NoteSortingMethods.values()]
 
         return incorrect_sort_methods
 
