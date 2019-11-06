@@ -21,9 +21,6 @@ class HookVendor:
         self.hook_manager.hook("exportersList", exporters_hook)
 
     def setup_snapshot_hooks(self):
-        if not self.config.automated_snapshot:
-            return
-
         snapshot_handler = ArchiverVendor(self.window, self.config).snapshot_on_sync
         self.hook_manager.hook('profileLoaded', snapshot_handler)
         self.hook_manager.hook('unloadProfile', snapshot_handler)

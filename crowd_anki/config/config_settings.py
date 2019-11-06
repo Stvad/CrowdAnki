@@ -23,6 +23,8 @@ class NoteSortingMethods(Enum):
 
 
 class ConfigSettings:
+    __instance = None
+
     snapshot_path: str
     automated_snapshot: bool
     snapshot_root_decks: list
@@ -46,6 +48,12 @@ class ConfigSettings:
     def __init__(self, init_values=None):
         self._config = init_values or mw.addonManager.getConfig(__name__)
         self.load_values()
+
+    @classmethod
+    def get_instance(cls):
+        if cls.__instance is None:
+            cls.__instance = ConfigSettings()
+        return cls.__instance
 
     def _get(self, prop: Properties):
         return self._config.get(prop.value.config_name, prop.value.default_value)

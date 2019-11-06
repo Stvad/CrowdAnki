@@ -14,7 +14,7 @@ class ConfigDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(None)
         self.parent = parent
-        self.config = ConfigSettings()
+        self.config = ConfigSettings.get_instance()
         self.form = ConfigUI()
         self.form.setupUi(self)
         self.ui_initial_setup()

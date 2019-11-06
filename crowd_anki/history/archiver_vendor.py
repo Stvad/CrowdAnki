@@ -37,7 +37,8 @@ class ArchiverVendor:
         self.do_snapshot('CrowdAnki: Manual snapshot')
 
     def snapshot_on_sync(self):
-        self.do_snapshot('CrowdAnki: Snapshot on sync')
+        if self.config.automated_snapshot:
+            self.do_snapshot('CrowdAnki: Snapshot on sync')
 
     def do_snapshot(self, reason):
         with progress_indicator(self.window, 'Taking CrowdAnki snapshot of all decks'):
