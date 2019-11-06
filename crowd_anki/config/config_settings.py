@@ -43,8 +43,8 @@ class ConfigSettings:
         EXPORT_NOTE_SORT_METHODS = ConfigEntry("export_note_sort_methods", [NoteSortingMethods.NO_SORTING.value])
         EXPORT_NOTES_REVERSE_ORDER = ConfigEntry("export_notes_reverse_order", False)
 
-    def __init__(self):
-        self._config = mw.addonManager.getConfig(__name__)
+    def __init__(self, init_values=None):
+        self._config = init_values or mw.addonManager.getConfig(__name__)
         self.load_values()
 
     def _get(self, prop: Properties):

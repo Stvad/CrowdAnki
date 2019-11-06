@@ -14,8 +14,9 @@ from crowd_anki.config.config_settings import ConfigSettings, NoteSortingMethods
 with describe(ConfigSettings) as self:
     with context("someone interacts with any config setting"):
         with it("do not sort / sort by none"):
-            config = ConfigSettings()
-            config.automated_snapshot = True
+            config = ConfigSettings({
+                "automated_snapshot": True
+            })
 
             assert config.automated_snapshot
 
@@ -35,31 +36,31 @@ with describe(ConfigSettings) as self:
             assert results == invalid_examples
 
         with it("should set the empty textboxes to their default values"):
-            config = ConfigSettings()
-
-            config.export_note_sort_methods = [""]
-            config.snapshot_path = ""
+            config = ConfigSettings({
+                "export_note_sort_methods": [""],
+                "snapshot_path": ""
+            })
 
             config.handle_empty_textboxes()
 
             assert config.export_note_sort_methods == config.Properties.EXPORT_NOTE_SORT_METHODS.value.default_value
             assert config.snapshot_path == config.Properties.SNAPSHOT_PATH.value.default_value
 
-        # with it("tries to save"):
-        #     config = ConfigSettings()
-        #
-        #     config.snapshot_path = "testing"
-        #     config.automated_snapshot = True
-        #     config.snapshot_root_decks = ["TestDeck1", "Other"]
-        #     config.export_notes_reverse_order = True
-        #     config.export_note_sort_methods = ["notemodel", "guid"]
-        #
-        #     config.save()
-        #
-        #     print(config._config["snapshot_path"])
-        #
-        #     assert config._config["snapshot_path"] == config.snapshot_path
-        #     assert config._config["automated_snapshot"] == config.automated_snapshot
-        #     assert config._config["snapshot_root_decks"] == config.snapshot_root_decks
-        #     assert config._config["export_notes_reverse_order"] == config.export_notes_reverse_order
-        #     assert config._config["export_note_sort_methods"] == config.export_note_sort_methods
+        with it("tries to save"):
+            config = ConfigSettings({
+                "snapshot_path": "testing",
+                "automated_snapshot": True,
+                "snapshot_root_decks": ["TestDeck1", "Other"],
+                "export_notes_reverse_order": True,
+                "export_note_sort_methods": ["notemodel", "guid"]
+            })
+
+            config.save()
+
+            print(config._config["snapshot_path"])
+
+            assert config._config["snapshot_path"] == config.snapshot_path
+            assert config._config["automated_snapshot"] == config.automated_snapshot
+            assert config._config["snapshot_root_decks"] == config.snapshot_root_decks
+            assert config._config["export_notes_reverse_order"] == config.export_notes_reverse_order
+            assert config._config["export_note_sort_methods"] == config.export_note_sort_methods
