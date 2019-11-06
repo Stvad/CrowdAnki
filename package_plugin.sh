@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-pyuic5 ui_files/config.ui -o crowd_anki/config/config_ui.py
+bash generate_ui.sh
 
 ./fetch_dependencies.sh
 cd crowd_anki
