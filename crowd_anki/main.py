@@ -15,8 +15,7 @@ def invoke_config_window():
     """
     Launch custom GUI on config change instead of default Anki JSON editor
     """
-    mw.crowd_anki_config = config = ConfigDialog()
-    config.exec_()
+    mw.crowd_anki_config.exec_()
 
 
 def initialize_config_window():
@@ -24,6 +23,7 @@ def initialize_config_window():
     Add option for addon's config in Anki
     :return:
     """
+    mw.crowd_anki_config = ConfigDialog()
     mw.addonManager.setConfigAction(__name__, invoke_config_window)
 
 

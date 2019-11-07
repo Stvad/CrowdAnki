@@ -28,7 +28,7 @@ class AnkiJsonExporterWrapper:
         self.did = deck_id
         self.count = 0  # Todo?
         self.collection = collection
-        self.anki_json_exporter = json_exporter or AnkiJsonExporter(collection, ConfigSettings())
+        self.anki_json_exporter = json_exporter or AnkiJsonExporter(collection, ConfigSettings.get_instance())
         self.notifier = notifier or AnkiUiNotifier()
 
     # required by anki exporting interface with it's non PEP-8 names

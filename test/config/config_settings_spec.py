@@ -47,20 +47,19 @@ with describe(ConfigSettings) as self:
             assert config.snapshot_path == config.Properties.SNAPSHOT_PATH.value.default_value
 
         with it("tries to save"):
-            config = ConfigSettings({
+            settings = {
                 "snapshot_path": "testing",
                 "automated_snapshot": True,
                 "snapshot_root_decks": ["TestDeck1", "Other"],
                 "export_notes_reverse_order": True,
                 "export_note_sort_methods": ["notemodel", "guid"]
-            })
+            }
+
+            config = ConfigSettings(settings)
 
             config.save()
 
-            print(config._config["snapshot_path"])
+            assert config._config == settings
 
-            assert config._config["snapshot_path"] == config.snapshot_path
-            assert config._config["automated_snapshot"] == config.automated_snapshot
-            assert config._config["snapshot_root_decks"] == config.snapshot_root_decks
-            assert config._config["export_notes_reverse_order"] == config.export_notes_reverse_order
-            assert config._config["export_note_sort_methods"] == config.export_note_sort_methods
+            for key in settings:
+                assert settings[key] == getattr(config, key)

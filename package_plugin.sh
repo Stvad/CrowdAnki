@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-bash generate_ui.sh
+./generate_ui.sh
 
 ./fetch_dependencies.sh
 cd crowd_anki
