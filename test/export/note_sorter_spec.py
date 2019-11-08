@@ -7,6 +7,7 @@ from random import shuffle
 from test_utils.anki import mock_anki_modules
 
 mock_anki_modules()
+from aqt import mw
 
 from crowd_anki.export.note_sorter import NoteSorter
 from crowd_anki.config.config_settings import ConfigSettings, NoteSortingMethods
@@ -37,7 +38,7 @@ class NoteSorterTester:
         self.notes = []
         self.sorted_notes = []
 
-        self.config = ConfigSettings()
+        self.config = ConfigSettings(mw.addonManager)
 
     @staticmethod
     def get_single_note_mock(i):

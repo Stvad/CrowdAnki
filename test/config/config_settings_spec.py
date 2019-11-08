@@ -7,6 +7,7 @@ from random import shuffle
 from test_utils.anki import mock_anki_modules
 
 mock_anki_modules()
+from aqt import mw
 
 from crowd_anki.config.config_settings import ConfigSettings, NoteSortingMethods
 
@@ -14,14 +15,14 @@ from crowd_anki.config.config_settings import ConfigSettings, NoteSortingMethods
 with describe(ConfigSettings) as self:
     with context("someone interacts with any config setting"):
         with it("do not sort / sort by none"):
-            config = ConfigSettings({
+            config = ConfigSettings(mw.addonManager, {
                 "automated_snapshot": True
             })
 
             assert config.automated_snapshot
 
         with it("tries to find the invalid config entries"):
-            config = ConfigSettings()
+            config = ConfigSettings(mw.addonManager)
 
             valid_sorting_methods = list(NoteSortingMethods.values())
             assert len(valid_sorting_methods) > 0
@@ -35,13 +36,13 @@ with describe(ConfigSettings) as self:
 
             assert results == invalid_examples
 
-        with it("should set the empty textboxes to their default values"):
-            config = ConfigSettings({
+        with it("should set the empty properties to their default values"):
+            config = ConfigSettings(mw.addonManager, {
                 "export_note_sort_methods": [""],
                 "snapshot_path": ""
             })
 
-            config.handle_empty_textboxes()
+            config.try_infer_values()
 
             assert config.export_note_sort_methods == config.Properties.EXPORT_NOTE_SORT_METHODS.value.default_value
             assert config.snapshot_path == config.Properties.SNAPSHOT_PATH.value.default_value
@@ -55,7 +56,7 @@ with describe(ConfigSettings) as self:
                 "export_note_sort_methods": ["notemodel", "guid"]
             }
 
-            config = ConfigSettings(settings)
+            config = ConfigSettings(mw.addonManager, settings)
 
             config.save()
 

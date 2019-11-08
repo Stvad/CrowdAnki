@@ -11,10 +11,11 @@ from .config_settings import ConfigSettings
 
 
 class ConfigDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, config: ConfigSettings,
+                 parent=None):
         super().__init__(None)
         self.parent = parent
-        self.config = ConfigSettings.get_instance()
+        self.config = config
         self.form = ConfigUI()
         self.form.setupUi(self)
         self.ui_initial_setup()

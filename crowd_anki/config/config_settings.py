@@ -1,7 +1,6 @@
 from collections import namedtuple
 from enum import Enum
 
-from aqt import mw
 from ..utils.constants import USER_FILES_PATH
 
 ConfigEntry = namedtuple("ConfigEntry", ["config_name", "default_value"])
@@ -45,14 +44,15 @@ class ConfigSettings:
         EXPORT_NOTE_SORT_METHODS = ConfigEntry("export_note_sort_methods", [NoteSortingMethods.NO_SORTING.value])
         EXPORT_NOTES_REVERSE_ORDER = ConfigEntry("export_notes_reverse_order", False)
 
-    def __init__(self, init_values=None):
-        self._config = init_values or mw.addonManager.getConfig(__name__)
+    def __init__(self, addon_manager, init_values=None):
+        self.addon_manager = addon_manager
+        self._config = init_values or addon_manager.getConfig(__name__)
         self.load_values()
 
     @classmethod
-    def get_instance(cls):
+    def get_instance(cls, addon_manager=None):
         if cls.__instance is None:
-            cls.__instance = ConfigSettings()
+            cls.__instance = ConfigSettings(addon_manager)
         return cls.__instance
 
     def _get(self, prop: Properties):
@@ -66,10 +66,10 @@ class ConfigSettings:
         for prop in self.Properties:
             self._config[prop.value.config_name] = getattr(self, prop.value.config_name)
 
-        mw.addonManager.writeConfig(__name__, self._config)
+        self.addon_manager.writeConfig(__name__, self._config)
 
     def find_invalid_config_values(self):
-        self.handle_empty_textboxes()
+        self.try_infer_values()
 
         incorrect_sort_methods = [method
                                   for method in self.export_note_sort_methods
@@ -77,7 +77,7 @@ class ConfigSettings:
 
         return incorrect_sort_methods
 
-    def handle_empty_textboxes(self):
+    def try_infer_values(self):
         if not self.export_note_sort_methods[0]:
             self.set_property_to_default_value(self.Properties.EXPORT_NOTE_SORT_METHODS)
 

@@ -18,12 +18,12 @@ def invoke_config_window():
     mw.crowd_anki_config.exec_()
 
 
-def initialize_config_window():
+def initialize_config_window(config: ConfigSettings):
     """
     Add option for addon's config in Anki
     :return:
     """
-    mw.crowd_anki_config = ConfigDialog()
+    mw.crowd_anki_config = ConfigDialog(config)
     mw.addonManager.setConfigAction(__name__, invoke_config_window)
 
 
@@ -42,11 +42,11 @@ def anki_init(window):
     if not window:
         return
 
-    config = ConfigSettings.get_instance()
+    config = ConfigSettings.get_instance(mw.addonManager)
 
     HookVendor(window, config).setup_hooks()
     anki_actions_init(window, config)
-    initialize_config_window()
+    initialize_config_window(config)
 
 
 anki_init(mw)
