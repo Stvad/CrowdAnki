@@ -3,7 +3,7 @@ from ..config.config_settings import ConfigSettings, NoteSortingMethods
 
 class NoteSorter:
     sorting_definitions = {
-        NoteSortingMethods.NO_SORTING: lambda i: i,
+        NoteSortingMethods.NO_SORTING: lambda i: 1,
         NoteSortingMethods.GUID: lambda i: i.anki_object.guid,
         NoteSortingMethods.FLAG: lambda i: i.anki_object.flags,
         NoteSortingMethods.TAG: lambda i: i.anki_object.tags,

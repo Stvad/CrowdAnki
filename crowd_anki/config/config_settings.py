@@ -1,6 +1,7 @@
 from collections import namedtuple
 from enum import Enum
 
+from aqt import mw
 from ..utils.constants import USER_FILES_PATH
 
 ConfigEntry = namedtuple("ConfigEntry", ["config_name", "default_value"])
@@ -44,8 +45,8 @@ class ConfigSettings:
         EXPORT_NOTE_SORT_METHODS = ConfigEntry("export_note_sort_methods", [NoteSortingMethods.NO_SORTING.value])
         EXPORT_NOTES_REVERSE_ORDER = ConfigEntry("export_notes_reverse_order", False)
 
-    def __init__(self, addon_manager, init_values=None):
-        self.addon_manager = addon_manager
+    def __init__(self, addon_manager=None, init_values=None):
+        self.addon_manager = addon_manager or mw.addonManager
         self._config = init_values or addon_manager.getConfig(__name__)
         self.load_values()
 

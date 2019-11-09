@@ -21,23 +21,26 @@ with describe(ConfigSettings) as self:
 
             assert config.automated_snapshot
 
+        with it("get all the NoteSortingMethod values"):
+            valid_sorting_methods = list(NoteSortingMethods.values())
+            assert len(valid_sorting_methods) > 0
+            assert isinstance(valid_sorting_methods, list)
+
         with it("tries to find the invalid config entries"):
             config = ConfigSettings(mw.addonManager)
 
             valid_sorting_methods = list(NoteSortingMethods.values())
-            assert len(valid_sorting_methods) > 0
 
             invalid_examples = ["testing", "giud", "dan", "flags", "notemodels", "feild", "card", "note"]
 
             config.export_note_sort_methods = invalid_examples + valid_sorting_methods
-            assert (len(valid_sorting_methods) + len(invalid_examples)) == len(config.export_note_sort_methods)
 
             results = config.find_invalid_config_values()
 
             assert results == invalid_examples
 
         with it("should set the empty properties to their default values"):
-            config = ConfigSettings(mw.addonManager, {
+            config = ConfigSettings(init_values={
                 "export_note_sort_methods": [""],
                 "snapshot_path": ""
             })
@@ -47,7 +50,7 @@ with describe(ConfigSettings) as self:
             assert config.export_note_sort_methods == config.Properties.EXPORT_NOTE_SORT_METHODS.value.default_value
             assert config.snapshot_path == config.Properties.SNAPSHOT_PATH.value.default_value
 
-        with it("tries to save"):
+        with it("tries to load to initial values in the constructor"):
             settings = {
                 "snapshot_path": "testing",
                 "automated_snapshot": True,
@@ -56,11 +59,41 @@ with describe(ConfigSettings) as self:
                 "export_note_sort_methods": ["notemodel", "guid"]
             }
 
-            config = ConfigSettings(mw.addonManager, settings)
-
-            config.save()
+            config = ConfigSettings(init_values=settings)
 
             assert config._config == settings
 
             for key in settings:
                 assert settings[key] == getattr(config, key)
+
+        with it("tries to save new values to config dictionary"):
+            addon_manager_mock = MagicMock()
+
+            old_settings = {
+                "snapshot_path": "",
+                "automated_snapshot": False,
+                "snapshot_root_decks": [],
+                "export_notes_reverse_order": False,
+                "export_note_sort_methods": []
+            }
+
+            new_settings = {
+                "snapshot_path": "testing",
+                "automated_snapshot": True,
+                "snapshot_root_decks": ["TestDeck1", "Other"],
+                "export_notes_reverse_order": True,
+                "export_note_sort_methods": ["notemodel", "guid"]
+            }
+
+            config = ConfigSettings(addon_manager=addon_manager_mock, init_values=old_settings)
+
+            for key in new_settings:
+                setattr(config, key, new_settings[key])
+
+            config.save()
+
+            assert config._config == new_settings
+            addon_manager_mock.writeConfig.assert_called_once()
+
+            for key in new_settings:
+                assert new_settings[key] == config._config[key]
