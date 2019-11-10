@@ -23,7 +23,7 @@ note_sorting_single_result_pairs = [
     (NoteSortingMethods.GUID, test_guids),
     (NoteSortingMethods.FLAG, test_flags),
     (NoteSortingMethods.TAG, test_tags),
-    (NoteSortingMethods.NOTE_MODEL, test_notemodels),
+    (NoteSortingMethods.NOTE_MODEL_NAME, test_notemodels),
     (NoteSortingMethods.NOTE_MODEL_ID, test_notemodelids),
     (NoteSortingMethods.FIELD1, test_fields),
     (NoteSortingMethods.FIELD2, test_fields)
@@ -125,10 +125,10 @@ with describe(NoteSorterTester) as self:
         with it("sorts by two sorting methods, notemodels+guids"):
             self.tester = NoteSorterTester()
 
-            self.tester.sort_with([NoteSortingMethods.NOTE_MODEL, NoteSortingMethods.GUID], False, is_multi_key=True)
+            self.tester.sort_with([NoteSortingMethods.NOTE_MODEL_NAME, NoteSortingMethods.GUID], False, is_multi_key=True)
 
             return_object = [
-                (NoteSorter.sorting_definitions[NoteSortingMethods.NOTE_MODEL](note),
+                (NoteSorter.sorting_definitions[NoteSortingMethods.NOTE_MODEL_NAME](note),
                  NoteSorter.sorting_definitions[NoteSortingMethods.GUID](note))
                 for note in self.tester.sorted_notes
             ]
@@ -138,10 +138,10 @@ with describe(NoteSorterTester) as self:
         with it("sorts by two sorting methods, notemodels+guids, reversed"):
             self.tester = NoteSorterTester()
 
-            self.tester.sort_with([NoteSortingMethods.NOTE_MODEL, NoteSortingMethods.GUID], True, is_multi_key=True)
+            self.tester.sort_with([NoteSortingMethods.NOTE_MODEL_NAME, NoteSortingMethods.GUID], True, is_multi_key=True)
 
             return_object = [
-                (NoteSorter.sorting_definitions[NoteSortingMethods.NOTE_MODEL](note),
+                (NoteSorter.sorting_definitions[NoteSortingMethods.NOTE_MODEL_NAME](note),
                  NoteSorter.sorting_definitions[NoteSortingMethods.GUID](note))
                 for note in self.tester.sorted_notes
             ]

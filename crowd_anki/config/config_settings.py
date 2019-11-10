@@ -14,8 +14,8 @@ class NoteSortingMethods(Enum):
     GUID = "guid"
     FLAG = "flag"
     TAG = "tag"
-    NOTE_MODEL = "notemodel"
-    NOTE_MODEL_ID = "notemodelid"
+    NOTE_MODEL_NAME = "note_model_name"
+    NOTE_MODEL_ID = "note_model_id"
 
     @classmethod
     def values(cls):

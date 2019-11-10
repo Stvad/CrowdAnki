@@ -94,6 +94,3 @@ with describe(ConfigSettings) as self:
 
             assert config._config == new_settings
             addon_manager_mock.writeConfig.assert_called_once()
-
-            for key in new_settings:
-                assert new_settings[key] == config._config[key]

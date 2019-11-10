@@ -3,11 +3,15 @@ from ..config.config_settings import ConfigSettings, NoteSortingMethods
 
 class NoteSorter:
     sorting_definitions = {
+        # NO_SORTING is a special case which should be ignored by should_sort
+        # However it's been kept here for edge cases, and for ease of testing
+        # It returns 1 to ensure stable sorting, so the results will be in their previous order
         NoteSortingMethods.NO_SORTING: lambda i: 1,
+
         NoteSortingMethods.GUID: lambda i: i.anki_object.guid,
         NoteSortingMethods.FLAG: lambda i: i.anki_object.flags,
         NoteSortingMethods.TAG: lambda i: i.anki_object.tags,
-        NoteSortingMethods.NOTE_MODEL: lambda i: i.anki_object._model["name"],
+        NoteSortingMethods.NOTE_MODEL_NAME: lambda i: i.anki_object._model["name"],
         NoteSortingMethods.NOTE_MODEL_ID: lambda i: i.anki_object._model["crowdanki_uuid"],
         NoteSortingMethods.FIELD1: lambda i: i.anki_object.fields[0],
         NoteSortingMethods.FIELD2: lambda i: i.anki_object.fields[1]

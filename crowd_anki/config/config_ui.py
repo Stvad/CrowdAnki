@@ -63,9 +63,9 @@ class Ui_Dialog(object):
         self.explanatory_text.setWordWrap(True)
         self.explanatory_text.setObjectName("explanatory_text")
         self.horizontalLayout.addWidget(self.explanatory_text)
-        self.textBrowser = QtWidgets.QTextBrowser(Dialog)
-        self.textBrowser.setObjectName("textBrowser")
-        self.horizontalLayout.addWidget(self.textBrowser)
+        self.tb_instructions = QtWidgets.QTextBrowser(Dialog)
+        self.tb_instructions.setObjectName("tb_instructions")
+        self.horizontalLayout.addWidget(self.tb_instructions)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
@@ -88,7 +88,7 @@ class Ui_Dialog(object):
         self.group_deck_export.setTitle(_translate("Dialog", "Export"))
         self.lbl_deck_sort.setText(_translate("Dialog", "Deck Sort Method(s) (separated by comma)"))
         self.cb_reverse_sort.setText(_translate("Dialog", "Reverse Sort Order"))
-        self.textBrowser.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.tb_instructions.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Noto Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
@@ -107,6 +107,6 @@ class Ui_Dialog(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt;\">Export</span></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Deck Sort Methods</span>: Methods with which the deck will be sorted. If multiple sorting methods are provided then each sorting method will be applied in order.</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" text-decoration: underline;\">Options</span>: <span style=\" font-style:italic;\">none, guid, flag, tag, notemodel, notemodelid, field1, </span>and<span style=\" font-style:italic;\"> field2.</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" text-decoration: underline;\">Options</span>: <span style=\" font-style:italic;\">none, guid, flag, tag, note_model_name, note_model_id, field1, </span>and<span style=\" font-style:italic;\"> field2.</span></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Reverse Sort Order</span>: Swap the order of the notes, after all sorting.</p></body></html>"))
