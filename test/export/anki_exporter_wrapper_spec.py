@@ -1,6 +1,10 @@
 from mamba import describe, it, context
 from unittest.mock import MagicMock
 
+from test_utils.anki import mock_anki_modules
+
+mock_anki_modules()
+
 from crowd_anki.export.anki_exporter_wrapper import AnkiJsonExporterWrapper
 
 DUMMY_EXPORT_DIRECTORY = "/tmp"

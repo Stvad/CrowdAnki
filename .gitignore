@@ -137,3 +137,7 @@ fabric.properties
 
 # Project specific stuff
 crowd_anki/thirdparty
+crowd_anki/meta.json
+
+.vscode
+.pylintrc

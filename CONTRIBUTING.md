@@ -11,6 +11,18 @@ of Anki.
 If you want to add new library dependency - add them to the `Pipfile`.  
 The dependency management is implemented using https://pipenv.org/
 
+## UI Files
+The config window is build using QtDesigner, which you can get by running 
+`sudo apt install qtcreator` 
+on Linux, or simply download from `https://build-system.fman.io/qt-designer-download`
+
+In Qt Designer you can create UI files using a simple GUI, and save them as a `.ui` file in the `ui_files` folder.
+Then the `pyuic5` module can be used to convert them to python.
+See the `generate_ui.sh` script for examples, and all new UI files should be added there for automation.
+
+This script is run automatically when packaging the extension in `package_plugin.sh`
+but needs to be done manually if the UI files are changed in the dev environment.
+
 # Testing 
 ## Testing you changes in Anki
  
@@ -18,7 +30,8 @@ The dependency management is implemented using https://pipenv.org/
 1. Run `fetch_dependencies.sh` - this will download the dependencies required for CrowdAnki to 
 operate and put them into the `crowd_anki/dist` directory.
 1. Add a symlink to the Anki plugins directory (you can find it via `Tools>Add-ons>View Files`)
-pointing to `crowd_anki` directory.
+pointing to `crowd_anki` directory (**you should not** name the symlink `crowd_anki` though, see 
+[#62](https://github.com/Stvad/CrowdAnki/issues/62)).
 
 At this point if you start Anki - it'd be using your development version of CrowdAnki.  
 If you made some changes to the plugin while Anki is running and want to test them - you need to 

@@ -5,29 +5,38 @@ import shutil
 from pathlib import Path
 from typing import Callable
 
+
 from .deck_exporter import DeckExporter
 from ..anki.adapters.anki_deck import AnkiDeck
 from ..representation import deck_initializer
 from ..representation.deck import Deck
 from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from ..utils.filesystem.name_sanitizer import sanitize_anki_deck_name
+from .note_sorter import NoteSorter
+from ..config.config_settings import ConfigSettings
 
 
 class AnkiJsonExporter(DeckExporter):
     def __init__(self, collection,
+                 config: ConfigSettings,
                  deck_name_sanitizer: Callable[[str], str] = sanitize_anki_deck_name,
                  deck_file_name: str = DECK_FILE_NAME):
+        self.config = config
         self.collection = collection
         self.last_exported_count = 0
         self.deck_name_sanitizer = deck_name_sanitizer
         self.deck_file_name = deck_file_name
-
+        self.note_sorter = NoteSorter(config)
+    
     def export_to_directory(self, deck: AnkiDeck, output_dir=Path("."), copy_media=True) -> Path:
         deck_directory = output_dir.joinpath(self.deck_name_sanitizer(deck.name))
 
         deck_directory.mkdir(parents=True, exist_ok=True)
 
         deck = deck_initializer.from_collection(self.collection, deck.name)
+
+        deck.notes = self.note_sorter.sort_notes(deck.notes)
+
         self.last_exported_count = deck.get_note_count()
 
         deck_filename = deck_directory.joinpath(self.deck_file_name).with_suffix(DECK_FILE_EXTENSION)
