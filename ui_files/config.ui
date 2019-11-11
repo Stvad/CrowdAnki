@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>843</width>
-    <height>749</height>
+    <width>825</width>
+    <height>726</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -59,6 +59,22 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="group_deck_import">
+         <property name="title">
+          <string>Import</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QCheckBox" name="cb_ignore_move_cards">
+            <property name="text">
+             <string>Do Not Move Existing Cards</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="group_deck_export">
          <property name="title">
           <string>Export</string>
@@ -87,17 +103,10 @@
       </layout>
      </item>
      <item>
-      <widget class="QLabel" name="explanatory_text">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QTextBrowser" name="tb_instructions">
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
        <property name="html">
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;

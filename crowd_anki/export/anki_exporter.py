@@ -33,7 +33,7 @@ class AnkiJsonExporter(DeckExporter):
 
         deck_directory.mkdir(parents=True, exist_ok=True)
 
-        deck = deck_initializer.from_collection(self.collection, deck.name)
+        deck = deck_initializer.from_collection(self.collection, self.config, deck.name)
 
         deck.notes = self.note_sorter.sort_notes(deck.notes)
 

@@ -9,6 +9,7 @@ from pathlib import Path
 import aqt.utils
 from aqt import QInputDialog
 from ..importer.anki_importer import AnkiJsonImporter
+from ..config.config_settings import ConfigSettings
 from ..utils import utils
 
 BRANCH_NAME = "master"
@@ -20,12 +21,13 @@ class GithubImporter(object):
     Provides functionality of installing shared deck from GitHub, by entering User and Repository names
     """
 
-    def __init__(self, collection):
+    def __init__(self, collection, config: ConfigSettings):
         self.collection = collection
+        self.config = config
 
     @staticmethod
-    def on_github_import_action(collection):
-        github_importer = GithubImporter(collection)
+    def on_github_import_action(collection, config: ConfigSettings):
+        github_importer = GithubImporter(collection, config)
         github_importer.import_from_github()
 
     def import_from_github(self):
@@ -48,7 +50,7 @@ class GithubImporter(object):
             deck_directory_wb.rename(deck_directory)
             # Todo progressbar on download
 
-            AnkiJsonImporter.import_deck_from_path(self.collection, deck_directory)
+            AnkiJsonImporter.import_deck_from_path(self.collection, self.config, deck_directory)
 
         except (URLError, HTTPError, OSError) as error:
             aqt.utils.showWarning("Error while trying to get deck from GitHub: {}".format(error))

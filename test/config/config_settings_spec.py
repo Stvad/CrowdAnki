@@ -74,7 +74,8 @@ with describe(ConfigSettings) as self:
                 "automated_snapshot": False,
                 "snapshot_root_decks": [],
                 "export_notes_reverse_order": False,
-                "export_note_sort_methods": []
+                "export_note_sort_methods": [],
+                "import_notes_ignore_deck_movement": False
             }
 
             new_settings = {
@@ -82,7 +83,8 @@ with describe(ConfigSettings) as self:
                 "automated_snapshot": True,
                 "snapshot_root_decks": ["TestDeck1", "Other"],
                 "export_notes_reverse_order": True,
-                "export_note_sort_methods": ["notemodel", "guid"]
+                "export_note_sort_methods": ["notemodel", "guid"],
+                "import_notes_ignore_deck_movement": True
             }
 
             config = ConfigSettings(addon_manager=addon_manager_mock, init_values=old_settings)

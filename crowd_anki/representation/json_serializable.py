@@ -115,7 +115,7 @@ class JsonSerializableAnkiDict(JsonSerializable):
 
 
 class JsonSerializableAnkiObject(JsonSerializable):
-    export_filter_set = JsonSerializable.export_filter_set | {"anki_object", "anki_object_dict"}
+    export_filter_set = JsonSerializable.export_filter_set | {"anki_object", "anki_object_dict", "config"}
 
     def __init__(self, anki_object=None):
         super(JsonSerializableAnkiObject, self).__init__()

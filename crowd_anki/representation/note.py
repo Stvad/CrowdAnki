@@ -1,6 +1,8 @@
 import anki
 import anki.utils
 from anki.notes import Note as AnkiNote
+
+from ..config.config_settings import ConfigSettings
 from .json_serializable import JsonSerializableAnkiObject
 from .note_model import NoteModel
 from ..anki.overrides.change_model_dialog import ChangeModelDialog
@@ -19,14 +21,15 @@ class Note(JsonSerializableAnkiObject):
     def __init__(self, anki_note=None):
         super(Note, self).__init__(anki_note)
         self.note_model_uuid = None
+        self.config = None
 
     @staticmethod
-    def get_notes_from_collection(collection, deck_id, note_models):
+    def get_notes_from_collection(collection, config, deck_id, note_models):
         note_ids = collection.decks.get_note_ids(deck_id, include_from_dynamic=True)
-        return [Note.from_collection(collection, note_id, note_models) for note_id in note_ids]
+        return [Note.from_collection(collection, config, note_id, note_models) for note_id in note_ids]
 
     @classmethod
-    def from_collection(cls, collection, note_id, note_models):
+    def from_collection(cls, collection, config: ConfigSettings, note_id, note_models):
         anki_note = AnkiNote(collection, id=note_id)
         note = Note(anki_note)
 
@@ -35,13 +38,16 @@ class Note(JsonSerializableAnkiObject):
 
         note.note_model_uuid = note_model.get_uuid()
 
+        note.config = config
+
         return note
 
     @classmethod
-    def from_json(cls, json_dict):
+    def from_json(cls, json_dict, config: ConfigSettings):
         note = Note()
         note.anki_object_dict = json_dict
         note.note_model_uuid = json_dict["note_model_uuid"]
+        note.config = config
         return note
 
     def get_uuid(self):
@@ -117,5 +123,5 @@ class Note(JsonSerializableAnkiObject):
 
         if new_note:
             collection.addNote(self.anki_object)
-        else:
+        elif not self.config.import_notes_ignore_deck_movement:
             self.move_cards_to_deck(deck.anki_dict["id"])

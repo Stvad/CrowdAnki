@@ -7,14 +7,17 @@ from typing import Callable, Optional
 
 import aqt
 import aqt.utils
+
+from ..config.config_settings import ConfigSettings
 from ..representation import deck_initializer
 from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 
 
 class AnkiJsonImporter:
-    def __init__(self, collection, deck_file_name: str = DECK_FILE_NAME):
+    def __init__(self, collection, config: ConfigSettings, deck_file_name: str = DECK_FILE_NAME):
         self.collection = collection
         self.deck_file_name = deck_file_name
+        self.config = config
 
     def load_from_file(self, file_path):
         """
@@ -26,7 +29,7 @@ class AnkiJsonImporter:
 
         with file_path.open(encoding='utf8') as deck_file:
             deck_json = json.load(deck_file)
-            deck = deck_initializer.from_json(deck_json)
+            deck = deck_initializer.from_json(deck_json, self.config)
 
             deck.save_to_collection(self.collection)
 
@@ -74,8 +77,8 @@ class AnkiJsonImporter:
         return convention_path if convention_path.exists() else inferred_path
 
     @staticmethod
-    def import_deck_from_path(collection, directory_path, import_media=True):
-        importer = AnkiJsonImporter(collection)
+    def import_deck_from_path(collection, config: ConfigSettings, directory_path, import_media=True):
+        importer = AnkiJsonImporter(collection, config)
         try:
             importer.load_from_directory(directory_path, import_media)
             aqt.utils.showInfo("Import of {} deck was successful".format(directory_path.name))
@@ -85,7 +88,7 @@ class AnkiJsonImporter:
             raise
 
     @staticmethod
-    def import_deck(collection, directory_provider: Callable[[str], Optional[str]]):
+    def import_deck(collection, config: ConfigSettings, directory_provider: Callable[[str], Optional[str]]):
         directory_path = str(directory_provider("Select Deck Directory"))
         if directory_path:
-            AnkiJsonImporter.import_deck_from_path(collection, Path(directory_path))
+            AnkiJsonImporter.import_deck_from_path(collection, config, Path(directory_path))
