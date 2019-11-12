@@ -28,11 +28,11 @@ class ActionVendor:
 
     def import_action(self):
         return self.action('CrowdAnki: Import from disk',
-                           lambda: AnkiJsonImporter.import_deck(self.window.col, self.config, self.directory_vendor))
+                           lambda: AnkiJsonImporter.import_deck(self.window.col, self.directory_vendor))
 
     def github_import(self):
         return self.action("CrowdAnki: Import from Github",
-                           lambda: GithubImporter.on_github_import_action(self.window.col, self.config))
+                           lambda: GithubImporter.on_github_import_action(self.window.col))
 
     def snapshot(self):
         return self.action('CrowdAnki: Snapshot', self.archiver_vendor.do_manual_snapshot)

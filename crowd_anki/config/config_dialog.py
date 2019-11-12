@@ -32,7 +32,11 @@ class ConfigDialog(QDialog):
             super().accept()
 
     def ui_initial_setup(self):
-        # Snapshot Options
+        self.ui_setup_snapshot_options()
+        self.ui_setup_export_options()
+        self.ui_setup_import_options()
+
+    def ui_setup_snapshot_options(self):
         self.form.textedit_snapshot_path.setText(self.config.snapshot_path)
         self.form.textedit_snapshot_path.textChanged.connect(self.changed_textedit_snapshot_path)
 
@@ -44,7 +48,7 @@ class ConfigDialog(QDialog):
         )
         self.form.textedit_snapshot_root_decks.textChanged.connect(self.changed_textedit_snapshot_root_decks)
 
-        # Export Options
+    def ui_setup_export_options(self):
         self.form.cb_reverse_sort.setChecked(self.config.export_notes_reverse_order)
         self.form.cb_reverse_sort.stateChanged.connect(self.toggle_reverse_sort)
 
@@ -53,7 +57,7 @@ class ConfigDialog(QDialog):
         )
         self.form.textedit_deck_sort_methods.textChanged.connect(self.changed_textedit_deck_sort_methods)
 
-        # Import Options
+    def ui_setup_import_options(self):
         self.form.cb_ignore_move_cards.setChecked(self.config.import_notes_ignore_deck_movement)
         self.form.cb_ignore_move_cards.stateChanged.connect(self.toggle_ignore_move_cards)
 

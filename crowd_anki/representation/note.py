@@ -18,36 +18,33 @@ class Note(JsonSerializableAnkiObject):
                          "scm"  # todo: clarify
                          }
 
-    def __init__(self, anki_note=None):
+    def __init__(self, anki_note=None, config=None):
         super(Note, self).__init__(anki_note)
         self.note_model_uuid = None
-        self.config = None
+        self.config = config or ConfigSettings.get_instance()
 
     @staticmethod
-    def get_notes_from_collection(collection, config, deck_id, note_models):
+    def get_notes_from_collection(collection, deck_id, note_models):
         note_ids = collection.decks.get_note_ids(deck_id, include_from_dynamic=True)
-        return [Note.from_collection(collection, config, note_id, note_models) for note_id in note_ids]
+        return [Note.from_collection(collection, note_id, note_models) for note_id in note_ids]
 
     @classmethod
-    def from_collection(cls, collection, config: ConfigSettings, note_id, note_models):
+    def from_collection(cls, collection, note_id, note_models, config: ConfigSettings = None):
         anki_note = AnkiNote(collection, id=note_id)
-        note = Note(anki_note)
+        note = Note(anki_note=anki_note, config=config)
 
         note_model = NoteModel.from_collection(collection, note.anki_object.mid)
         note_models.setdefault(note_model.get_uuid(), note_model)
 
         note.note_model_uuid = note_model.get_uuid()
 
-        note.config = config
-
         return note
 
     @classmethod
-    def from_json(cls, json_dict, config: ConfigSettings):
-        note = Note()
+    def from_json(cls, json_dict, config: ConfigSettings = None):
+        note = Note(config=config)
         note.anki_object_dict = json_dict
         note.note_model_uuid = json_dict["note_model_uuid"]
-        note.config = config
         return note
 
     def get_uuid(self):
