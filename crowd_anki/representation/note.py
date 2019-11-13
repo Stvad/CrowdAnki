@@ -19,7 +19,7 @@ class Note(JsonSerializableAnkiObject):
                          "config"
                          }
 
-    def __init__(self, anki_note=None, config=None):
+    def __init__(self, anki_note=None, config: ConfigSettings = None):
         super(Note, self).__init__(anki_note)
         self.note_model_uuid = None
         self.config = config or ConfigSettings.get_instance()
@@ -30,9 +30,9 @@ class Note(JsonSerializableAnkiObject):
         return [Note.from_collection(collection, note_id, note_models) for note_id in note_ids]
 
     @classmethod
-    def from_collection(cls, collection, note_id, note_models, config: ConfigSettings = None):
+    def from_collection(cls, collection, note_id, note_models):
         anki_note = AnkiNote(collection, id=note_id)
-        note = Note(anki_note=anki_note, config=config)
+        note = Note(anki_note=anki_note)
 
         note_model = NoteModel.from_collection(collection, note.anki_object.mid)
         note_models.setdefault(note_model.get_uuid(), note_model)
@@ -42,8 +42,8 @@ class Note(JsonSerializableAnkiObject):
         return note
 
     @classmethod
-    def from_json(cls, json_dict, config: ConfigSettings = None):
-        note = Note(config=config)
+    def from_json(cls, json_dict):
+        note = Note()
         note.anki_object_dict = json_dict
         note.note_model_uuid = json_dict["note_model_uuid"]
         return note
