@@ -30,6 +30,7 @@ class ConfigSettings:
     snapshot_root_decks: list
     export_notes_reverse_order: bool
     export_note_sort_methods: list
+    import_notes_ignore_deck_movement: bool
 
     @property
     def formatted_export_note_sort_methods(self) -> list:
@@ -44,6 +45,7 @@ class ConfigSettings:
         SNAPSHOT_ROOT_DECKS = ConfigEntry("snapshot_root_decks", [])
         EXPORT_NOTE_SORT_METHODS = ConfigEntry("export_note_sort_methods", [NoteSortingMethods.NO_SORTING.value])
         EXPORT_NOTES_REVERSE_ORDER = ConfigEntry("export_notes_reverse_order", False)
+        IMPORT_NOTES_IGNORE_DECK_MOVEMENT = ConfigEntry("import_notes_ignore_deck_movement", False)
 
     def __init__(self, addon_manager=None, init_values=None):
         self.addon_manager = addon_manager or mw.addonManager
