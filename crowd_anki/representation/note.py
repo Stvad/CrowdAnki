@@ -15,7 +15,8 @@ class Note(JsonSerializableAnkiObject):
                          "_fmap",  # Generated data
                          "_model",  # Card model. Would be handled by deck.
                          "mid",  # -> uuid
-                         "scm"  # todo: clarify
+                         "scm",  # todo: clarify
+                         "config"
                          }
 
     def __init__(self, anki_note=None, config=None):
