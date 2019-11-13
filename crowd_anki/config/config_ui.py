@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(843, 749)
+        Dialog.resize(825, 726)
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -43,6 +43,14 @@ class Ui_Dialog(object):
         self.textedit_snapshot_root_decks.setObjectName("textedit_snapshot_root_decks")
         self.verticalLayout_3.addWidget(self.textedit_snapshot_root_decks)
         self.verticalLayout_2.addWidget(self.group_snapshot)
+        self.group_deck_import = QtWidgets.QGroupBox(Dialog)
+        self.group_deck_import.setObjectName("group_deck_import")
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.group_deck_import)
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.cb_ignore_move_cards = QtWidgets.QCheckBox(self.group_deck_import)
+        self.cb_ignore_move_cards.setObjectName("cb_ignore_move_cards")
+        self.verticalLayout_5.addWidget(self.cb_ignore_move_cards)
+        self.verticalLayout_2.addWidget(self.group_deck_import)
         self.group_deck_export = QtWidgets.QGroupBox(Dialog)
         self.group_deck_export.setObjectName("group_deck_export")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.group_deck_export)
@@ -58,12 +66,8 @@ class Ui_Dialog(object):
         self.verticalLayout_4.addWidget(self.cb_reverse_sort)
         self.verticalLayout_2.addWidget(self.group_deck_export)
         self.horizontalLayout.addLayout(self.verticalLayout_2)
-        self.explanatory_text = QtWidgets.QLabel(Dialog)
-        self.explanatory_text.setText("")
-        self.explanatory_text.setWordWrap(True)
-        self.explanatory_text.setObjectName("explanatory_text")
-        self.horizontalLayout.addWidget(self.explanatory_text)
         self.tb_instructions = QtWidgets.QTextBrowser(Dialog)
+        self.tb_instructions.setLineWidth(1)
         self.tb_instructions.setObjectName("tb_instructions")
         self.horizontalLayout.addWidget(self.tb_instructions)
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -85,6 +89,8 @@ class Ui_Dialog(object):
         self.lbl_snapshot_path.setText(_translate("Dialog", "Snapshot Path:"))
         self.cb_automated_snapshot.setText(_translate("Dialog", "Automated Snapshot"))
         self.lbl_snapshot.setText(_translate("Dialog", "Snapshot Root Decks (separated by comma)"))
+        self.group_deck_import.setTitle(_translate("Dialog", "Import"))
+        self.cb_ignore_move_cards.setText(_translate("Dialog", "Do Not Move Existing Cards"))
         self.group_deck_export.setTitle(_translate("Dialog", "Export"))
         self.lbl_deck_sort.setText(_translate("Dialog", "Deck Sort Method(s) (separated by comma)"))
         self.cb_reverse_sort.setText(_translate("Dialog", "Reverse Sort Order"))
@@ -102,6 +108,9 @@ class Ui_Dialog(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Default</span>: Each deck with no children is considered `root`.</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" text-decoration: underline;\">Example</span>: Let\'s assume that you have the following decks in your collection: `a` (with sub-decks `b` and `c`), and  `d`. By default CrowdAnki is going to create 3 separate repositories - `a::b`, `a::c` and `d`. If you are to add `a` to `snapshot_root_decks` then CrowdAnki would create 2 repositories instead -  `a` and `d`. The information for sub-decks `b` and `c` would be stored within repository `a` in this case.</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt;\">Import</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Do Not Move Existing Cards</span>: By default on import of a CrowdAnki deck file, when a note already exists in Anki itself, all notes will be updated and placed in the deck set in the deck file. Tick this box if you wish only to have the notes updated, but left in their current deck. See <a href=\"https://github.com/Stvad/CrowdAnki/issues/23\"><span style=\" text-decoration: underline; color:#2980b9;\">this Issue</span></a> on the CrowdAnki Github Repo for more info.</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt;\">Export</span></p>\n"

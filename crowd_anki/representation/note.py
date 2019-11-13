@@ -1,6 +1,8 @@
 import anki
 import anki.utils
 from anki.notes import Note as AnkiNote
+
+from ..config.config_settings import ConfigSettings
 from .json_serializable import JsonSerializableAnkiObject
 from .note_model import NoteModel
 from ..anki.overrides.change_model_dialog import ChangeModelDialog
@@ -13,12 +15,14 @@ class Note(JsonSerializableAnkiObject):
                          "_fmap",  # Generated data
                          "_model",  # Card model. Would be handled by deck.
                          "mid",  # -> uuid
-                         "scm"  # todo: clarify
+                         "scm",  # todo: clarify
+                         "config"
                          }
 
-    def __init__(self, anki_note=None):
+    def __init__(self, anki_note=None, config: ConfigSettings = None):
         super(Note, self).__init__(anki_note)
         self.note_model_uuid = None
+        self.config = config or ConfigSettings.get_instance()
 
     @staticmethod
     def get_notes_from_collection(collection, deck_id, note_models):
@@ -28,7 +32,7 @@ class Note(JsonSerializableAnkiObject):
     @classmethod
     def from_collection(cls, collection, note_id, note_models):
         anki_note = AnkiNote(collection, id=note_id)
-        note = Note(anki_note)
+        note = Note(anki_note=anki_note)
 
         note_model = NoteModel.from_collection(collection, note.anki_object.mid)
         note_models.setdefault(note_model.get_uuid(), note_model)
@@ -117,5 +121,5 @@ class Note(JsonSerializableAnkiObject):
 
         if new_note:
             collection.addNote(self.anki_object)
-        else:
+        elif not self.config.import_notes_ignore_deck_movement:
             self.move_cards_to_deck(deck.anki_dict["id"])

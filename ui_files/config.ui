@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>843</width>
-    <height>749</height>
+    <width>825</width>
+    <height>726</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -59,6 +59,22 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="group_deck_import">
+         <property name="title">
+          <string>Import</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QCheckBox" name="cb_ignore_move_cards">
+            <property name="text">
+             <string>Do Not Move Existing Cards</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="group_deck_export">
          <property name="title">
           <string>Export</string>
@@ -87,17 +103,10 @@
       </layout>
      </item>
      <item>
-      <widget class="QLabel" name="explanatory_text">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QTextBrowser" name="tb_instructions">
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
        <property name="html">
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -113,6 +122,9 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Default&lt;/span&gt;: Each deck with no children is considered `root`.&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Example&lt;/span&gt;: Let's assume that you have the following decks in your collection: `a` (with sub-decks `b` and `c`), and  `d`. By default CrowdAnki is going to create 3 separate repositories - `a::b`, `a::c` and `d`. If you are to add `a` to `snapshot_root_decks` then CrowdAnki would create 2 repositories instead -  `a` and `d`. The information for sub-decks `b` and `c` would be stored within repository `a` in this case.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Import&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Do Not Move Existing Cards&lt;/span&gt;: By default on import of a CrowdAnki deck file, when a note already exists in Anki itself, all notes will be updated and placed in the deck set in the deck file. Tick this box if you wish only to have the notes updated, but left in their current deck. See &lt;a href=&quot;https://github.com/Stvad/CrowdAnki/issues/23&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;this Issue&lt;/span&gt;&lt;/a&gt; on the CrowdAnki Github Repo for more info.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Export&lt;/span&gt;&lt;/p&gt;

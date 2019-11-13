@@ -32,6 +32,11 @@ class ConfigDialog(QDialog):
             super().accept()
 
     def ui_initial_setup(self):
+        self.setup_snapshot_options()
+        self.setup_export_options()
+        self.setup_import_options()
+
+    def setup_snapshot_options(self):
         self.form.textedit_snapshot_path.setText(self.config.snapshot_path)
         self.form.textedit_snapshot_path.textChanged.connect(self.changed_textedit_snapshot_path)
 
@@ -43,6 +48,7 @@ class ConfigDialog(QDialog):
         )
         self.form.textedit_snapshot_root_decks.textChanged.connect(self.changed_textedit_snapshot_root_decks)
 
+    def setup_export_options(self):
         self.form.cb_reverse_sort.setChecked(self.config.export_notes_reverse_order)
         self.form.cb_reverse_sort.stateChanged.connect(self.toggle_reverse_sort)
 
@@ -51,11 +57,18 @@ class ConfigDialog(QDialog):
         )
         self.form.textedit_deck_sort_methods.textChanged.connect(self.changed_textedit_deck_sort_methods)
 
+    def setup_import_options(self):
+        self.form.cb_ignore_move_cards.setChecked(self.config.import_notes_ignore_deck_movement)
+        self.form.cb_ignore_move_cards.stateChanged.connect(self.toggle_ignore_move_cards)
+
     def toggle_automated_snapshot(self):
         self.config.automated_snapshot = not self.config.automated_snapshot
 
     def toggle_reverse_sort(self):
         self.config.export_notes_reverse_order = not self.config.export_notes_reverse_order
+
+    def toggle_ignore_move_cards(self):
+        self.config.import_notes_ignore_deck_movement = not self.config.import_notes_ignore_deck_movement
 
     def changed_textedit_deck_sort_methods(self):
         self.config.export_note_sort_methods = self.string_cs_to_list(
