@@ -114,7 +114,7 @@ class Note(JsonSerializableAnkiObject):
         else:
             self.handle_model_update(collection, model_map_cache)
 
-        self.anki_object.__dict__.update(self.anki_object_dict)
+        self.handle_dictionary_update()
         self.anki_object.mid = note_model.anki_dict["id"]
         self.anki_object.mod = anki.utils.intTime()
         self.anki_object.flush()
@@ -123,3 +123,12 @@ class Note(JsonSerializableAnkiObject):
             collection.addNote(self.anki_object)
         elif not self.config.import_notes_ignore_deck_movement:
             self.move_cards_to_deck(deck.anki_dict["id"])
+
+    def handle_dictionary_update(self):
+        fields_personal = self.anki_object_dict["fields"]
+        for num, field in enumerate(fields_personal):
+            if field is False:
+                fields_personal[num] = self.anki_object.fields[num]
+        
+        self.anki_object_dict["fields"] = fields_personal
+        self.anki_object.__dict__.update(self.anki_object_dict)
