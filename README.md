@@ -167,9 +167,19 @@ So, for example, to get my [git deck](https://github.com/Stvad/Software_Engineer
 ## Snapshots
 
 **CrowdAnki** can help you preserve **the history of edits for your decks**.  
-It does this by exporting them in a specified location and creating a git commit each time you do a snapshot.
+It does this by exporting them in a specified location and creating a git commit each time you do a snapshot. 
 
-You can take snapshots manually via `File > CrowdAnki: Snapshot` menu action.  
-Or you can enable automated snapshots in plugin configuration. You can find more details on how to do it [here](crowd_anki/config.md) 
+You can take snapshots manually via `File > CrowdAnki: Snapshot` menu action. 
+Or you can enable automated snapshots in add-on configuration (see below) which will take a snapshot each time you open or close anki.
 
-Other things you can [configure](crowd_anki/config.md) is the location of the snapshot and what decks should be included into it. 
+## Configuration Settings
+You can find the add-on's config page via `Tools -> Add-ons, select CrowdAnki then hit Config`. 
+In here you can set a some config options, as well as a detailed explanation on what each does, with examples and default behaviour.
+
+Here is a general summary of the currently available config options:
+ - `Snapshot Path`: location of the snapshot will be exported to
+ - `Snapshot Root Decks`: what decks should be included in the snapshot
+ - `Automated Snapshot`: whether the snapshot happens automatically
+ - `Do Not Move Existing Cards on Import`: whether to move already existing cards on import or not
+ - `Deck Sort Methods`: how to sort cards on export
+ - `Reverse Sort Order`: whether to reverse the sorting of cards on export
