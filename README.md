@@ -178,7 +178,7 @@ In here you can set a some config options, as well as a detailed explanation on 
 
 Here is a general summary of the currently available config options:
  - `Snapshot Path`: location of the snapshot will be exported to
- - `Snapshot Root Decks`: what decks should be included in the snapshot
+ - `Snapshot Root Decks`: when a snapshot is taken a git repo will be generated for each of these decks 
  - `Automated Snapshot`: whether the snapshot happens automatically
  - `Do Not Move Existing Cards on Import`: whether to move already existing cards on import or not
  - `Deck Sort Methods`: how to sort cards on export
