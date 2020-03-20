@@ -33,8 +33,11 @@ def _init_externals():
 _init_externals()
 #################
 
-#{ Imports
+# #46 this line is the only extra code from the original GitPython source
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+#{ Imports
+
 from git.exc import *                       # @NoMove @IgnorePep8
 try:
     from git.config import GitConfigParser  # @NoMove @IgnorePep8
