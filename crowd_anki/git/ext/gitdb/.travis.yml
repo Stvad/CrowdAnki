@@ -1,0 +1,19 @@
+language: python
+python:
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  # - "pypy" - won't work as smmap doesn't work (see smmap/.travis.yml for details)
+
+git:
+  # a higher depth is needed for one of the tests - lets fet
+  depth: 1000
+install:
+  - pip install coveralls
+script: 
+  - ulimit -n 48
+  - ulimit -n
+  - nosetests -v --with-coverage
+after_success:
+  - coveralls
+

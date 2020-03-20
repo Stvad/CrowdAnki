@@ -1,0 +1,21 @@
+{
+	"folders":
+	[
+		// SMMAP
+		////////
+		{
+			"follow_symlinks": true,
+			"path": "../..",
+			"file_exclude_patterns" : [
+				"*.sublime-workspace",
+				".git",
+				".noseids",
+				".coverage"
+			],
+			"folder_exclude_patterns" : [
+				".git",
+				"cover",
+			]
+		},
+	]
+}
