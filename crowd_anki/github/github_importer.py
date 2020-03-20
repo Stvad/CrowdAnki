@@ -2,7 +2,7 @@ import tempfile
 import zipfile
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
-
+import sys
 from io import BytesIO
 from pathlib import Path
 
@@ -10,9 +10,12 @@ import aqt.utils
 from aqt import QInputDialog
 from ..importer.anki_importer import AnkiJsonImporter
 from ..utils import utils
+from ..git.repo import Repo
+from ..git.exc import GitCommandNotFound, InvalidGitRepositoryError
 
 BRANCH_NAME = "master"
-GITHUB_LINK = "https://github.com/{}/archive/" + BRANCH_NAME + ".zip"
+GITHUB_ZIP_URL = "https://github.com/{}/archive/" + BRANCH_NAME + ".zip"
+GITHUB_REPO_URL = "https://github.com/{}.git"
 
 
 class GithubImporter(object):
@@ -34,9 +37,38 @@ class GithubImporter(object):
         if repo and ok:
             self.download_and_import(repo)
 
-    def download_and_import(self, repo):
+    def download_and_import(self, github_repo):
         try:
-            response = urlopen(GITHUB_LINK.format(repo))
+            try:
+                self.download_and_import_git(github_repo)
+            except GitCommandNotFound:  # Git not available. Use .zip archive instead
+                print('Error accessing the git executable.\n '
+                      'Please make sure git is installed and available on your PATH.\n'
+                      'Downgrading to zip archive download.')
+                self.download_and_import_zip(github_repo)
+
+        except Exception as error:
+            # aqt.utils.showWarning("Error while trying to get deck from Github: {}".format(error))
+            raise error
+
+    def download_and_import_git(self, github_repo):
+        repo = None
+        repo_parts = github_repo.split("/")
+        deck_base_name = repo_parts[-1]
+        repo_dir = Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", deck_base_name, "git")
+        try:
+            repo_dir.mkdir(parents=True, exist_ok=True)
+            repo = Repo(repo_dir)
+            repo.remote("origin").pull()
+        except InvalidGitRepositoryError:  # Clone repository
+            github_url = GITHUB_REPO_URL.format(github_repo)
+            Repo.clone_from(github_url, repo_dir)
+
+        AnkiJsonImporter.import_deck_from_path(self.collection, repo_dir)
+
+    def download_and_import_zip(self, repo):
+        try:
+            response = urlopen(GITHUB_ZIP_URL.format(repo))
             response_sio = BytesIO(response.read())
             with zipfile.ZipFile(response_sio) as repo_zip:
                 repo_zip.extractall(tempfile.tempdir)
