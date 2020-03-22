@@ -31,7 +31,7 @@ class AnkiJsonExporterWrapper:
         self.anki_json_exporter = json_exporter or AnkiJsonExporter(collection, ConfigSettings.get_instance())
         self.notifier = notifier or AnkiUiNotifier()
 
-    # required by anki exporting interface with it's non PEP-8 names
+    # required by anki exporting interface with its non PEP-8 names
     # noinspection PyPep8Naming
     def exportInto(self, directory_path):
         if self.did is None:
