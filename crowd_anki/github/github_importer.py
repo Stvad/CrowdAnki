@@ -54,15 +54,13 @@ class GithubImporter(object):
     def download_and_import_git(self, github_repo):
         repo = None
         repo_parts = github_repo.split("/")
-        deck_base_name = repo_parts[-1]
-        repo_dir = Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", deck_base_name, "git")
+        repo_dir = Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", repo_parts[0], repo_parts[1])
         try:
             repo_dir.mkdir(parents=True, exist_ok=True)
             repo = Repo(repo_dir)
             repo.remote("origin").pull()
         except InvalidGitRepositoryError:  # Clone repository
-            github_url = GITHUB_REPO_URL.format(github_repo)
-            Repo.clone_from(github_url, repo_dir)
+            Repo.clone_from(GITHUB_REPO_URL.format(github_repo), repo_dir)
 
         AnkiJsonImporter.import_deck_from_path(self.collection, repo_dir)
 
