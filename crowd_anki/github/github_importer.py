@@ -32,7 +32,7 @@ class GithubImporter(object):
 
     def download_and_import_git(self, github_repo):
         repo_parts = github_repo.split("/")
-        repo_dir = Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", repo_parts[0], repo_parts[1])
+        repo_dir = Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", repo_parts[-1])
         try:
             repo_dir.mkdir(parents=True, exist_ok=True)
             porcelain.pull(porcelain.open_repo(str(repo_dir)), GITHUB_REPO_URL.format(github_repo))
