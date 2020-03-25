@@ -52,6 +52,9 @@ class ConfigDialog(QDialog):
         self.form.cb_reverse_sort.setChecked(self.config.export_notes_reverse_order)
         self.form.cb_reverse_sort.stateChanged.connect(self.toggle_reverse_sort)
 
+        self.form.cb_create_directory.setChecked(self.config.export_create_directory)
+        self.form.cb_create_directory.stateChanged.connect(self.toggle_create_directory)
+
         self.form.textedit_deck_sort_methods.appendPlainText(
             self.list_to_cs_string(self.config.export_note_sort_methods)
         )
@@ -66,6 +69,9 @@ class ConfigDialog(QDialog):
 
     def toggle_reverse_sort(self):
         self.config.export_notes_reverse_order = not self.config.export_notes_reverse_order
+
+    def toggle_create_directory(self):
+        self.config.export_create_directory = not self.config.export_create_directory
 
     def toggle_ignore_move_cards(self):
         self.config.import_notes_ignore_deck_movement = not self.config.import_notes_ignore_deck_movement

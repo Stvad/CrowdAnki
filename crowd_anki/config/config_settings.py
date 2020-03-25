@@ -30,6 +30,7 @@ class ConfigSettings:
     snapshot_root_decks: list
     export_notes_reverse_order: bool
     export_note_sort_methods: list
+    export_create_directory: bool
     import_notes_ignore_deck_movement: bool
 
     @property
@@ -45,6 +46,7 @@ class ConfigSettings:
         SNAPSHOT_ROOT_DECKS = ConfigEntry("snapshot_root_decks", [])
         EXPORT_NOTE_SORT_METHODS = ConfigEntry("export_note_sort_methods", [NoteSortingMethods.NO_SORTING.value])
         EXPORT_NOTES_REVERSE_ORDER = ConfigEntry("export_notes_reverse_order", False)
+        EXPORT_CREATE_DIRECTORY = ConfigEntry("export_create_directory", True)
         IMPORT_NOTES_IGNORE_DECK_MOVEMENT = ConfigEntry("import_notes_ignore_deck_movement", False)
 
     def __init__(self, addon_manager=None, init_values=None):

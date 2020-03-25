@@ -28,8 +28,12 @@ class AnkiJsonExporter(DeckExporter):
         self.deck_file_name = deck_file_name
         self.note_sorter = NoteSorter(config)
     
-    def export_to_directory(self, deck: AnkiDeck, output_dir=Path("."), copy_media=True) -> Path:
+    def export_to_directory(self, deck: AnkiDeck, output_dir=Path("."), copy_media=True, snapshot=True) -> Path:
         deck_directory = output_dir
+        create_directory = True if snapshot else self.config.export_create_directory
+        if create_directory:
+            deck_directory = output_dir.joinpath(self.deck_name_sanitizer(deck.name))
+            deck_directory.mkdir(parents=True, exist_ok=True)
 
         deck = deck_initializer.from_collection(self.collection, deck.name)
 

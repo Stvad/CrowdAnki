@@ -31,7 +31,7 @@ class AnkiJsonExporterWrapper:
         self.anki_json_exporter = json_exporter or AnkiJsonExporter(collection, ConfigSettings.get_instance())
         self.notifier = notifier or AnkiUiNotifier()
 
-    # required by anki exporting interface with its non PEP-8 names
+    # required by anki exporting interface with its non-PEP-8 names
     # noinspection PyPep8Naming
     def exportInto(self, directory_path):
         if self.did is None:
@@ -47,7 +47,7 @@ class AnkiJsonExporterWrapper:
 
         # .parent because we receive name with random numbers at the end (hacking around internals of Anki) :(
         export_path = Path(directory_path).parent
-        self.anki_json_exporter.export_to_directory(deck, export_path, self.includeMedia)
+        self.anki_json_exporter.export_to_directory(deck, export_path, self.includeMedia, snapshot=False)
 
         self.count = self.anki_json_exporter.last_exported_count
 
