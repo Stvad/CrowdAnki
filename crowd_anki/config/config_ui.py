@@ -64,9 +64,9 @@ class Ui_Dialog(object):
         self.cb_reverse_sort = QtWidgets.QCheckBox(self.group_deck_export)
         self.cb_reverse_sort.setObjectName("cb_reverse_sort")
         self.verticalLayout_4.addWidget(self.cb_reverse_sort)
-        self.cb_create_directory = QtWidgets.QCheckBox(self.group_deck_export)
-        self.cb_create_directory.setObjectName("cb_create_directory")
-        self.verticalLayout_4.addWidget(self.cb_create_directory)
+        self.cb_create_deck_subdirectory = QtWidgets.QCheckBox(self.group_deck_export)
+        self.cb_create_deck_subdirectory.setObjectName("cb_create_deck_subdirectory")
+        self.verticalLayout_4.addWidget(self.cb_create_deck_subdirectory)
         self.verticalLayout_2.addWidget(self.group_deck_export)
         self.horizontalLayout.addLayout(self.verticalLayout_2)
         self.tb_instructions = QtWidgets.QTextBrowser(Dialog)
@@ -97,7 +97,7 @@ class Ui_Dialog(object):
         self.group_deck_export.setTitle(_translate("Dialog", "Export"))
         self.lbl_deck_sort.setText(_translate("Dialog", "Deck Sort Method(s) (separated by comma)"))
         self.cb_reverse_sort.setText(_translate("Dialog", "Reverse Sort Order"))
-        self.cb_create_directory.setText(_translate("Dialog", "Create directory on manual export"))
+        self.cb_create_deck_subdirectory.setText(_translate("Dialog", "Create directory on manual export"))
         self.tb_instructions.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

@@ -48,7 +48,7 @@ class AnkiJsonExporterWrapper:
         # .parent because we receive name with random numbers at the end (hacking around internals of Anki) :(
         export_path = Path(directory_path).parent
         self.anki_json_exporter.export_to_directory(deck, export_path, self.includeMedia,
-                                                create_directory=ConfigSettings.get_instance().export_create_directory)
+                                                    create_deck_subdirectory=ConfigSettings.get_instance().export_create_deck_subdirectory)
 
         self.count = self.anki_json_exporter.last_exported_count
 

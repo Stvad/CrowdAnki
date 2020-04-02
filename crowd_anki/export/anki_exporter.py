@@ -28,9 +28,9 @@ class AnkiJsonExporter(DeckExporter):
         self.deck_file_name = deck_file_name
         self.note_sorter = NoteSorter(config)
     
-    def export_to_directory(self, deck: AnkiDeck, output_dir=Path("."), copy_media=True, create_directory=True) -> Path:
+    def export_to_directory(self, deck: AnkiDeck, output_dir=Path("."), copy_media=True, create_deck_subdirectory=True) -> Path:
         deck_directory = output_dir
-        if create_directory:
+        if create_deck_subdirectory:
             deck_directory = output_dir.joinpath(self.deck_name_sanitizer(deck.name))
             deck_directory.mkdir(parents=True, exist_ok=True)
 
