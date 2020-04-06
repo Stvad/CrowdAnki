@@ -42,7 +42,7 @@ def anki_init(window):
     if not window:
         return
 
-    config = ConfigSettings.get_instance(mw.addonManager)
+    config = ConfigSettings.get_instance(mw.addonManager, window)
 
     HookVendor(window, config).setup_hooks()
     anki_actions_init(window, config)

@@ -26,7 +26,7 @@ class ArchiverVendor:
         return AllDeckArchiver(
             self.deck_manager,
             lambda deck: AnkiDeckArchiver(deck,
-                                          self.snapshot_path().joinpath(self.window.pm.name),
+                                          Path(self.config.snapshot_complete_dir),
                                           AnkiJsonExporter(self.window.col, self.config),
                                           DulwichAnkiRepo))
 
@@ -45,7 +45,7 @@ class ArchiverVendor:
             self.all_deck_archiver().archive(overrides=self.overrides(),
                                              reason=reason)
             self.notifier.info("Snapshot successful",
-                               f"The CrowdAnki snapshot to {self.snapshot_path().resolve()} successfully completed")
+                               f"The CrowdAnki snapshot to {self.config.snapshot_complete_dir} successfully completed")
 
     def overrides(self):
         return self.deck_manager.for_names(self.config.snapshot_root_decks)
