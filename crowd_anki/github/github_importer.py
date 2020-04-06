@@ -2,39 +2,41 @@ from pathlib import Path
 from aqt import QInputDialog
 
 from dulwich import porcelain
-from dulwich.errors import NotGitRepository
+from dulwich.errors import NotGitRepository, GitProtocolError
 from ..importer.anki_importer import AnkiJsonImporter
 
 BRANCH_NAME = "master"
-GITHUB_REPO_URL = "https://github.com/{}.git"
 
-
-class GithubImporter(object):
+class GitImporter(object):
     """
-    Provides functionality of installing a shared deck from GitHub, by entering User and Repository names
+    Provides functionality of cloning a git repository that contains CrowdAnki export data, and importing it into Anki
     """
 
     def __init__(self, collection):
         self.collection = collection
 
     @staticmethod
-    def on_github_import_action(collection):
-        github_importer = GithubImporter(collection)
-        github_importer.import_from_github()
+    def on_git_import_action(collection):
+        GitImporter(collection).import_from_git()
 
-    def import_from_github(self):
-        repo, ok = QInputDialog.getText(None, 'Enter GitHub repository',
-                                        'Path:', text='<name>/<repository>')
+    def import_from_git(self):
+        repo, ok = QInputDialog.getText(None, 'Import git repository',
+                                        'URL:', text='')
         if repo and ok:
-            self.clone_and_import(repo)
+            self.clone_repository_and_import(repo)
 
-    def clone_and_import(self, github_repo):
-        repo_parts = github_repo.split("/")
-        repo_dir = Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", repo_parts[-1], "git")
+    def clone_repository_and_import(self, repo_url):
+        repo_parts = repo_url.split("/")
+        repo_dir = Path(self.collection.media.dir()).joinpath("..", "CrowdAnkiGit", repo_parts[-1].split(".")[0])
+        repo_dir_str = str(repo_dir)
         try:
-            porcelain.pull(porcelain.open_repo(str(repo_dir)), GITHUB_REPO_URL.format(github_repo))
+            porcelain.pull(porcelain.open_repo(repo_dir_str, repo_url))
         except NotGitRepository:  # Clone repository
-            repo_dir.mkdir(parents=True, exist_ok=True)
-            porcelain.clone(GITHUB_REPO_URL.format(github_repo), target=repo_dir, bare=False, checkout=True, errstream=porcelain.NoneStream(), outstream=porcelain.NoneStream())
+            try:
+                repo_dir.mkdir(parents=True, exist_ok=True)
+                porcelain.clone(repo_url, target=repo_dir_str, bare=False, checkout=True, errstream=porcelain.NoneStream(),
+                    outstream=porcelain.NoneStream())
+            except GitProtocolError as error: # git repository not found at that URL; but not sure how to display a more user-friendly error message
+                raise error
 
         AnkiJsonImporter.import_deck_from_path(self.collection, repo_dir)
