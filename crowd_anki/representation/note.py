@@ -16,7 +16,8 @@ class Note(JsonSerializableAnkiObject):
                          "_model",  # Card model. Would be handled by deck.
                          "mid",  # -> uuid
                          "scm",  # todo: clarify
-                         "config"
+                         "config",
+                         "newlyAdded"
                          }
 
     def __init__(self, anki_note=None, config: ConfigSettings = None):
