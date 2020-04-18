@@ -27,7 +27,7 @@ class GitImporter(object):
 
     def clone_repository_and_import(self, repo_url):
         repo_name = repo_url.split("/")[-1].split(".")[0]
-        repo_path = Path(ConfigSettings.get_instance().snapshot_complete_dir).joinpath(repo_name)
+        repo_path = ConfigSettings.get_instance().full_snapshot_path.joinpath(repo_name)
         repo_dir = str(repo_path)
         try:
             porcelain.pull(porcelain.open_repo(repo_dir), repo_url)

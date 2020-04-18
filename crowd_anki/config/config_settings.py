@@ -66,8 +66,8 @@ class ConfigSettings:
         return self._window.pm.name if self._window.pm else ""
 
     @property
-    def snapshot_complete_dir(self):
-        return str(Path(self.snapshot_path).joinpath(self.profileName))
+    def full_snapshot_path(self):
+        return Path(self.snapshot_path).joinpath(self.profileName)
 
     def _get(self, prop: Properties):
         return self._config.get(prop.value.config_name, prop.value.default_value)
