@@ -26,8 +26,7 @@ class GitImporter(object):
             self.clone_repository_and_import(repo)
 
     def clone_repository_and_import(self, repo_url):
-        repo_name = repo_url.split("/")[-1].split(".")[0]
-        repo_path = ConfigSettings.get_instance().full_snapshot_path.joinpath(repo_name)
+        repo_path = self.get_repo_path(repo_url)
         repo_dir = str(repo_path)
         try:
             porcelain.pull(porcelain.open_repo(repo_dir), repo_url)
@@ -40,3 +39,7 @@ class GitImporter(object):
                 raise error
 
         AnkiJsonImporter.import_deck_from_path(self.collection, repo_path)
+
+    def get_repo_path(self, repo_url):
+        repo_name = repo_url.split("/")[-1].split(".")[0]
+        return ConfigSettings.get_instance().full_snapshot_path.joinpath(repo_name)
