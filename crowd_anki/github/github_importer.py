@@ -27,18 +27,20 @@ class GitImporter(object):
 
     def clone_repository_and_import(self, repo_url):
         repo_path = self.get_repo_path(repo_url)
-        repo_dir = str(repo_path)
         try:
-            porcelain.pull(porcelain.open_repo(repo_dir), repo_url)
+            porcelain.pull(porcelain.open_repo(str(repo_path)), repo_url)
         except NotGitRepository:  # Clone repository
             try:
-                repo_path.mkdir(parents=True, exist_ok=True)
-                porcelain.clone(repo_url, target=repo_dir, bare=False, checkout=True, errstream=porcelain.NoneStream(),
-                    outstream=porcelain.NoneStream())
+                self.clone_repository(repo_url, repo_path)
             except GitProtocolError as error: # git repository not found at that URL; but not sure how to display a more user-friendly error message
                 raise error
 
         AnkiJsonImporter.import_deck_from_path(self.collection, repo_path)
+
+    def clone_repository(self, repo_url, repo_path):
+        repo_path.mkdir(parents=True, exist_ok=True)
+        porcelain.clone(repo_url, target=str(repo_path), bare=False, checkout=True, errstream=porcelain.NoneStream(),
+                        outstream=porcelain.NoneStream())
 
     def get_repo_path(self, repo_url):
         repo_name = repo_url.split("/")[-1].split(".")[0]
