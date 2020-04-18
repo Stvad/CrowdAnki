@@ -50,9 +50,10 @@ class ConfigSettings:
         IMPORT_NOTES_IGNORE_DECK_MOVEMENT = ConfigEntry("import_notes_ignore_deck_movement", False)
 
     def __init__(self, addon_manager=None, init_values=None, window=None):
+        window = window or mw
+        self._profile_manager = window.pm
         self.addon_manager = addon_manager or mw.addonManager
         self._config = init_values or addon_manager.getConfig(__name__)
-        self._window = window
         self.load_values()
 
     @classmethod
@@ -63,7 +64,7 @@ class ConfigSettings:
 
     @property
     def profileName(self):
-        return self._window.pm.name if self._window.pm else ""
+        return self._profile_manager.name if self._profile_manager else ""
 
     @property
     def full_snapshot_path(self):
