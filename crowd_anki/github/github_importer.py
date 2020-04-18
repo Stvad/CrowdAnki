@@ -1,6 +1,7 @@
 from pathlib import Path
 from aqt import QInputDialog
 from ..config.config_settings import ConfigSettings
+from ..utils.notifier import AnkiUiNotifier
 from dulwich import porcelain
 from dulwich.errors import NotGitRepository, GitProtocolError
 from ..importer.anki_importer import AnkiJsonImporter
@@ -14,6 +15,7 @@ class GitImporter(object):
 
     def __init__(self, collection):
         self.collection = collection
+        self.notifier = AnkiUiNotifier()
 
     @staticmethod
     def on_git_import_action(collection):
@@ -29,11 +31,11 @@ class GitImporter(object):
         repo_path = self.get_repo_path(repo_url)
         try:
             porcelain.pull(porcelain.open_repo(str(repo_path)), repo_url)
-        except NotGitRepository:  # Clone repository
+        except NotGitRepository:
             try:
                 self.clone_repository(repo_url, repo_path)
-            except GitProtocolError as error: # git repository not found at that URL; but not sure how to display a more user-friendly error message
-                raise error
+            except (GitProtocolError, NotGitRepository):
+                return self.notifier.error("repository not found", f"git repository not found at URL {repo_url}")
 
         AnkiJsonImporter.import_deck_from_path(self.collection, repo_path)
 
