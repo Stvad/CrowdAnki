@@ -8,29 +8,16 @@ from typing import Callable, Optional
 import aqt
 import aqt.utils
 from ..representation import deck_initializer
-from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
-
+from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME, SETTINGS_FIELD_NAME
+from ..importer.import_dialog import ImportDialog
+from aqt.qt import QDialog
 
 class AnkiJsonImporter:
     def __init__(self, collection, deck_file_name: str = DECK_FILE_NAME):
         self.collection = collection
         self.deck_file_name = deck_file_name
 
-    def load_from_file(self, file_path):
-        """
-        Load deck from json file
-        :type file_path: Path
-        """
-        if not file_path.exists():
-            raise ValueError("There is no {} file inside of the selected directory".format(file_path))
-
-        with file_path.open(encoding='utf8') as deck_file:
-            deck_json = json.load(deck_file)
-            deck = deck_initializer.from_json(deck_json)
-
-            deck.save_to_collection(self.collection)
-
-    def load_from_directory(self, directory_path, import_media=True):
+    def load_from_directory(self, deck_json, directory_path, import_media=True):
         """
         Load deck serialized to directory
         Assumes that deck json file is located in the directory
@@ -43,7 +30,8 @@ class AnkiJsonImporter:
             aqt.mw.progress.start(immediate=True)
 
         try:
-            self.load_from_file(self.get_deck_path(directory_path))
+            deck = deck_initializer.from_json(deck_json)
+            deck.save_to_collection(self.collection)
 
             if import_media:
                 media_directory = directory_path.joinpath(MEDIA_SUBDIRECTORY_NAME)
@@ -73,12 +61,40 @@ class AnkiJsonImporter:
         inferred_path = path_for_name(directory_path.name)
         return convention_path if convention_path.exists() else inferred_path
 
+    def load_deck_with_settings(self, directory_path):
+        deck_json = self.read_file(self.get_deck_path(directory_path))
+
+        deck_settings = deck_json.get(SETTINGS_FIELD_NAME, [])
+
+        import_dialog = ImportDialog(deck_settings)
+        if import_dialog.exec_() == QDialog.Rejected:
+            return None, None
+
+        # TODO: strip settings from deck_json
+
+        return deck_json, deck_settings
+
+    @staticmethod
+    def read_file(file_path):
+        """
+        Load deck from json file
+        :type file_path: Path
+        """
+        if not file_path.exists():
+            raise ValueError("There is no {} file inside of the selected directory".format(file_path))
+
+        with file_path.open(encoding='utf8') as deck_file:
+            return json.load(deck_file)
+
     @staticmethod
     def import_deck_from_path(collection, directory_path, import_media=True):
         importer = AnkiJsonImporter(collection)
         try:
-            importer.load_from_directory(directory_path, import_media)
-            aqt.utils.showInfo("Import of {} deck was successful".format(directory_path.name))
+            deck_json, deck_settings = importer.load_deck_with_settings(directory_path)
+
+            if deck_json is not None:
+                importer.load_from_directory(deck_json, directory_path, import_media)
+                aqt.utils.showInfo("Import of {} deck was successful".format(directory_path.name))
         except ValueError as error:
             aqt.utils.showWarning("Error: {}. While trying to import deck from directory {}".format(
                 error.args[0], directory_path))
