@@ -17,6 +17,9 @@ The config window is build using QtDesigner, which you can get by running
 on Linux, or simply download from `https://build-system.fman.io/qt-designer-download`
 
 In Qt Designer you can create UI files using a simple GUI, and save them as a `.ui` file in the `ui_files` folder.
+
+Run `pip install PyQt5` to get the `pyuic5` on your system.
+
 Then the `pyuic5` module can be used to convert them to python.
 See the `generate_ui.sh` script for examples, and all new UI files should be added there for automation.
 

@@ -53,10 +53,20 @@ To get more information or get in touch with author, please visit <a href="https
 <b>CrowdAnki</b> can help you preserve <strong>the history of edits for your decks</strong>.
 It does this by exporting them in a specified location and creating a git commit each time you do a snapshot.
 You can take snapshots manually via <code>File &gt; CrowdAnki: Snapshot</code> menu action.
-Or you can enable automated snapshots in plugin configuration. You can find more details on how to do it <a
-        href="https://github.com/Stvad/CrowdAnki/blob/master/crowd_anki/config.md">here</a>.
-Other things you can <a
-        href="file:///Users/sitalov/Dropbox/SoftwareEngineering/Projects/Anki/CrowdAnki/crowd_anki/config.md">configure</a> is the location of the snapshot and what decks should be included into it.
+Or you can enable automated snapshots in add-on configuration (see below) which will take a snapshot each time you open or close anki.
+
+<b><a href="#configsettings" id="configsettings">Configuration Settings</a></b>
+You can find the add-on's config page via <code>Tools -> Add-ons, select CrowdAnki then hit Config</code>.
+In here you can set a some config options, as well as a detailed explanation on what each does, with examples and default behaviour.
+
+Here is a general summary of the currently available config options:
+ - <code>Snapshot Path</code>: location of the snapshot will be exported to
+ - <code>Snapshot Root Decks</code>: when a snapshot is taken a git repo will be generated for each of these decks
+ - <code>Automated Snapshot</code>: whether the snapshot happens automatically
+ - <code>Do Not Move Existing Cards on Import</code>: whether to move already existing cards on import or not
+ - <code>Deck Sort Methods</code>: how to sort cards on export
+ - <code>Reverse Sort Order</code>: whether to reverse the sorting of cards on export
+
 
 <b>Please note that I can't reply to your comments here (and I'm not getting notified about them). If you want to get in
     touch - please ping me on GitHub: <a href="https://github.com/Stvad/CrowdAnki" rel="nofollow">https://github.com/Stvad/CrowdAnki</a></b>
