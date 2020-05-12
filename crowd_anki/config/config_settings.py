@@ -49,17 +49,16 @@ class ConfigSettings:
         EXPORT_CREATE_DECK_SUBDIRECTORY = ConfigEntry("export_create_deck_subdirectory", True)
         IMPORT_NOTES_IGNORE_DECK_MOVEMENT = ConfigEntry("import_notes_ignore_deck_movement", False)
 
-    def __init__(self, addon_manager=None, init_values=None, window=None):
-        window = window or mw
-        self._profile_manager = window.pm
+    def __init__(self, addon_manager=None, init_values=None, profile_manager=None):
+        self._profile_manager = profile_manager or mw.pm
         self.addon_manager = addon_manager or mw.addonManager
         self._config = init_values or addon_manager.getConfig(__name__)
         self.load_values()
 
     @classmethod
-    def get_instance(cls, addon_manager=None, window=None):
+    def get_instance(cls, addon_manager=None, profile_manager=None):
         if cls.__instance is None:
-            cls.__instance = ConfigSettings(addon_manager=addon_manager, window=window)
+            cls.__instance = ConfigSettings(addon_manager=addon_manager, profile_manager=profile_manager)
         return cls.__instance
 
     @property
