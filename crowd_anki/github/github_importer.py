@@ -1,4 +1,3 @@
-from urllib.parse import urlparse
 from aqt import QInputDialog
 from ..config.config_settings import ConfigSettings
 from ..utils.notifier import AnkiUiNotifier
@@ -10,12 +9,8 @@ BRANCH_NAME = "master"
 
 
 def get_repository_name(repository_url):
-    repo_url_path = urlparse(repository_url).path
-    repo_name = list(filter(None, repo_url_path.split("/")))[-1]  # using filter() in case it ends in "/"
-    repo_name = repo_name.split(".")[0]  # in case it ends in ".git"
-    if repo_name.find(" ") != -1:
-        raise ValueError("repository name in URL should not contain spaces")
-    return repo_name
+    repo_name = list(filter(None, repository_url.split("/")))[-1]  # using filter() in case it ends in "/"
+    return repo_name.split(".")[0]  # in case it ends in ".git"
 
 
 class GitImporter(object):
