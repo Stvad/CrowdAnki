@@ -8,6 +8,7 @@ from aqt.qt import *
 
 from .config_ui import Ui_Dialog as ConfigUI
 from .config_settings import ConfigSettings
+from ..utils.utils import list_to_cs_string, string_cs_to_list
 
 
 class ConfigDialog(QDialog):
@@ -43,9 +44,7 @@ class ConfigDialog(QDialog):
         self.form.cb_automated_snapshot.setChecked(self.config.automated_snapshot)
         self.form.cb_automated_snapshot.stateChanged.connect(self.toggle_automated_snapshot)
 
-        self.form.textedit_snapshot_root_decks.appendPlainText(
-            self.list_to_cs_string(self.config.snapshot_root_decks)
-        )
+        self.form.textedit_snapshot_root_decks.appendPlainText(list_to_cs_string(self.config.snapshot_root_decks))
         self.form.textedit_snapshot_root_decks.textChanged.connect(self.changed_textedit_snapshot_root_decks)
 
     def setup_export_options(self):
@@ -55,9 +54,7 @@ class ConfigDialog(QDialog):
         self.form.cb_create_deck_subdirectory.setChecked(self.config.export_create_deck_subdirectory)
         self.form.cb_create_deck_subdirectory.stateChanged.connect(self.toggle_create_deck_subdirectory)
 
-        self.form.textedit_deck_sort_methods.appendPlainText(
-            self.list_to_cs_string(self.config.export_note_sort_methods)
-        )
+        self.form.textedit_deck_sort_methods.appendPlainText(list_to_cs_string(self.config.export_note_sort_methods))
         self.form.textedit_deck_sort_methods.textChanged.connect(self.changed_textedit_deck_sort_methods)
 
     def setup_import_options(self):
@@ -82,15 +79,7 @@ class ConfigDialog(QDialog):
         )
 
     def changed_textedit_snapshot_root_decks(self):
-        self.config.snapshot_root_decks = self.string_cs_to_list(self.form.textedit_snapshot_root_decks.toPlainText())
+        self.config.snapshot_root_decks = string_cs_to_list(self.form.textedit_snapshot_root_decks.toPlainText())
 
     def changed_textedit_snapshot_path(self):
         self.config.snapshot_path = self.form.textedit_snapshot_path.text()
-
-    @staticmethod
-    def list_to_cs_string(uf_list: list) -> str:
-        return ', '.join(uf_list)
-
-    @staticmethod
-    def string_cs_to_list(f_list: str) -> list:
-        return [x.strip() for x in f_list.split(',')]

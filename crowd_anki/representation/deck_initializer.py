@@ -4,6 +4,7 @@ from .deck import Deck
 from .note import Note
 from ..anki.adapters.anki_deck import AnkiDeck
 from ..anki.adapters.note_model_file_provider import NoteModelFileProvider
+from ..importer.import_dialog import ImportConfig
 
 
 def from_collection(collection, name, deck_metadata=None, is_child=False) -> Deck:
@@ -31,7 +32,7 @@ def from_collection(collection, name, deck_metadata=None, is_child=False) -> Dec
     return deck
 
 
-def from_json(json_dict, deck_metadata=None) -> Deck:
+def from_json(json_dict, import_config: ImportConfig, deck_metadata=None) -> Deck:
     """load metadata, load notes, load children"""
     deck = Deck(NoteModelFileProvider, json_dict)
     deck._update_fields()
@@ -41,7 +42,7 @@ def from_json(json_dict, deck_metadata=None) -> Deck:
         deck._load_metadata_from_json(json_dict)
 
     deck.deck_config_uuid = json_dict["deck_config_uuid"]
-    deck.notes = [Note.from_json(json_note) for json_note in json_dict["notes"]]
+    deck.notes = [Note.from_json(json_note, import_config) for json_note in json_dict["notes"]]
     deck.children = [from_json(child, deck.metadata) for child in json_dict["children"]]
 
     # Todo should I call this here?

@@ -55,3 +55,11 @@ def fs_remove(path):
         shutil.rmtree(str(path))
     else:
         os.remove(str(path))
+
+
+def list_to_cs_string(uf_list: list) -> str:
+    return ', '.join(uf_list)
+
+
+def string_cs_to_list(f_list: str) -> list:
+    return [x.strip() for x in f_list.split(',')]

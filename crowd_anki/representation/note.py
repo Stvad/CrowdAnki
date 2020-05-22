@@ -6,8 +6,9 @@ from ..config.config_settings import ConfigSettings
 from .json_serializable import JsonSerializableAnkiObject
 from .note_model import NoteModel
 from ..anki.overrides.change_model_dialog import ChangeModelDialog
+from ..importer.import_dialog import ImportConfig
 from ..utils.constants import UUID_FIELD_NAME
-
+from aqt.utils import showInfo
 
 class Note(JsonSerializableAnkiObject):
     export_filter_set = JsonSerializableAnkiObject.export_filter_set | \
@@ -20,10 +21,11 @@ class Note(JsonSerializableAnkiObject):
                          "newlyAdded"
                          }
 
-    def __init__(self, anki_note=None, config: ConfigSettings = None):
+    def __init__(self, anki_note=None, config: ConfigSettings = None, import_config: ImportConfig = None):
         super(Note, self).__init__(anki_note)
         self.note_model_uuid = None
         self.config = config or ConfigSettings.get_instance()
+        self.import_config = import_config or ImportConfig()
 
     @staticmethod
     def get_notes_from_collection(collection, deck_id, note_models):
@@ -43,10 +45,11 @@ class Note(JsonSerializableAnkiObject):
         return note
 
     @classmethod
-    def from_json(cls, json_dict):
-        note = Note()
+    def from_json(cls, json_dict, import_config: ImportConfig):
+        note = Note(import_config=import_config)
         note.anki_object_dict = json_dict
         note.note_model_uuid = json_dict["note_model_uuid"]
+
         return note
 
     def get_uuid(self):
@@ -115,7 +118,7 @@ class Note(JsonSerializableAnkiObject):
         else:
             self.handle_model_update(collection, model_map_cache)
 
-        self.handle_dictionary_update()
+        self.handle_dictionary_update(note_model)
         self.anki_object.mid = note_model.anki_dict["id"]
         self.anki_object.mod = anki.utils.intTime()
         self.anki_object.flush()
@@ -125,11 +128,12 @@ class Note(JsonSerializableAnkiObject):
         elif not self.config.import_notes_ignore_deck_movement:
             self.move_cards_to_deck(deck.anki_dict["id"])
 
-    def handle_dictionary_update(self):
-        fields_personal = self.anki_object_dict["fields"]
-        for num, field in enumerate(fields_personal):
-            if field is False:
-                fields_personal[num] = self.anki_object.fields[num]
+    def handle_dictionary_update(self, note_model):
+        fields = self.anki_object_dict["fields"]
+        for num, field in enumerate(fields):
+            showInfo(str(note_model))
+            if True:
+                fields[num] = self.anki_object.fields[num]
         
-        self.anki_object_dict["fields"] = fields_personal
+        self.anki_object_dict["fields"] = fields
         self.anki_object.__dict__.update(self.anki_object_dict)
