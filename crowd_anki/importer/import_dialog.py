@@ -7,8 +7,8 @@ from typing import List, Tuple
 
 from .import_ui import Ui_Dialog as ConfigUI
 # from .config_settings import ConfigSettings
+from ..config.config_settings import ConfigSettings
 from ..utils.constants import SETTINGS_FIELD_NAME
-from aqt.utils import showInfo
 
 from ..utils.utils import string_cs_to_list
 
@@ -37,9 +37,12 @@ class ImportConfig:
     use_notes: bool = True
     use_media: bool = True
 
+    ignore_deck_movement: bool = False
+
     def __repr__(self):
         return f"ImportConfig({self.personal_fields!r}, {self.add_tag_to_cards!r}, " \
-               f"{self.use_header!r}, {self.use_notes!r}, {self.use_note_models!r}, {self.use_media!r})"
+               f"{self.use_header!r}, {self.use_notes!r}, {self.use_note_models!r}, {self.use_media!r} " \
+               f"{self.ignore_deck_movement!r})"
 
 
 class ImportDialog(QDialog):
@@ -49,8 +52,8 @@ class ImportDialog(QDialog):
         self.parent = parent
         self.form = ConfigUI()
         self.form.setupUi(self)
+        self.userConfig = ConfigSettings.get_instance()
         self.deck_json = deck_json
-        self.note_model_name_to_uuid: dict = {}
         self.import_settings = ImportJsonSetting(self.deck_json.get(SETTINGS_FIELD_NAME, {}))
         self.ui_initial_setup()
 
@@ -75,8 +78,6 @@ class ImportDialog(QDialog):
             return f["personal_field"]
 
         for model in self.deck_json["note_models"]:
-            self.note_model_name_to_uuid.setdefault(model["name"], model["crowdanki_uuid"])
-
             heading_ui = QListWidgetItem(model["name"])
             heading_ui.setFlags(Qt.ItemIsEnabled)
             self.form.list_personal_fields.addItem(heading_ui)
@@ -96,6 +97,9 @@ class ImportDialog(QDialog):
         # else:
         # set as default from config settings
 
+        if self.userConfig.import_notes_ignore_deck_movement:
+            self.form.cb_ignore_move_cards.setCheckState(Qt.Checked)
+
         # TODO: Deck Parts to Use
 
     def get_import_config(self):
@@ -106,7 +110,7 @@ class ImportDialog(QDialog):
         fields: List[QListWidgetItem] = [self.form.list_personal_fields.item(i) for i in range(self.form.list_personal_fields.count())]
         for field in fields:
             if not field.flags() & Qt.ItemIsUserCheckable:  # Note Model Header
-                current_note_model = self.note_model_name_to_uuid[field.text()]
+                current_note_model = field.text()
             elif field.checkState() == Qt.Checked:  # Field
                 config.personal_fields.append((current_note_model, field.text()))
 
@@ -117,6 +121,6 @@ class ImportDialog(QDialog):
         config.use_notes = self.form.cb_notes.isChecked()
         config.use_media = self.form.cb_media.isChecked()
 
-        showInfo(str(config))
+        config.ignore_deck_movement = self.form.cb_ignore_move_cards.isChecked()
 
         self.final_import_config = config

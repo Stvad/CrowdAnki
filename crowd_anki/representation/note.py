@@ -8,7 +8,7 @@ from .note_model import NoteModel
 from ..anki.overrides.change_model_dialog import ChangeModelDialog
 from ..importer.import_dialog import ImportConfig
 from ..utils.constants import UUID_FIELD_NAME
-from aqt.utils import showInfo
+
 
 class Note(JsonSerializableAnkiObject):
     export_filter_set = JsonSerializableAnkiObject.export_filter_set | \
@@ -125,15 +125,21 @@ class Note(JsonSerializableAnkiObject):
 
         if new_note:
             collection.addNote(self.anki_object)
-        elif not self.config.import_notes_ignore_deck_movement:
+        elif not self.import_config.ignore_deck_movement:
             self.move_cards_to_deck(deck.anki_dict["id"])
 
     def handle_dictionary_update(self, note_model):
+
+        # Personal Fields Resolution
         fields = self.anki_object_dict["fields"]
         for num, field in enumerate(fields):
-            showInfo(str(note_model))
-            if True:
+            model_field_pair = (note_model.anki_dict['name'], note_model.anki_dict['flds'][num]['name'])
+            if model_field_pair in self.import_config.personal_fields:
                 fields[num] = self.anki_object.fields[num]
-        
+
+        # Tag Cards on Import
+        self.anki_object_dict["tags"] += self.import_config.add_tag_to_cards
+
+        # Update dict
         self.anki_object_dict["fields"] = fields
         self.anki_object.__dict__.update(self.anki_object_dict)
