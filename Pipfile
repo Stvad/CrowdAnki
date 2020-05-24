@@ -8,6 +8,7 @@ expects = "*"
 mamba = "*"
 hypothesis = "*"
 PyQt5 = "*"
+anki = "*"
 
 [packages]
 PyFunctional = "*"
@@ -18,4 +19,4 @@ pygtrie = "*"
 cached-property = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"

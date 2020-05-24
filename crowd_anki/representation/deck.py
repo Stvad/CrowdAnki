@@ -8,6 +8,7 @@ from .note_model import NoteModel
 from ..anki.adapters.file_provider import FileProvider
 from ..utils import utils
 from ..utils.constants import UUID_FIELD_NAME
+from ..utils.uuid import UuidFetcher
 
 DeckMetadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
 
@@ -154,7 +155,7 @@ class Deck(JsonSerializableAnkiDict):
     def _save_deck(self, collection, parent_name):
         name = (parent_name + self.DECK_NAME_DELIMITER if parent_name else "") + self.anki_dict["name"]
 
-        deck_dict = collection.decks.get_deck_by_uuid(self.get_uuid())
+        deck_dict = UuidFetcher(collection).get_deck(self.get_uuid())
 
         deck_id = collection.decks.id(name, create=False)
         if deck_id and (not deck_dict or deck_dict["id"] != deck_id):
