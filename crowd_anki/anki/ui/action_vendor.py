@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Callable, Any, Optional
 
-from ...github.github_importer import GithubImporter
+from ...github.github_importer import GitImporter
 from ...history.archiver_vendor import ArchiverVendor
 from ...importer.anki_importer import AnkiJsonImporter
 from ...config.config_settings import ConfigSettings
@@ -31,8 +31,8 @@ class ActionVendor:
                            lambda: AnkiJsonImporter.import_deck(self.window.col, self.directory_vendor))
 
     def github_import(self):
-        return self.action("CrowdAnki: Import from Github",
-                           lambda: GithubImporter.on_github_import_action(self.window.col))
+        return self.action("CrowdAnki: Import git repository",
+                           lambda: GitImporter.on_git_import_action(self.window.col))
 
     def snapshot(self):
         return self.action('CrowdAnki: Snapshot', self.archiver_vendor.do_manual_snapshot)

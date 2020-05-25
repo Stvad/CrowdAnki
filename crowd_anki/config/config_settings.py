@@ -1,6 +1,6 @@
 from collections import namedtuple
 from enum import Enum
-
+from pathlib import Path
 from aqt import mw
 from ..utils.constants import USER_FILES_PATH
 
@@ -49,16 +49,25 @@ class ConfigSettings:
         EXPORT_CREATE_DECK_SUBDIRECTORY = ConfigEntry("export_create_deck_subdirectory", True)
         IMPORT_NOTES_IGNORE_DECK_MOVEMENT = ConfigEntry("import_notes_ignore_deck_movement", False)
 
-    def __init__(self, addon_manager=None, init_values=None):
+    def __init__(self, addon_manager=None, init_values=None, profile_manager=None):
+        self._profile_manager = profile_manager or mw.pm
         self.addon_manager = addon_manager or mw.addonManager
         self._config = init_values or addon_manager.getConfig(__name__)
         self.load_values()
 
     @classmethod
-    def get_instance(cls, addon_manager=None):
+    def get_instance(cls, addon_manager=None, profile_manager=None):
         if cls.__instance is None:
-            cls.__instance = ConfigSettings(addon_manager)
+            cls.__instance = ConfigSettings(addon_manager=addon_manager, profile_manager=profile_manager)
         return cls.__instance
+
+    @property
+    def profileName(self):
+        return self._profile_manager.name if self._profile_manager else ""
+
+    @property
+    def full_snapshot_path(self):
+        return Path(self.snapshot_path).joinpath(self.profileName)
 
     def _get(self, prop: Properties):
         return self._config.get(prop.value.config_name, prop.value.default_value)
