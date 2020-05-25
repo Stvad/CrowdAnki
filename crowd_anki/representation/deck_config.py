@@ -19,12 +19,13 @@ class DeckConfig(JsonSerializableAnkiDict):
         # Todo whole uuid matching thingy
         # For now only create scenario
 
-        config_dict = UuidFetcher(collection).get_deck_config(self.get_uuid())
+        config_dict = self.fetch_or_create_config(collection)
 
-        if config_dict:
-            config_dict.update(self.anki_dict)
-            collection.decks.update_config(config_dict)
-        else:
-            config_dict = collection.decks.add_config(self.anki_dict["name"], self.anki_dict)
+        config_dict.update(self.anki_dict)
+        collection.decks.update_config(config_dict)
 
         self.anki_dict = config_dict
+
+    def fetch_or_create_config(self, collection):
+        return UuidFetcher(collection).get_deck_config(self.get_uuid()) or \
+               collection.decks.add_config(self.anki_dict["name"])
