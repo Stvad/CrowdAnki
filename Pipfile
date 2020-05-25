@@ -9,6 +9,7 @@ mamba = "*"
 hypothesis = "*"
 PyQt5 = "*"
 anki = "*"
+aqt = "*"
 
 [packages]
 PyFunctional = "*"

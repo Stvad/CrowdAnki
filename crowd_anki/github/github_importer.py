@@ -1,9 +1,10 @@
 from aqt import QInputDialog
-from ..config.config_settings import ConfigSettings
-from ..utils.notifier import AnkiUiNotifier
 from dulwich import porcelain
 from dulwich.errors import NotGitRepository, GitProtocolError
+
+from ..config.config_settings import ConfigSettings
 from ..importer.anki_importer import AnkiJsonImporter
+from ..utils.notifier import AnkiModalNotifier
 
 BRANCH_NAME = "master"
 
@@ -20,7 +21,7 @@ class GitImporter(object):
 
     def __init__(self, collection):
         self.collection = collection
-        self.notifier = AnkiUiNotifier()
+        self.notifier = AnkiModalNotifier()
 
     @staticmethod
     def on_git_import_action(collection):
