@@ -1,8 +1,10 @@
 from collections import namedtuple
 
+from anki import Collection
 from .json_serializable import JsonSerializableAnkiDict
 from ..anki.overrides.change_model_dialog import ChangeModelDialog
 from ..utils import utils
+from ..utils.uuid import UuidFetcher
 
 
 class NoteModel(JsonSerializableAnkiDict):
@@ -31,11 +33,11 @@ class NoteModel(JsonSerializableAnkiDict):
 
         return True
 
-    def save_to_collection(self, collection):
+    def save_to_collection(self, collection: Collection):
         # Todo regenerate cards on update
         # look into template manipulation in "models"
 
-        note_model_dict = collection.models.get_by_uuid(self.get_uuid()) or \
+        note_model_dict = UuidFetcher(collection).get_model(self.get_uuid()) or \
                           collection.models.new(self.anki_dict["name"])
 
         new_model = note_model_dict["id"] is None

@@ -17,7 +17,7 @@ class Notifier(ABC):
         pass
 
 
-class AnkiUiNotifier(Notifier):
+class AnkiModalNotifier(Notifier):
     def info(self, title: str, message: str):
         aqt.utils.showInfo(message, title=title)
 
@@ -26,3 +26,18 @@ class AnkiUiNotifier(Notifier):
 
     def error(self, title: str, message: str):
         aqt.utils.showCritical(message, title=title)
+
+
+class AnkiTooltipNotifier(Notifier):
+    @staticmethod
+    def show_message(title: str, message: str, prefix=""):
+        aqt.utils.tooltip(f"{prefix} {title}\n{message}", period=5000)
+
+    def info(self, title: str, message: str):
+        self.show_message(title, message)
+
+    def warning(self, title: str, message: str):
+        self.show_message(title, message, "Warning:")
+
+    def error(self, title: str, message: str):
+        self.show_message(title, message, "Error:")

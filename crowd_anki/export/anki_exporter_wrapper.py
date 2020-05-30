@@ -2,9 +2,9 @@ from pathlib import Path
 
 from .anki_exporter import AnkiJsonExporter
 from ..anki.adapters.anki_deck import AnkiDeck
-from ..utils import constants
-from ..utils.notifier import AnkiUiNotifier, Notifier
 from ..config.config_settings import ConfigSettings
+from ..utils import constants
+from ..utils.notifier import AnkiModalNotifier, Notifier
 
 EXPORT_FAILED_TITLE = "Export failed"
 
@@ -29,7 +29,7 @@ class AnkiJsonExporterWrapper:
         self.count = 0  # Todo?
         self.collection = collection
         self.anki_json_exporter = json_exporter or AnkiJsonExporter(collection, ConfigSettings.get_instance())
-        self.notifier = notifier or AnkiUiNotifier()
+        self.notifier = notifier or AnkiModalNotifier()
 
     # required by anki exporting interface with its non-PEP-8 names
     # noinspection PyPep8Naming

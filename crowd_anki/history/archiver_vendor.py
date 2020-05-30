@@ -7,16 +7,16 @@ from .archiver import AllDeckArchiver
 from .dulwich_repo import DulwichAnkiRepo
 from ..anki.adapters.deck_manager import AnkiStaticDeckManager, DeckManager
 from ..anki.ui.utils import progress_indicator
-from ..export.anki_exporter import AnkiJsonExporter
-from ..utils.notifier import Notifier, AnkiUiNotifier
 from ..config.config_settings import ConfigSettings
+from ..export.anki_exporter import AnkiJsonExporter
+from ..utils.notifier import Notifier, AnkiTooltipNotifier
 
 
 @dataclass
 class ArchiverVendor:
     window: Any
     config: ConfigSettings
-    notifier: Notifier = field(default_factory=AnkiUiNotifier)
+    notifier: Notifier = field(default_factory=AnkiTooltipNotifier)
 
     @property
     def deck_manager(self) -> DeckManager:
