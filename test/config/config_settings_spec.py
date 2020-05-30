@@ -1,8 +1,7 @@
-import logging
-
-from mamba import describe, it, context
 from unittest.mock import MagicMock
-from random import shuffle
+
+from expects import expect, contain
+from mamba import describe, it, context
 
 from test_utils.anki import mock_anki_modules
 
@@ -10,7 +9,6 @@ mock_anki_modules()
 from aqt import mw
 
 from crowd_anki.config.config_settings import ConfigSettings, NoteSortingMethods
-
 
 with describe(ConfigSettings) as self:
     with context("someone interacts with any config setting"):
@@ -87,12 +85,12 @@ with describe(ConfigSettings) as self:
                 "import_notes_ignore_deck_movement": True
             }
 
-            config = ConfigSettings(addon_manager=addon_manager_mock, init_values=old_settings)
+            config = ConfigSettings(addon_manager_mock, old_settings, MagicMock())
 
             for key in new_settings:
                 setattr(config, key, new_settings[key])
 
             config.save()
 
-            assert config._config == new_settings
+            expect(config._config.items()).to(contain(*list(new_settings.items())))
             addon_manager_mock.writeConfig.assert_called_once()
