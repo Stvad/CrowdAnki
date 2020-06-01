@@ -6,11 +6,14 @@ from typing import Callable, Optional
 
 import aqt
 import aqt.utils
+import yaml
 
 from ..representation import deck_initializer
-from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
+from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME, IMPORT_CONFIG_NAME, \
+    CONFIG_EXTENSION
 from ..importer.import_dialog import ImportDialog, ImportConfig
 from aqt.qt import QDialog
+
 
 class AnkiJsonImporter:
     def __init__(self, collection, deck_file_name: str = DECK_FILE_NAME):
@@ -57,14 +60,15 @@ class AnkiJsonImporter:
         def path_for_name(name):
             return directory_path.joinpath(name).with_suffix(DECK_FILE_EXTENSION)
 
-        convention_path = path_for_name(self.deck_file_name)
-        inferred_path = path_for_name(directory_path.name)
+        convention_path = path_for_name(self.deck_file_name)   # [folder]/deck.json
+        inferred_path = path_for_name(directory_path.name)     # [folder]/[folder].json
         return convention_path if convention_path.exists() else inferred_path
 
     def load_deck_with_settings(self, directory_path) -> (dict, ImportConfig):
-        deck_json = self.read_file(self.get_deck_path(directory_path))
+        deck_json = self.read_deck(self.get_deck_path(directory_path))
+        import_config = self.read_import_config(directory_path)
 
-        import_dialog = ImportDialog(deck_json)
+        import_dialog = ImportDialog(deck_json, import_config)
         if import_dialog.exec_() == QDialog.Rejected:
             return None, None  # User has cancelled
 
@@ -73,7 +77,7 @@ class AnkiJsonImporter:
         return deck_json, import_dialog.final_import_config
 
     @staticmethod
-    def read_file(file_path):
+    def read_deck(file_path):
         """
         Load deck from json file
         :type file_path: Path
@@ -83,6 +87,16 @@ class AnkiJsonImporter:
 
         with file_path.open(encoding='utf8') as deck_file:
             return json.load(deck_file)
+
+    @staticmethod
+    def read_import_config(directory_path):
+        file_path = directory_path.joinpath(IMPORT_CONFIG_NAME).with_suffix(CONFIG_EXTENSION)
+
+        if not file_path.exists():
+            return {}
+
+        with file_path.open(encoding='utf8') as meta_file:
+            return yaml.full_load(meta_file)
 
     @staticmethod
     def import_deck_from_path(collection, directory_path):
