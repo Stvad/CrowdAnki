@@ -34,7 +34,7 @@ def get_deck_by_uuid(self, uuid):
 
 # Deck configuration
 def get_deck_configuration_by_uuid(self, uuid):
-    return get_from_dict_by_uuid(self, "decks", uuid)
+    return get_from_dict_by_uuid(self, "dconf", uuid)
 
 
 # Note model
