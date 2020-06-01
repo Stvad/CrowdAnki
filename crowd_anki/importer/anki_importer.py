@@ -31,7 +31,7 @@ class AnkiJsonImporter:
             aqt.mw.progress.start(immediate=True)
 
         try:
-            deck = deck_initializer.from_json(deck_json, import_config)
+            deck = deck_initializer.from_json(deck_json, import_config=import_config)
             deck.save_to_collection(self.collection)
 
             if import_config.use_media:
@@ -93,7 +93,7 @@ class AnkiJsonImporter:
             deck_json, import_config = importer.load_deck_with_settings(directory_path)
 
             if deck_json is not None:
-                importer.load_deck(deck_json, directory_path, import_config)
+                importer.load_deck(deck_json, directory_path, import_config=import_config)
                 aqt.utils.showInfo("Import of {} deck was successful".format(directory_path.name))
         except ValueError as error:
             aqt.utils.showWarning("Error: {}. While trying to import deck from directory {}".format(
