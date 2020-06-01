@@ -1,13 +1,13 @@
 import anki
 import anki.utils
 from anki.notes import Note as AnkiNote
-
-from ..config.config_settings import ConfigSettings
 from .json_serializable import JsonSerializableAnkiObject
 from .note_model import NoteModel
 from ..anki.overrides.change_model_dialog import ChangeModelDialog
 from ..importer.import_dialog import ImportConfig
+from ..config.config_settings import ConfigSettings
 from ..utils.constants import UUID_FIELD_NAME
+from ..utils.uuid import UuidFetcher
 
 
 class Note(JsonSerializableAnkiObject):
@@ -49,7 +49,6 @@ class Note(JsonSerializableAnkiObject):
         note = Note(import_config=import_config)
         note.anki_object_dict = json_dict
         note.note_model_uuid = json_dict["note_model_uuid"]
-
         return note
 
     def get_uuid(self):
@@ -65,7 +64,8 @@ class Note(JsonSerializableAnkiObject):
 
         # todo if models semantically identical - create map without calling dialog
 
-        new_model = NoteModel.from_json(collection.models.get_by_uuid(self.note_model_uuid))
+        uuid_fetcher = UuidFetcher(collection)
+        new_model = NoteModel.from_json(uuid_fetcher.get_model(self.note_model_uuid))
         mapping = model_map_cache[old_model_uuid].get(self.note_model_uuid)
         if mapping:
             collection.models.change(self.anki_object.model(),
@@ -87,7 +87,7 @@ class Note(JsonSerializableAnkiObject):
             # todo process cancel
 
         # To get an updated note to work with
-        self.anki_object = AnkiNote.get_by_uuid(collection, self.get_uuid())
+        self.anki_object = uuid_fetcher.get_note(self.get_uuid())
 
     def move_cards_to_deck(self, deck_id, move_from_dynamic_decks=False):
         """
@@ -111,7 +111,7 @@ class Note(JsonSerializableAnkiObject):
         # ;(
         note_model.anki_dict["did"] = deck.anki_dict["id"]
 
-        self.anki_object = AnkiNote.get_by_uuid(collection, self.get_uuid())
+        self.anki_object = UuidFetcher(collection).get_note(self.get_uuid())
         new_note = self.anki_object is None
         if new_note:
             self.anki_object = AnkiNote(collection, note_model.anki_dict)

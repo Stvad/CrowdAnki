@@ -1,12 +1,12 @@
 import json
 import os
-
 import shutil
 from pathlib import Path
 from typing import Callable, Optional
 
 import aqt
 import aqt.utils
+
 from ..representation import deck_initializer
 from ..utils.constants import DECK_FILE_NAME, DECK_FILE_EXTENSION, MEDIA_SUBDIRECTORY_NAME
 from ..importer.import_dialog import ImportDialog, ImportConfig
@@ -28,7 +28,6 @@ class AnkiJsonImporter:
         """
         if aqt.mw:
             aqt.mw.backup()
-            aqt.mw.progress.start(immediate=True)
 
         try:
             deck = deck_initializer.from_json(deck_json, import_config=import_config)
@@ -47,7 +46,6 @@ class AnkiJsonImporter:
                     print("Warning: no media directory exists.")
         finally:
             if aqt.mw:
-                aqt.mw.progress.finish()
                 aqt.mw.deckBrowser.show()
 
     def get_deck_path(self, directory_path):
