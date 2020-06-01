@@ -97,6 +97,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="cb_create_deck_subdirectory">
+            <property name="text">
+             <string>Create directory on manual export</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -132,7 +139,9 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Deck Sort Methods&lt;/span&gt;: Methods with which the deck will be sorted. If multiple sorting methods are provided then each sorting method will be applied in order.&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Options&lt;/span&gt;: &lt;span style=&quot; font-style:italic;&quot;&gt;none, guid, flag, tag, note_model_name, note_model_id, field1, &lt;/span&gt;and&lt;span style=&quot; font-style:italic;&quot;&gt; field2.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Reverse Sort Order&lt;/span&gt;: Swap the order of the notes, after all sorting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Reverse Sort Order&lt;/span&gt;: Swap the order of the notes, after all sorting.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Create directory on manual export&lt;/span&gt;: When exporting via File -&amp;gt; Export, whether to create a directory (named after the deck) in the selected destination, or whether to export directly in the selected destination.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
