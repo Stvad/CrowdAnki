@@ -21,7 +21,7 @@
        <item>
         <widget class="QGroupBox" name="group_deck_import">
          <property name="title">
-          <string>Import</string>
+          <string/>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
@@ -36,7 +36,7 @@
                 <item>
                  <widget class="QLabel" name="import_message_label">
                   <property name="text">
-                   <string>Import Message</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Import Message&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                  </widget>
                 </item>
@@ -73,14 +73,24 @@
                     </property>
                    </widget>
                   </item>
+                  <item>
+                   <widget class="QCheckBox" name="cb_ignore_move_cards">
+                    <property name="text">
+                     <string>Do Not Move Existing Cards</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </item>
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_7">
                   <item>
                    <widget class="QLabel" name="label_2">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
                     <property name="text">
-                     <string>Deck Parts to Use</string>
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Deck Parts to Use&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                    </widget>
                   </item>
@@ -121,16 +131,9 @@
            </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_ignore_move_cards">
-            <property name="text">
-             <string>Do Not Move Existing Cards</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Personal Fields - [Explanation of what that is]</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Personal Fields&lt;/span&gt; - &lt;span style=&quot; font-style:italic;&quot;&gt;Fields which will keep their existing values instead of being imported&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
