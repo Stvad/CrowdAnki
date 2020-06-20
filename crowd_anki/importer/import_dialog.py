@@ -6,7 +6,6 @@ from aqt.qt import *
 from typing import List, Tuple
 
 from .import_ui import Ui_Dialog as ConfigUI
-# from .config_settings import ConfigSettings
 from ..config.config_settings import ConfigSettings
 
 from ..utils.utils import string_cs_to_list

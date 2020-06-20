@@ -77,11 +77,7 @@ class AnkiJsonImporter:
         return deck_json, import_dialog.final_import_config
 
     @staticmethod
-    def read_deck(file_path):
-        """
-        Load deck from json file
-        :type file_path: Path
-        """
+    def read_deck(file_path: Path):
         if not file_path.exists():
             raise ValueError("There is no {} file inside of the selected directory".format(file_path))
 
