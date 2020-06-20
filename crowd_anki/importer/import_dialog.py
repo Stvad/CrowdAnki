@@ -113,6 +113,11 @@ class ImportDialog(QDialog):
         if self.userConfig.import_notes_ignore_deck_movement:
             self.form.cb_ignore_move_cards.setCheckState(Qt.Checked)
 
+        self.form.cb_headers.setCheckState(Qt.Checked)
+        self.form.cb_note_models.setCheckState(Qt.Checked)
+        self.form.cb_notes.setCheckState(Qt.Checked)
+        self.form.cb_media.setCheckState(Qt.Checked)
+
         # TODO: Deck Parts to Use
 
     def get_import_config(self):
