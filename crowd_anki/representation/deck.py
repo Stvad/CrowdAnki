@@ -6,6 +6,7 @@ from .deck_config import DeckConfig
 from .json_serializable import JsonSerializableAnkiDict
 from .note_model import NoteModel
 from ..anki.adapters.file_provider import FileProvider
+from ..importer.import_dialog import ImportConfig
 from ..utils import utils
 from ..utils.constants import UUID_FIELD_NAME
 from ..utils.uuid import UuidFetcher
@@ -127,6 +128,7 @@ class Deck(JsonSerializableAnkiDict):
 
     def save_to_collection(self,
                            collection,
+                           import_config: ImportConfig,
                            parent_name="",
                            save_configs=True,
                            save_note_models=True,
@@ -150,7 +152,7 @@ class Deck(JsonSerializableAnkiDict):
                                      model_map_cache=model_map_cache)
 
         for note in self.notes:
-            note.save_to_collection(collection, self, model_map_cache)
+            note.save_to_collection(collection, self, model_map_cache, import_config=import_config)
 
     def _save_deck(self, collection, parent_name):
         name = (parent_name + self.DECK_NAME_DELIMITER if parent_name else "") + self.anki_dict["name"]

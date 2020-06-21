@@ -9,8 +9,7 @@ class JsonSerializable:
     export_filter_set = {
         "mod",  # Modification time
         "usn",  # Todo clarify
-        "id",
-        "import_config"
+        "id"
     }
     import_filter_set = {"__type__"}
 

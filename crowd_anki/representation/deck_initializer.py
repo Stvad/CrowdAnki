@@ -32,7 +32,7 @@ def from_collection(collection, name, deck_metadata=None, is_child=False) -> Dec
     return deck
 
 
-def from_json(json_dict, import_config: ImportConfig, deck_metadata=None) -> Deck:
+def from_json(json_dict, deck_metadata=None) -> Deck:
     """load metadata, load notes, load children"""
     deck = Deck(NoteModelFileProvider, json_dict)
     deck._update_fields()
@@ -42,8 +42,8 @@ def from_json(json_dict, import_config: ImportConfig, deck_metadata=None) -> Dec
         deck._load_metadata_from_json(json_dict)
 
     deck.deck_config_uuid = json_dict["deck_config_uuid"]
-    deck.notes = [Note.from_json(json_note, import_config=import_config) for json_note in json_dict["notes"]]
-    deck.children = [from_json(child, import_config=import_config, deck_metadata=deck.metadata) for child in json_dict["children"]]
+    deck.notes = [Note.from_json(json_note) for json_note in json_dict["notes"]]
+    deck.children = [from_json(child, deck_metadata=deck.metadata) for child in json_dict["children"]]
 
     # Todo should I call this here?
     deck.post_import_filter()

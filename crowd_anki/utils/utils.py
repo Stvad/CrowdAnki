@@ -62,4 +62,4 @@ def list_to_cs_string(uf_list: list) -> str:
 
 
 def string_cs_to_list(f_list: str) -> list:
-    return [x.strip() for x in f_list.split(',')]
+    return [x.strip() for x in f_list.split(',')] if f_list else []

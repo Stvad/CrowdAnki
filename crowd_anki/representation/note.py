@@ -21,11 +21,10 @@ class Note(JsonSerializableAnkiObject):
                          "newlyAdded"
                          }
 
-    def __init__(self, anki_note=None, config: ConfigSettings = None, import_config: ImportConfig = None):
+    def __init__(self, anki_note=None, config: ConfigSettings = None):
         super(Note, self).__init__(anki_note)
         self.note_model_uuid = None
         self.config = config or ConfigSettings.get_instance()
-        self.import_config = import_config or ImportConfig()
 
     @staticmethod
     def get_notes_from_collection(collection, deck_id, note_models):
@@ -45,8 +44,8 @@ class Note(JsonSerializableAnkiObject):
         return note
 
     @classmethod
-    def from_json(cls, json_dict, import_config: ImportConfig):
-        note = Note(import_config=import_config)
+    def from_json(cls, json_dict):
+        note = Note()
         note.anki_object_dict = json_dict
         note.note_model_uuid = json_dict["note_model_uuid"]
         return note
@@ -101,7 +100,7 @@ class Note(JsonSerializableAnkiObject):
             card.move_to_deck(deck_id, move_from_dynamic_decks)
             card.flush()
 
-    def save_to_collection(self, collection, deck, model_map_cache):
+    def save_to_collection(self, collection, deck, model_map_cache, import_config):
         # Todo uuid match on existing notes
 
         note_model = deck.metadata.models[self.note_model_uuid]
@@ -118,28 +117,23 @@ class Note(JsonSerializableAnkiObject):
         else:
             self.handle_model_update(collection, model_map_cache)
 
-        self.handle_dictionary_update(note_model)
+        self.handle_import_config_changes(import_config, note_model)
+
+        self.anki_object.__dict__.update(self.anki_object_dict)
         self.anki_object.mid = note_model.anki_dict["id"]
         self.anki_object.mod = anki.utils.intTime()
         self.anki_object.flush()
 
         if new_note:
             collection.addNote(self.anki_object)
-        elif not self.import_config.ignore_deck_movement:
+        elif not import_config.ignore_deck_movement:
             self.move_cards_to_deck(deck.anki_dict["id"])
 
-    def handle_dictionary_update(self, note_model):
-
-        # Personal Fields Resolution
-        fields = self.anki_object_dict["fields"]
-        for num, field in enumerate(fields):
-            model_field_pair = (note_model.anki_dict['name'], note_model.anki_dict['flds'][num]['name'])
-            if model_field_pair in self.import_config.personal_fields:
-                fields[num] = self.anki_object.fields[num]
+    def handle_import_config_changes(self, import_config, note_model):
+        # Personal Fields
+        for num, field in enumerate(self.anki_object_dict["fields"]):
+            if import_config.has_pf(note_model.anki_dict['flds'][num]['name'], note_model.anki_dict['name']):
+                self.anki_object_dict["fields"][num] = self.anki_object.fields[num]
 
         # Tag Cards on Import
-        self.anki_object_dict["tags"] += self.import_config.add_tag_to_cards
-
-        # Update dict
-        self.anki_object_dict["fields"] = fields
-        self.anki_object.__dict__.update(self.anki_object_dict)
+        self.anki_object_dict["tags"] += import_config.add_tag_to_cards
