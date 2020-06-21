@@ -139,7 +139,7 @@ class Deck(JsonSerializableAnkiDict):
 
         if save_note_models:
             for note_model in self.metadata.models.values():
-                note_model.save_to_collection(collection)
+                note_model.save_to_collection(collection, import_config.use_note_models)
 
         name = self._save_deck(collection, parent_name)
 
@@ -150,9 +150,9 @@ class Deck(JsonSerializableAnkiDict):
                                      save_configs=False,
                                      save_note_models=False,
                                      model_map_cache=model_map_cache)
-
-        for note in self.notes:
-            note.save_to_collection(collection, self, model_map_cache, import_config=import_config)
+        if import_config.use_notes:
+            for note in self.notes:
+                note.save_to_collection(collection, self, model_map_cache, import_config=import_config)
 
     def _save_deck(self, collection, parent_name):
         name = (parent_name + self.DECK_NAME_DELIMITER if parent_name else "") + self.anki_dict["name"]
