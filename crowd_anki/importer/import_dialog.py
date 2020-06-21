@@ -143,13 +143,13 @@ class ImportDialog(QDialog):
         if self.userConfig.import_notes_ignore_deck_movement:
             self.form.cb_ignore_move_cards.setCheckState(Qt.Checked)
 
-        def set_checked_and_text(checkbox, text, count=0, checked: bool = True):
+        def set_checked_and_text(checkbox, text, count, checked: bool = True):
             checkbox.setCheckState(Qt.Checked if checked else Qt.Unchecked)
-            if count:
+            if count is not None:
                 text = f"{text}: {'{:,}'.format(count)}"
             checkbox.setText(text)
 
-        set_checked_and_text(self.form.cb_headers, "Headers")
+        set_checked_and_text(self.form.cb_headers, "Headers", None)
         set_checked_and_text(self.form.cb_note_models, "Note Models", len(self.deck_json['note_models']))
         set_checked_and_text(self.form.cb_notes, f"Notes", len(self.deck_json['notes']))
         set_checked_and_text(self.form.cb_media, f"Media Files", len(self.deck_json['media_files']))
