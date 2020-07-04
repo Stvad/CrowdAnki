@@ -1,4 +1,4 @@
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from dataclasses import dataclass, field
 from enum import Enum
 
@@ -20,24 +20,16 @@ class ConfigEntry:
 
 @dataclass
 class PersonalFieldsHolder:
-    personal_fields: Dict[str, List[str]] = field(init=False, default_factory=lambda: dict())
+    personal_fields: defaultdict = field(init=False, default_factory=lambda: defaultdict(list))
 
-    def has_pf(self, field_name, *keys):
-        def _check_pfs(key):
-            if key in self.personal_fields:
-                if field_name in self.personal_fields[key]:
-                    return True
-            return False
-        return any(_check_pfs(key) for key in keys)
+    def is_personal_field(self, model_name, field_name):
+        if model_name in self.personal_fields:
+            if field_name in self.personal_fields[model_name]:
+                return True
+        return False
 
-    def add_field(self, model_name, model_id, field_name):
-        def _add(key):
-            if key not in self.personal_fields:
-                self.personal_fields.setdefault(key, [field_name])
-            else:
-                self.personal_fields[key].append(field_name)
-        _add(model_id)
-        _add(model_name)
+    def add_field(self, model_name, field_name):
+        self.personal_fields[model_name].append(field_name)
 
 
 @dataclass
@@ -58,9 +50,9 @@ class ImportDefaults(PersonalFieldsHolder):
         return new_cls
 
     def _setup_personal_fields(self, settings_dict):
-        models = settings_dict.get("note_models", [])
-        for model_name_or_id in models:
-            self.personal_fields.setdefault(model_name_or_id, models[model_name_or_id].get("personal_fields", []))
+        models = settings_dict.get("note_models", dict())
+        for model_name, keys in models.items():
+            self.personal_fields.setdefault(model_name, keys.get("personal_fields", []))
 
 
 @dataclass
@@ -74,11 +66,6 @@ class ImportConfig(PersonalFieldsHolder):
 
     ignore_deck_movement: bool
 
-    def __repr__(self):
-        return f"ImportConfig({self.personal_fields!r}, {self.add_tag_to_cards!r}, " \
-               f"{self.use_header!r}, {self.use_notes!r}, {self.use_note_models!r}, {self.use_media!r} " \
-               f"{self.ignore_deck_movement!r})"
-
 
 class ImportDialog(QDialog):
     def __init__(self, deck_json, config, parent=None):
@@ -89,6 +76,7 @@ class ImportDialog(QDialog):
         self.userConfig = ConfigSettings.get_instance()
         self.deck_json = deck_json
         self.import_defaults = ImportDefaults.from_dict(config)
+        self.personal_field_ui_dict = defaultdict(dict)
         self.ui_initial_setup()
 
         self.final_import_config: ImportConfig = None
@@ -96,9 +84,6 @@ class ImportDialog(QDialog):
     def accept(self):
         self.read_import_config()
         super().accept()
-
-    def reject(self):
-        super().reject()
 
     def ui_initial_setup(self):
         self.setup_personal_field_selection()
@@ -116,11 +101,12 @@ class ImportDialog(QDialog):
             heading_ui.setFont(heading_font)
             self.form.list_personal_fields.addItem(heading_ui)
 
-        def add_field(name, is_personal):
+        def add_field(name, is_personal) -> QListWidgetItem:
             field_ui = QListWidgetItem(name)
             field_ui.setCheckState(Qt.Checked if is_personal else Qt.Unchecked)
             field_ui.setFlags(Qt.ItemIsEnabled | Qt.ItemIsUserCheckable)
             self.form.list_personal_fields.addItem(field_ui)
+            return field_ui
 
         for model in self.deck_json["note_models"]:
             model_name = model["name"]
@@ -129,7 +115,8 @@ class ImportDialog(QDialog):
 
             for field in model["flds"]:
                 field_name = field["name"]
-                add_field(field_name, self.import_defaults.has_pf(field_name, model_name, model_id))
+                field_ui = add_field(field_name, self.import_defaults.is_personal_field(model_name, field_name))
+                self.personal_field_ui_dict[model_name].setdefault(field_name, field_ui)
 
     def setup_misc(self):
         self.form.import_message_textbox.setText(self.import_defaults.import_message)
@@ -149,10 +136,12 @@ class ImportDialog(QDialog):
                 text = f"{text}: {'{:,}'.format(count)}"
             checkbox.setText(text)
 
-        set_checked_and_text(self.form.cb_headers, "Headers", None)
+        self.form.cb_headers.setVisible(False)  # TODO: implement header selection functionality. Disabled for now
+        # set_checked_and_text(self.form.cb_headers, "Headers", None)
+
         set_checked_and_text(self.form.cb_note_models, "Note Models", len(self.deck_json['note_models']))
-        set_checked_and_text(self.form.cb_notes, f"Notes", len(self.deck_json['notes']))
-        set_checked_and_text(self.form.cb_media, f"Media Files", len(self.deck_json['media_files']))
+        set_checked_and_text(self.form.cb_notes, "Notes", len(self.deck_json['notes']))
+        set_checked_and_text(self.form.cb_media, "Media Files", len(self.deck_json['media_files']))
 
         # TODO: Deck Parts to Use, check which are actually in the deck_json
 
@@ -174,16 +163,7 @@ class ImportDialog(QDialog):
         self.final_import_config = config
 
     def read_personal_fields(self, config):
-        current_note_model = ""
-        current_uuid = ""
-        ui_fields: List[QListWidgetItem] = self.get_ui_pf_items()
-        for ui_field in ui_fields:
-            if not ui_field.flags() & Qt.ItemIsUserCheckable:  # Note Model Header
-                current_note_model = ui_field.text()
-                current_uuid = next(model[UUID_FIELD_NAME]
-                                    for model in self.deck_json["note_models"] if model["name"] == current_note_model)
-            elif ui_field.checkState() == Qt.Checked:  # Field
-                config.add_field(current_note_model, current_uuid, ui_field.text())
-
-    def get_ui_pf_items(self):
-        return [self.form.list_personal_fields.item(i) for i in range(self.form.list_personal_fields.count())]
+        for model_name, fields_dict in self.personal_field_ui_dict.items():
+            for field_name, widget_item in fields_dict.items():
+                if widget_item.checkState() == Qt.Checked:
+                    config.add_field(model_name, field_name)

@@ -28,8 +28,8 @@ class AnkiJsonImporter:
         """
         deck_json = self.read_deck(self.get_deck_path(directory_path))
 
-        import_config, ui_accepted = self.read_import_config(directory_path, deck_json)
-        if not ui_accepted:
+        import_config = self.read_import_config(directory_path, deck_json)
+        if import_config is None:
             return False
 
         if aqt.mw:
@@ -90,9 +90,9 @@ class AnkiJsonImporter:
 
         import_dialog = ImportDialog(deck_json, import_dict)
         if import_dialog.exec_() == QDialog.Rejected:
-            return None, False
+            return None
 
-        return import_dialog.final_import_config, True
+        return import_dialog.final_import_config
 
     @staticmethod
     def import_deck_from_path(collection, directory_path):

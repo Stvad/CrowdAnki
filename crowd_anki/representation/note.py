@@ -131,8 +131,8 @@ class Note(JsonSerializableAnkiObject):
 
     def handle_import_config_changes(self, import_config, note_model):
         # Personal Fields
-        for num, field in enumerate(self.anki_object_dict["fields"]):
-            if import_config.has_pf(note_model.anki_dict['flds'][num]['name'], note_model.anki_dict['name']):
+        for num in range(len(self.anki_object_dict["fields"])):
+            if import_config.is_personal_field(note_model.anki_dict['name'], note_model.anki_dict['flds'][num]['name']):
                 self.anki_object_dict["fields"][num] = self.anki_object.fields[num]
 
         # Tag Cards on Import

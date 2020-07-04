@@ -4,7 +4,6 @@ from .deck import Deck
 from .note import Note
 from ..anki.adapters.anki_deck import AnkiDeck
 from ..anki.adapters.note_model_file_provider import NoteModelFileProvider
-from ..importer.import_dialog import ImportConfig
 
 
 def from_collection(collection, name, deck_metadata=None, is_child=False) -> Deck:
