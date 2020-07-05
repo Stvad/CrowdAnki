@@ -87,6 +87,7 @@ class ImportDialog(QDialog):
     def ui_initial_setup(self):
         self.setup_personal_field_selection()
         self.setup_misc()
+        self.setup_deck_part_checkboxes()
 
     def setup_personal_field_selection(self):
         heading_font = QFont()
@@ -129,6 +130,7 @@ class ImportDialog(QDialog):
         if self.userConfig.import_notes_ignore_deck_movement:
             self.form.cb_ignore_move_cards.setCheckState(Qt.Checked)
 
+    def setup_deck_part_checkboxes(self):
         def set_checked_and_text(checkbox, text, count, checked: bool = True):
             checkbox.setCheckState(Qt.Checked if checked else Qt.Unchecked)
             if count is not None:
