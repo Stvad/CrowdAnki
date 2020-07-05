@@ -122,7 +122,7 @@ class ImportDialog(QDialog):
 
         if self.import_defaults.suggest_tag_imported_cards:
             self.form.cb_tag_cards.setCheckState(Qt.Checked)
-            self.form.cb_tag_cards.setText("Tag Cards (Suggested by Deck Manager!)")
+            self.form.cb_tag_cards.setText("Tag Cards (Suggested by Deck Maintainer!)")
         # else:
         # set as default from config settings
 
