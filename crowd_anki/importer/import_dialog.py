@@ -1,14 +1,13 @@
-from collections import namedtuple, defaultdict
+from collections import defaultdict
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import List
 
-from aqt.qt import *
-from typing import List, Tuple, Dict
+from aqt.qt import QDialog, QListWidgetItem, Qt, QFont, QSize
 
 from .import_ui import Ui_Dialog as ConfigUI
 from ..config.config_settings import ConfigSettings
 from ..utils.constants import UUID_FIELD_NAME
-
 from ..utils.utils import string_cs_to_list
 
 
@@ -45,7 +44,8 @@ class ImportDefaults(PersonalFieldsHolder):
     def from_dict(cls, settings_dict: dict) -> 'ImportDefaults':
         new_cls = cls()
         for prop in cls.Properties:
-            setattr(new_cls, prop.value.config_name, settings_dict.get(prop.value.config_name, prop.value.default_value))
+            setattr(new_cls, prop.value.config_name,
+                    settings_dict.get(prop.value.config_name, prop.value.default_value))
         new_cls._setup_personal_fields(settings_dict)
         return new_cls
 
