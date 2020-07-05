@@ -33,7 +33,7 @@ class NoteModel(JsonSerializableAnkiDict):
 
         return True
 
-    def save_to_collection(self, collection: Collection, should_save: bool):
+    def save_to_collection(self, collection: Collection):
         # Todo regenerate cards on update
         # look into template manipulation in "models"
 
@@ -44,15 +44,14 @@ class NoteModel(JsonSerializableAnkiDict):
 
         self.anki_dict = utils.merge_dicts(note_model_dict, self.anki_dict)
 
-        if should_save:
-            if new_model:
-                collection.models.add(self.anki_dict)
-            else:
-                collection.models.update(self.anki_dict)
-            collection.models.flush()
+        if new_model:
+            collection.models.add(self.anki_dict)
+        else:
+            collection.models.update(self.anki_dict)
+        collection.models.flush()
 
-            if not new_model:
-                self.update_cards(collection, note_model_dict)
+        if not new_model:
+            self.update_cards(collection, note_model_dict)
 
     def make_current(self, collection):
         # Sync through setting global "current" model makes me sad too, but it's ingrained on many levels down

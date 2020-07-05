@@ -131,7 +131,7 @@ class Deck(JsonSerializableAnkiDict):
             config.save_to_collection(collection)
 
         for note_model in self.metadata.models.values():
-            note_model.save_to_collection(collection, import_config.use_note_models)
+            note_model.save_to_collection(collection)
 
         self.save_children_and_notes(collection=collection,
                                      import_config=import_config,

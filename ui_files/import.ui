@@ -95,13 +95,6 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QCheckBox" name="cb_note_models">
-                    <property name="text">
-                     <string>Note Models</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
                    <widget class="QCheckBox" name="cb_notes">
                     <property name="text">
                      <string>Notes (Cards)</string>
