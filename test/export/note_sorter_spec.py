@@ -1,16 +1,12 @@
 import logging
-
-from mamba import describe, it, context
-from unittest.mock import MagicMock
 from random import shuffle
+from unittest.mock import MagicMock
 
-from test_utils.anki import mock_anki_modules
-
-mock_anki_modules()
 from aqt import mw
+from mamba import describe, it, context
 
-from crowd_anki.export.note_sorter import NoteSorter
 from crowd_anki.config.config_settings import ConfigSettings, NoteSortingMethods
+from crowd_anki.export.note_sorter import NoteSorter
 
 test_guids = ["abc", "bcd", "cde", "def", "efg", "fgh"]
 test_flags = [0, 1, 2, 3, 4, 5]
@@ -125,7 +121,8 @@ with describe(NoteSorterTester) as self:
         with it("sorts by two sorting methods, notemodels+guids"):
             self.tester = NoteSorterTester()
 
-            self.tester.sort_with([NoteSortingMethods.NOTE_MODEL_NAME, NoteSortingMethods.GUID], False, is_multi_key=True)
+            self.tester.sort_with([NoteSortingMethods.NOTE_MODEL_NAME, NoteSortingMethods.GUID], False,
+                                  is_multi_key=True)
 
             return_object = [
                 (NoteSorter.sorting_definitions[NoteSortingMethods.NOTE_MODEL_NAME](note),
@@ -138,7 +135,8 @@ with describe(NoteSorterTester) as self:
         with it("sorts by two sorting methods, notemodels+guids, reversed"):
             self.tester = NoteSorterTester()
 
-            self.tester.sort_with([NoteSortingMethods.NOTE_MODEL_NAME, NoteSortingMethods.GUID], True, is_multi_key=True)
+            self.tester.sort_with([NoteSortingMethods.NOTE_MODEL_NAME, NoteSortingMethods.GUID], True,
+                                  is_multi_key=True)
 
             return_object = [
                 (NoteSorter.sorting_definitions[NoteSortingMethods.NOTE_MODEL_NAME](note),
