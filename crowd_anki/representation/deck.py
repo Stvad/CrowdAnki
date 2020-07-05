@@ -1,5 +1,4 @@
 from collections import namedtuple, defaultdict
-
 from typing import Callable, Any, Iterable
 
 from .deck_config import DeckConfig
@@ -127,52 +126,55 @@ class Deck(JsonSerializableAnkiDict):
         self.metadata = DeckMetadata(new_deck_configs, new_models)
 
     def save_to_collection(self, collection, import_config: ImportConfig):
+        self.save_metadata(collection)
+
+        self.save_decks_and_notes(collection=collection,
+                                  parent_name="",
+                                  model_map_cache=defaultdict(dict),
+                                  import_config=import_config)
+
+    def save_metadata(self, collection):
         for config in self.metadata.deck_configs.values():
             config.save_to_collection(collection)
 
         for note_model in self.metadata.models.values():
             note_model.save_to_collection(collection)
 
-        self.save_children_and_notes(collection=collection,
-                                     import_config=import_config,
-                                     parent_name="",
-                                     model_map_cache=defaultdict(dict))
-
-    def save_children_and_notes(self, collection, import_config: ImportConfig, parent_name, model_map_cache):
-        name = self._save_deck(collection, parent_name)
+    def save_decks_and_notes(self, collection, parent_name, model_map_cache, import_config: ImportConfig):
+        full_name = self._save_deck(collection, parent_name)
 
         for child in self.children:
-            child.save_children_and_notes(collection=collection,
-                                          import_config=import_config,
-                                          parent_name=name,
-                                          model_map_cache=model_map_cache)
+            child.save_decks_and_notes(collection=collection,
+                                       parent_name=full_name,
+                                       model_map_cache=model_map_cache,
+                                       import_config=import_config)
 
         if import_config.use_notes:
             for note in self.notes:
                 note.save_to_collection(collection, self, model_map_cache, import_config=import_config)
 
     def _save_deck(self, collection, parent_name):
-        name = (parent_name + self.DECK_NAME_DELIMITER if parent_name else "") + self.anki_dict["name"]
+        full_name = (parent_name + self.DECK_NAME_DELIMITER if parent_name else "") + self.anki_dict["name"]
 
         deck_dict = UuidFetcher(collection).get_deck(self.get_uuid())
 
-        deck_id = collection.decks.id(name, create=False)
+        deck_id = collection.decks.id(full_name, create=False)
         if deck_id and (not deck_dict or deck_dict["id"] != deck_id):
-            name = self._rename_deck(name, collection)
+            full_name = self._rename_deck(full_name, collection)
 
         if not deck_dict:
-            new_deck_id = collection.decks.id(name)
+            new_deck_id = collection.decks.id(full_name)
             deck_dict = collection.decks.get(new_deck_id)
 
         deck_dict.update(self.anki_dict)
 
         self.anki_dict = deck_dict
-        self.anki_dict["name"] = name
+        self.anki_dict["name"] = full_name
         self.anki_dict["conf"] = self.metadata.deck_configs[self.deck_config_uuid].anki_dict["id"]
         collection.decks.save()
         collection.decks.flush()
 
-        return name
+        return full_name
 
     @staticmethod
     def _rename_deck(initial_name, collection):
