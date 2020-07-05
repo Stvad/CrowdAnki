@@ -59,7 +59,6 @@ class ImportDefaults(PersonalFieldsHolder):
 class ImportConfig(PersonalFieldsHolder):
     add_tag_to_cards: List[str]
 
-    use_header: bool
     use_note_models: bool
     use_notes: bool
     use_media: bool
@@ -136,9 +135,6 @@ class ImportDialog(QDialog):
                 text = f"{text}: {'{:,}'.format(count)}"
             checkbox.setText(text)
 
-        self.form.cb_headers.setVisible(False)  # TODO: implement header selection functionality. Disabled for now
-        # set_checked_and_text(self.form.cb_headers, "Headers", None)
-
         set_checked_and_text(self.form.cb_note_models, "Note Models", len(self.deck_json['note_models']))
         set_checked_and_text(self.form.cb_notes, "Notes", len(self.deck_json['notes']))
         set_checked_and_text(self.form.cb_media, "Media Files", len(self.deck_json['media_files']))
@@ -150,7 +146,6 @@ class ImportDialog(QDialog):
             add_tag_to_cards=string_cs_to_list(
                 self.form.textedit_tags.text()) if self.form.cb_tag_cards.isChecked() else [],
 
-            use_header=self.form.cb_headers.isChecked(),
             use_note_models=self.form.cb_note_models.isChecked(),
             use_notes=self.form.cb_notes.isChecked(),
             use_media=self.form.cb_media.isChecked(),
