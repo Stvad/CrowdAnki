@@ -6,9 +6,11 @@ from ..utils.constants import UUID_FIELD_NAME
 
 class JsonSerializable:
     readable_names = {}
-    export_filter_set = {"mod",  # Modification time
-                         "usn",  # Todo clarify
-                         "id"}
+    export_filter_set = {
+        "mod",  # Modification time
+        "usn",  # Todo clarify
+        "id"
+    }
     import_filter_set = {"__type__"}
 
     def __init__(self):

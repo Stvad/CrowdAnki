@@ -4,6 +4,7 @@ from anki.notes import Note as AnkiNote
 from .json_serializable import JsonSerializableAnkiObject
 from .note_model import NoteModel
 from ..anki.overrides.change_model_dialog import ChangeModelDialog
+from ..importer.import_dialog import ImportConfig
 from ..config.config_settings import ConfigSettings
 from ..utils.constants import UUID_FIELD_NAME
 from ..utils.uuid import UuidFetcher
@@ -99,7 +100,7 @@ class Note(JsonSerializableAnkiObject):
             card.move_to_deck(deck_id, move_from_dynamic_decks)
             card.flush()
 
-    def save_to_collection(self, collection, deck, model_map_cache):
+    def save_to_collection(self, collection, deck, model_map_cache, import_config):
         # Todo uuid match on existing notes
 
         note_model = deck.metadata.models[self.note_model_uuid]
@@ -116,6 +117,8 @@ class Note(JsonSerializableAnkiObject):
         else:
             self.handle_model_update(collection, model_map_cache)
 
+        self.handle_import_config_changes(import_config, note_model)
+
         self.anki_object.__dict__.update(self.anki_object_dict)
         self.anki_object.mid = note_model.anki_dict["id"]
         self.anki_object.mod = anki.utils.intTime()
@@ -123,5 +126,14 @@ class Note(JsonSerializableAnkiObject):
 
         if new_note:
             collection.addNote(self.anki_object)
-        elif not self.config.import_notes_ignore_deck_movement:
+        elif not import_config.ignore_deck_movement:
             self.move_cards_to_deck(deck.anki_dict["id"])
+
+    def handle_import_config_changes(self, import_config, note_model):
+        # Personal Fields
+        for num in range(len(self.anki_object_dict["fields"])):
+            if import_config.is_personal_field(note_model.anki_dict['name'], note_model.anki_dict['flds'][num]['name']):
+                self.anki_object_dict["fields"][num] = self.anki_object.fields[num]
+
+        # Tag Cards on Import
+        self.anki_object_dict["tags"] += import_config.add_tag_to_cards

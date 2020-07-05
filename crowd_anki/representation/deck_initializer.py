@@ -42,7 +42,7 @@ def from_json(json_dict, deck_metadata=None) -> Deck:
 
     deck.deck_config_uuid = json_dict["deck_config_uuid"]
     deck.notes = [Note.from_json(json_note) for json_note in json_dict["notes"]]
-    deck.children = [from_json(child, deck.metadata) for child in json_dict["children"]]
+    deck.children = [from_json(child, deck_metadata=deck.metadata) for child in json_dict["children"]]
 
     # Todo should I call this here?
     deck.post_import_filter()

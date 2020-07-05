@@ -6,6 +6,7 @@ from .deck_config import DeckConfig
 from .json_serializable import JsonSerializableAnkiDict
 from .note_model import NoteModel
 from ..anki.adapters.file_provider import FileProvider
+from ..importer.import_dialog import ImportConfig
 from ..utils import utils
 from ..utils.constants import UUID_FIELD_NAME
 from ..utils.uuid import UuidFetcher
@@ -125,32 +126,30 @@ class Deck(JsonSerializableAnkiDict):
 
         self.metadata = DeckMetadata(new_deck_configs, new_models)
 
-    def save_to_collection(self,
-                           collection,
-                           parent_name="",
-                           save_configs=True,
-                           save_note_models=True,
-                           model_map_cache=None):
-        if save_configs:  # Todo when update implemented multiple save can be harmless and code simpler
-            for config in self.metadata.deck_configs.values():
-                config.save_to_collection(collection)
+    def save_to_collection(self, collection, import_config: ImportConfig):
+        for config in self.metadata.deck_configs.values():
+            config.save_to_collection(collection)
 
-        if save_note_models:
-            for note_model in self.metadata.models.values():
-                note_model.save_to_collection(collection)
+        for note_model in self.metadata.models.values():
+            note_model.save_to_collection(collection)
 
+        self.save_children_and_notes(collection=collection,
+                                     import_config=import_config,
+                                     parent_name="",
+                                     model_map_cache=defaultdict(dict))
+
+    def save_children_and_notes(self, collection, import_config: ImportConfig, parent_name, model_map_cache):
         name = self._save_deck(collection, parent_name)
 
-        model_map_cache = model_map_cache or defaultdict(dict)
         for child in self.children:
-            child.save_to_collection(collection,
-                                     parent_name=name,
-                                     save_configs=False,
-                                     save_note_models=False,
-                                     model_map_cache=model_map_cache)
+            child.save_children_and_notes(collection=collection,
+                                          import_config=import_config,
+                                          parent_name=name,
+                                          model_map_cache=model_map_cache)
 
-        for note in self.notes:
-            note.save_to_collection(collection, self, model_map_cache)
+        if import_config.use_notes:
+            for note in self.notes:
+                note.save_to_collection(collection, self, model_map_cache, import_config=import_config)
 
     def _save_deck(self, collection, parent_name):
         name = (parent_name + self.DECK_NAME_DELIMITER if parent_name else "") + self.anki_dict["name"]
