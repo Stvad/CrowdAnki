@@ -1,9 +1,6 @@
-from mamba import describe, it, context
 from unittest.mock import MagicMock
 
-from test_utils.anki import mock_anki_modules
-
-mock_anki_modules()
+from mamba import describe, it, context
 
 from crowd_anki.export.anki_exporter_wrapper import AnkiJsonExporterWrapper
 
