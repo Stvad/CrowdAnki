@@ -133,19 +133,19 @@ class Deck(JsonSerializableAnkiDict):
         for note_model in self.metadata.models.values():
             note_model.save_to_collection(collection)
 
-        self.save_children_and_notes(collection=collection,
-                                     import_config=import_config,
-                                     parent_name="",
-                                     model_map_cache=defaultdict(dict))
+        self.save_deck_children_and_notes(collection=collection,
+                                          import_config=import_config,
+                                          parent_name="",
+                                          model_map_cache=defaultdict(dict))
 
-    def save_children_and_notes(self, collection, import_config: ImportConfig, parent_name, model_map_cache):
+    def save_deck_children_and_notes(self, collection, import_config: ImportConfig, parent_name, model_map_cache):
         name = self._save_deck(collection, parent_name)
 
         for child in self.children:
-            child.save_children_and_notes(collection=collection,
-                                          import_config=import_config,
-                                          parent_name=name,
-                                          model_map_cache=model_map_cache)
+            child.save_deck_children_and_notes(collection=collection,
+                                               import_config=import_config,
+                                               parent_name=name,
+                                               model_map_cache=model_map_cache)
 
         if import_config.use_notes:
             for note in self.notes:

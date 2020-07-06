@@ -2,8 +2,8 @@ from collections import namedtuple, defaultdict
 from dataclasses import dataclass, field
 from enum import Enum
 
-from aqt.qt import *
-from typing import List, Tuple, Dict
+from aqt.qt import Qt, QSize, QDialog, QListWidgetItem, QFont
+from typing import List
 
 from .import_ui import Ui_Dialog as ConfigUI
 from ..config.config_settings import ConfigSettings
