@@ -40,7 +40,7 @@ class NoteModel(JsonSerializableAnkiDict):
         note_model_dict = UuidFetcher(collection).get_model(self.get_uuid()) or \
                           collection.models.new(self.anki_dict["name"])
 
-        new_model = note_model_dict["id"] is None
+        new_model = not note_model_dict["id"]
 
         self.anki_dict = utils.merge_dicts(note_model_dict, self.anki_dict)
 
