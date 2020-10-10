@@ -26,7 +26,7 @@ def from_collection(collection, name, deck_metadata=None, is_child=False) -> Dec
 
     deck.children = seq(direct_children) \
         .map(lambda child_name: from_collection(collection, child_name, deck.metadata, True)) \
-        .filter(lambda it: it is not None).to_list()
+        .filter(lambda it: it is not None).order_by(lambda x: x.anki_dict["name"]).to_list()
 
     return deck
 
