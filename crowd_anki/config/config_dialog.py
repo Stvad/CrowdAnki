@@ -74,7 +74,7 @@ class ConfigDialog(QDialog):
         self.config.import_notes_ignore_deck_movement = not self.config.import_notes_ignore_deck_movement
 
     def changed_textedit_deck_sort_methods(self):
-        self.config.export_note_sort_methods = self.string_cs_to_list(
+        self.config.export_note_sort_methods = string_cs_to_list(
             self.form.textedit_deck_sort_methods.toPlainText()
         )
 
