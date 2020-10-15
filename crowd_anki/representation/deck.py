@@ -171,8 +171,7 @@ class Deck(JsonSerializableAnkiDict):
         self.anki_dict = deck_dict
         self.anki_dict["name"] = full_name
         self.anki_dict["conf"] = self.metadata.deck_configs[self.deck_config_uuid].anki_dict["id"]
-        collection.decks.save()
-        collection.decks.flush()
+        collection.decks.save(deck_dict)
 
         return full_name
 

@@ -104,11 +104,6 @@ class Note(JsonSerializableAnkiObject):
         # Todo uuid match on existing notes
 
         note_model = deck.metadata.models[self.note_model_uuid]
-        # You may ask WTF? Well, it seems anki has 2 ways to identify deck where to place card:
-        # 1) Looking for existing cards of this note
-        # 2) Looking at model->did and to add new cards to correct deck we need to modify the did each time
-        # ;(
-        note_model.anki_dict["did"] = deck.anki_dict["id"]
 
         self.anki_object = UuidFetcher(collection).get_note(self.get_uuid())
         new_note = self.anki_object is None
@@ -122,12 +117,13 @@ class Note(JsonSerializableAnkiObject):
         self.anki_object.__dict__.update(self.anki_object_dict)
         self.anki_object.mid = note_model.anki_dict["id"]
         self.anki_object.mod = anki.utils.intTime()
-        self.anki_object.flush()
 
         if new_note:
-            collection.addNote(self.anki_object)
-        elif not import_config.ignore_deck_movement:
-            self.move_cards_to_deck(deck.anki_dict["id"])
+            collection.add_note(self.anki_object, deck.anki_dict["id"])
+        else:
+            self.anki_object.flush()
+            if not import_config.ignore_deck_movement:
+                self.move_cards_to_deck(deck.anki_dict["id"])
 
     def handle_import_config_changes(self, import_config, note_model):
         # Personal Fields
