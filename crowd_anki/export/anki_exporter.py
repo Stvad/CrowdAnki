@@ -48,21 +48,25 @@ class AnkiJsonExporter(DeckExporter):
                                        indent=4,
                                        ensure_ascii=False))
 
-        self._save_changes()
+        self._save_changes(deck)
 
         if copy_media:
             self._copy_media(deck, deck_directory)
 
         return deck_directory
 
-    def _save_changes(self):
-        """Save updates that were maid during the export. E.g. UUID fields"""
-        # This saves decks and deck configurations
-        self.collection.decks.save()
-        self.collection.decks.flush()
+    def _save_changes(self, deck):
+        """Save updates that were made during the export. E.g. UUID fields"""
+        # This saves decks, deck configurations and models
 
-        self.collection.models.save()
-        self.collection.models.flush()
+        # TODO ensure that this works correctly for subdecks
+        self.collection.decks.save(deck.anki_dict)
+
+        for deck_config in deck.metadata.deck_configs.values():
+            self.collection.decks.save(deck_config.anki_dict)
+
+        for model in deck.metadata.models.values():
+            self.collection.models.save(model.anki_dict)
 
         # Notes?
 
