@@ -11,6 +11,7 @@ class NoteSorter:
         NoteSortingMethods.GUID: lambda i: i.anki_object.guid,
         NoteSortingMethods.FLAG: lambda i: i.anki_object.flags,
         NoteSortingMethods.TAG: lambda i: i.anki_object.tags,
+        NoteSortingMethods.NOTE_ID: lambda i: i.anki_object.id,
         NoteSortingMethods.NOTE_MODEL_NAME: lambda i: i.anki_object._model["name"],
         NoteSortingMethods.NOTE_MODEL_ID: lambda i: i.anki_object._model["crowdanki_uuid"],
         NoteSortingMethods.FIELD1: lambda i: i.anki_object.fields[0],
