@@ -10,20 +10,25 @@ from crowd_anki.export.note_sorter import NoteSorter
 
 test_guids = ["abc", "bcd", "cde", "def", "efg", "fgh"]
 test_flags = [0, 1, 2, 3, 4, 5]
-test_tags = ["adjectives", "directions", "interesting", "nouns", "verbs", "zzzzFinal"]
+test_tags = ["adjectives", "directions10", "directions2", "nouns", "verbs", "zzzzFinal"]
+test_tags_numeric = [["adjectives"], ["directions", 2], ["directions", 10], ["nouns"],
+                     ["verbs"], ["zzzzFinal"]]
 test_note_ids = test_flags
 test_notemodels = ["Default", "LL Noun", "LL Sentence", "LL Verb", "LL Word", "Zulu"]
 test_notemodelids = test_guids
 test_fields = test_tags
+test_fields_numeric = test_tags_numeric
 
 note_sorting_single_result_pairs = [
     (NoteSortingMethods.GUID, test_guids),
     (NoteSortingMethods.FLAG, test_flags),
     (NoteSortingMethods.TAG, test_tags),
+    (NoteSortingMethods.TAG_N, test_tags_numeric),
     (NoteSortingMethods.NOTE_ID, test_note_ids),
     (NoteSortingMethods.NOTE_MODEL_NAME, test_notemodels),
     (NoteSortingMethods.NOTE_MODEL_ID, test_notemodelids),
     (NoteSortingMethods.FIELD1, test_fields),
+    (NoteSortingMethods.FIELD1_N, test_fields_numeric),
     (NoteSortingMethods.FIELD2, test_fields),
     (NoteSortingMethods.FIELD_LAST, test_fields)
 ]
