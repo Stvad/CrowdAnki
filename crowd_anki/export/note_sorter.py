@@ -1,5 +1,6 @@
 from ..config.config_settings import ConfigSettings, NoteSortingMethods
 
+import re
 
 class NoteSorter:
     sorting_definitions = {
@@ -11,10 +12,12 @@ class NoteSorter:
         NoteSortingMethods.GUID: lambda i: i.anki_object.guid,
         NoteSortingMethods.FLAG: lambda i: i.anki_object.flags,
         NoteSortingMethods.TAG: lambda i: i.anki_object.tags,
+        NoteSortingMethods.TAG_N: lambda i: NoteSorter.numeric_list(i.anki_object.tags),
         NoteSortingMethods.NOTE_ID: lambda i: i.anki_object.id,
         NoteSortingMethods.NOTE_MODEL_NAME: lambda i: i.anki_object._model["name"],
         NoteSortingMethods.NOTE_MODEL_ID: lambda i: i.anki_object._model["crowdanki_uuid"],
         NoteSortingMethods.FIELD1: lambda i: i.anki_object.fields[0],
+        NoteSortingMethods.FIELD1_N: lambda i: NoteSorter.numeric_list(i.anki_object.fields[0]),
         NoteSortingMethods.FIELD2: lambda i: i.anki_object.fields[1],
         NoteSortingMethods.FIELD_LAST: lambda i: i.anki_object.fields[-1]
     }
@@ -43,3 +46,30 @@ class NoteSorter:
                 for method_name in self.sort_methods
             )
         )
+
+    # premature optimisation?
+    numeric_list_regex = re.compile(r'^([^0-9]*)([0-9]*)(.*)$')
+
+    @staticmethod
+    def numeric_list(s):
+        """Split string into a list of alternating strings and integers.
+
+        The listed strings do not contain any numeric characters.  The
+        integers are non-negative.
+
+        For example, 'section1.42' will return ['section', 1, '.', 42].
+
+        This function is used to allow sorting strings containing numerals
+        more "naturally".
+
+        """
+        m = NoteSorter.numeric_list_regex.match(s)
+        (prefix, integer, suffix) = m.groups()
+        if integer:
+            l = [prefix, int(integer)]
+            if suffix:
+                return l + NoteSorter.numeric_list(suffix)
+            else:
+                return l
+        else:
+            return [prefix]
