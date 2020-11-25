@@ -24,7 +24,8 @@ note_sorting_single_result_pairs = [
     (NoteSortingMethods.NOTE_MODEL_NAME, test_notemodels),
     (NoteSortingMethods.NOTE_MODEL_ID, test_notemodelids),
     (NoteSortingMethods.FIELD1, test_fields),
-    (NoteSortingMethods.FIELD2, test_fields)
+    (NoteSortingMethods.FIELD2, test_fields),
+    (NoteSortingMethods.FIELD_LAST, test_fields)
 ]
 
 test_multikey_notemodel_guid = [(notemodel, guid) for notemodel in test_notemodels for guid in test_guids]

@@ -15,7 +15,8 @@ class NoteSorter:
         NoteSortingMethods.NOTE_MODEL_NAME: lambda i: i.anki_object._model["name"],
         NoteSortingMethods.NOTE_MODEL_ID: lambda i: i.anki_object._model["crowdanki_uuid"],
         NoteSortingMethods.FIELD1: lambda i: i.anki_object.fields[0],
-        NoteSortingMethods.FIELD2: lambda i: i.anki_object.fields[1]
+        NoteSortingMethods.FIELD2: lambda i: i.anki_object.fields[1],
+        NoteSortingMethods.FIELD_LAST: lambda i: i.anki_object.fields[-1]
     }
     
     def __init__(self, config: ConfigSettings):

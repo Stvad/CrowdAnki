@@ -10,6 +10,7 @@ ConfigEntry = namedtuple("ConfigEntry", ["config_name", "default_value"])
 class NoteSortingMethods(Enum):
     FIELD1 = "field1"
     FIELD2 = "field2"
+    FIELD_LAST = "field_last"
     NO_SORTING = "none"
     GUID = "guid"
     FLAG = "flag"
