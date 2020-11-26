@@ -18,6 +18,7 @@ test_notemodels = ["Default", "LL Noun", "LL Sentence", "LL Verb", "LL Word", "Z
 test_notemodelids = test_guids
 test_fields = test_tags
 test_fields_numeric = test_tags_numeric
+test_sortf = [0] * 6
 
 note_sorting_single_result_pairs = [
     (NoteSortingMethods.GUID, test_guids),
@@ -30,7 +31,8 @@ note_sorting_single_result_pairs = [
     (NoteSortingMethods.FIELD1, test_fields),
     (NoteSortingMethods.FIELD1_N, test_fields_numeric),
     (NoteSortingMethods.FIELD2, test_fields),
-    (NoteSortingMethods.FIELD_LAST, test_fields)
+    (NoteSortingMethods.FIELD_LAST, test_fields),
+    (NoteSortingMethods.BROWSER_SORT_FIELD, test_fields)
 ]
 
 test_multikey_notemodel_guid = [(notemodel, guid) for notemodel in test_notemodels for guid in test_guids]
@@ -55,7 +57,8 @@ class NoteSorterTester:
 
         note.anki_object._model = {
             "name": test_notemodels[i],
-            "crowdanki_uuid": test_notemodelids[i]
+            "crowdanki_uuid": test_notemodelids[i],
+            "sortf": test_sortf[i]
         }
 
         note.anki_object.fields = [test_fields[i], test_fields[i]]

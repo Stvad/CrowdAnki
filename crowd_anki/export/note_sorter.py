@@ -19,7 +19,8 @@ class NoteSorter:
         NoteSortingMethods.FIELD1: lambda i: i.anki_object.fields[0],
         NoteSortingMethods.FIELD1_N: lambda i: NoteSorter.numeric_list(i.anki_object.fields[0]),
         NoteSortingMethods.FIELD2: lambda i: i.anki_object.fields[1],
-        NoteSortingMethods.FIELD_LAST: lambda i: i.anki_object.fields[-1]
+        NoteSortingMethods.FIELD_LAST: lambda i: i.anki_object.fields[-1],
+        NoteSortingMethods.BROWSER_SORT_FIELD: lambda i: i.anki_object.fields[i.anki_object._model['sortf']]
     }
     
     def __init__(self, config: ConfigSettings):

@@ -12,6 +12,7 @@ class NoteSortingMethods(Enum):
     FIELD1_N = "field1_numeric"
     FIELD2 = "field2"
     FIELD_LAST = "field_last"
+    BROWSER_SORT_FIELD = "browser_sort_field"
     NO_SORTING = "none"
     GUID = "guid"
     FLAG = "flag"
