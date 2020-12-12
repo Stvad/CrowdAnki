@@ -27,7 +27,7 @@ class AnkiJsonExporter(DeckExporter):
         self.deck_name_sanitizer = deck_name_sanitizer
         self.deck_file_name = deck_file_name
         self.note_sorter = NoteSorter(config)
-    
+
     def export_to_directory(self, deck: AnkiDeck, output_dir=Path("."), copy_media=True, create_deck_subdirectory=True) -> Path:
         deck_directory = output_dir
         if create_deck_subdirectory:
@@ -58,13 +58,13 @@ class AnkiJsonExporter(DeckExporter):
     def _save_changes(self, deck, is_export_child=False):
         """Save updates that were made during the export. E.g. UUID fields
 
-It saves decks, deck configurations and models.
+        It saves decks, deck configurations and models.
 
-is_export_child refers to whether this deck is a child for the
-_purposes of the current export operation_.  For instance, if we're
-exporting or snapshotting a specific subdeck, then it's considered the
-"parent" here.  We need the argument to avoid duplicately saving deck
-configs and note models.
+        is_export_child refers to whether this deck is a child for the
+        _purposes of the current export operation_.  For instance, if
+        we're exporting or snapshotting a specific subdeck, then it's
+        considered the "parent" here.  We need the argument to avoid
+        duplicately saving deck configs and note models.
 
         """
 
