@@ -27,7 +27,7 @@ class AnkiJsonExporter(DeckExporter):
         self.deck_name_sanitizer = deck_name_sanitizer
         self.deck_file_name = deck_file_name
         self.note_sorter = NoteSorter(config)
-    
+
     def export_to_directory(self, deck: AnkiDeck, output_dir=Path("."), copy_media=True, create_deck_subdirectory=True) -> Path:
         deck_directory = output_dir
         if create_deck_subdirectory:
@@ -48,21 +48,36 @@ class AnkiJsonExporter(DeckExporter):
                                        indent=4,
                                        ensure_ascii=False))
 
-        self._save_changes()
+        self._save_changes(deck)
 
         if copy_media:
             self._copy_media(deck, deck_directory)
 
         return deck_directory
 
-    def _save_changes(self):
-        """Save updates that were maid during the export. E.g. UUID fields"""
-        # This saves decks and deck configurations
-        self.collection.decks.save()
-        self.collection.decks.flush()
+    def _save_changes(self, deck, is_export_child=False):
+        """Save updates that were made during the export. E.g. UUID fields
 
-        self.collection.models.save()
-        self.collection.models.flush()
+        It saves decks, deck configurations and models.
+
+        is_export_child refers to whether this deck is a child for the
+        _purposes of the current export operation_.  For instance, if
+        we're exporting or snapshotting a specific subdeck, then it's
+        considered the "parent" here.  We need the argument to avoid
+        duplicately saving deck configs and note models.
+
+        """
+
+        self.collection.decks.save(deck.anki_dict)
+        for child_deck in deck.children:
+            self._save_changes(child_deck, is_export_child=True)
+
+        if not is_export_child:
+            for deck_config in deck.metadata.deck_configs.values():
+                self.collection.decks.save(deck_config.anki_dict)
+
+            for model in deck.metadata.models.values():
+                self.collection.models.save(model.anki_dict)
 
         # Notes?
 
