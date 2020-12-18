@@ -14,7 +14,7 @@ from ...utils import constants
 
 
 def exporter_changed(self, exporter_id):
-    self.exporter = aqt.exporting.exporters()[exporter_id][1](self.col)
+    self.exporter = aqt.exporting.exporters(self.col)[exporter_id][1](self.col)
     self.frm.includeMedia.setVisible(hasattr(self.exporter, "includeMedia"))
 
 
