@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 import aqt.utils
+import aqt
 
 
 class Notifier(ABC):
@@ -16,16 +17,27 @@ class Notifier(ABC):
     def error(self, title: str, message: str):
         pass
 
+def run_closure_in_main(closure):
+    """Run the closure in the main thread.
+
+This is necessary, because GUI operations in a background thread cause
+a crash.  For instance, export is now run in a background thread.
+
+    """
+    if aqt.mw.inMainThread():
+        closure()
+    else:
+        aqt.mw.taskman.run_on_main(lambda: aqt.mw.progress.timer(50, closure, False))
 
 class AnkiModalNotifier(Notifier):
     def info(self, title: str, message: str):
-        aqt.utils.showInfo(message, title=title)
+        run_closure_in_main(lambda: aqt.utils.showInfo(message, title=title))
 
     def warning(self, title: str, message: str):
-        aqt.utils.showWarning(message, title=title)
+        run_closure_in_main(lambda: aqt.utils.showWarning(message, title=title))
 
     def error(self, title: str, message: str):
-        aqt.utils.showCritical(message, title=title)
+        run_closure_in_main(lambda: aqt.utils.showCritical(message, title=title))
 
 
 class AnkiTooltipNotifier(Notifier):
