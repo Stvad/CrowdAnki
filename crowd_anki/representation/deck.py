@@ -83,6 +83,12 @@ class Deck(JsonSerializableAnkiDict):
         new_config = DeckConfig.from_collection(self.collection, self.anki_dict["conf"])
         self.deck_config_uuid = new_config.get_uuid()
 
+        # TODO Remove this once enough time has passed that #106/#116
+        # is no longer an issue — i.e. when there are likely no more
+        # Anki dbs with a `deck_config_uuid` attached to the deck.
+        if "deck_config_uuid" in self.anki_dict:
+            del self.anki_dict["deck_config_uuid"]
+
         self.metadata.deck_configs.setdefault(new_config.get_uuid(), new_config)
 
     def serialization_dict(self):
