@@ -36,7 +36,8 @@ class Deck(JsonSerializableAnkiDict):
                          "deck_configurations",
                          "children",
                          "media_files",
-                         "notes"}
+                         "notes",
+                         "deck_config_uuid"}
 
     def __init__(self,
                  file_provider_supplier: Callable[[Any, Iterable[int]], FileProvider],
