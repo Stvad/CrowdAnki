@@ -27,7 +27,7 @@ a crash.  For instance, export is now run in a background thread.
     if aqt.mw.inMainThread():
         closure()
     else:
-        aqt.mw.taskman.run_on_main(lambda: aqt.mw.progress.timer(50, closure, False))
+        aqt.mw.taskman.run_on_main(lambda: aqt.mw.progress.timer(0, closure, False))
 
 class AnkiModalNotifier(Notifier):
     def info(self, title: str, message: str):
