@@ -87,6 +87,7 @@ class Deck(JsonSerializableAnkiDict):
         # TODO Remove this once enough time has passed that #106/#116
         # is no longer an issue — i.e. when there are likely no more
         # Anki dbs with a `deck_config_uuid` attached to the deck.
+        # See #133.
         if "deck_config_uuid" in self.anki_dict:
             del self.anki_dict["deck_config_uuid"]
 
@@ -184,6 +185,7 @@ class Deck(JsonSerializableAnkiDict):
             # TODO Remove the exception-handling once we're confident
             # that there are no more buggy decks, with mismatching
             # `deck_config_uuid`s.
+            # See #133.
         except KeyError as error:
             AnkiModalNotifier().error("Incorrect deck config",
                                       "The deck config uuid {} is not present in the deck. "
