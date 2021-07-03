@@ -6,3 +6,4 @@
 from . import cards
 from . import decks
 from . import exporting
+from . import models
