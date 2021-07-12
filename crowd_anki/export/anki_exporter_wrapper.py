@@ -1,3 +1,4 @@
+from crowd_anki import config
 from pathlib import Path
 
 from .anki_exporter import AnkiJsonExporter
@@ -39,7 +40,7 @@ class AnkiJsonExporterWrapper:
         self.anki_json_exporter = json_exporter or AnkiJsonExporter(collection, ConfigSettings.get_instance())
         self.notifier = notifier or AnkiModalNotifier()
         
-    def exportToGithub(self, username, password, repo):
+    def exportToGithub(self):
         if self.did is None:
             self.notifier.warning(EXPORT_FAILED_TITLE, "CrowdAnki export works only for specific decks. "
                                                        "Please use CrowdAnki snapshot if you want to export "
@@ -51,8 +52,9 @@ class AnkiJsonExporterWrapper:
             self.notifier.warning(EXPORT_FAILED_TITLE, "CrowdAnki does not support export for dynamic decks.")
             return
         
-        self.anki_json_exporter.export_to_github(deck, username, password, repo, self.includeMedia,
-                                                 create_deck_subdirectory=ConfigSettings.get_instance().export_create_deck_subdirectory)
+        self.anki_json_exporter.export_to_github(deck, ConfigSettings.get_instance().gh_username,
+                                                ConfigSettings.get_instance().gh_password, self.includeMedia,
+                                                ConfigSettings.get_instance().gh_repo, create_deck_subdirectory=ConfigSettings.get_instance().export_create_deck_subdirectory)
         
         self.count = self.anki_json_exporter.last_exported_count
     

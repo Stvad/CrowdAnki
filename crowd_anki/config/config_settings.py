@@ -33,6 +33,10 @@ class ConfigSettings:
     export_create_deck_subdirectory: bool
     import_notes_ignore_deck_movement: bool
 
+    gh_username: str
+    gh_password: str
+    gh_repo: str
+
     @property
     def formatted_export_note_sort_methods(self) -> list:
         return [
@@ -48,6 +52,10 @@ class ConfigSettings:
         EXPORT_NOTES_REVERSE_ORDER = ConfigEntry("export_notes_reverse_order", False)
         EXPORT_CREATE_DECK_SUBDIRECTORY = ConfigEntry("export_create_deck_subdirectory", True)
         IMPORT_NOTES_IGNORE_DECK_MOVEMENT = ConfigEntry("import_notes_ignore_deck_movement", False)
+
+        GH_USERNAME = ConfigEntry("gh_username", "")
+        GH_PASSWORD = ConfigEntry("gh_password", "")
+        GH_REPO = ConfigEntry("gh_password", "")
 
     def __init__(self, addon_manager=None, init_values=None, profile_manager=None):
         self._profile_manager = profile_manager or mw.pm

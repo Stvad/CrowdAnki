@@ -59,6 +59,62 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="group_snapshot">
+         <property name="title">
+          <string>Github</string>
+         </property>
+
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="lbl_gh_username">
+              <property name="text">
+               <string>Github username (no @):</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="textedit_gh_username"/>
+            </item>
+           </layout>
+          </item>
+
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="lbl_gh_password">
+              <property name="text">
+               <string>Github personal access token (from https://git.io/token):</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="textedit_gh_password"/>
+            </item>
+           </layout>
+          </item>
+
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="lbl_gh_repo">
+              <property name="text">
+               <string>Github export repository (from https://repo.new):</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="textedit_gh_repo"/>
+            </item>
+           </layout>
+          </item>
+
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="group_deck_import">
          <property name="title">
           <string>Import</string>

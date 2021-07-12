@@ -60,7 +60,7 @@ class AnkiJsonExporter(DeckExporter):
     def export_to_github(self, deck: AnkiDeck, user, pass, repo, copy_media=True, create_deck_subdirectory=True, notifier=None):
     
         """
-        This utility function directly uploads an AnkiDeck to Github.
+        This utility function directly uploads an AnkiDeck to Github in the JSON format.
         
         To authorize it, a username and password must be supplied (note: password should be a Github
         personal access token from https://github.com/settings/tokens - don't try it using your

@@ -35,11 +35,16 @@ class ConfigDialog(QDialog):
     def ui_initial_setup(self):
         self.setup_snapshot_options()
         self.setup_export_options()
+        self.setup_github_options()
         self.setup_import_options()
 
     def setup_snapshot_options(self):
         self.form.textedit_snapshot_path.setText(self.config.snapshot_path)
         self.form.textedit_snapshot_path.textChanged.connect(self.changed_textedit_snapshot_path)
+
+        self.form.textedit_gh_username.textChanged.connect(self.changed_gh_username)
+        self.form.textedit_gh_password.textChanged.connect(self.changed_gh_password)
+        self.form.textedit_gh_repo.textChanged.connect(self.changed_gh_repo)
 
         self.form.cb_automated_snapshot.setChecked(self.config.automated_snapshot)
         self.form.cb_automated_snapshot.stateChanged.connect(self.toggle_automated_snapshot)
@@ -60,6 +65,20 @@ class ConfigDialog(QDialog):
     def setup_import_options(self):
         self.form.cb_ignore_move_cards.setChecked(self.config.import_notes_ignore_deck_movement)
         self.form.cb_ignore_move_cards.stateChanged.connect(self.toggle_ignore_move_cards)
+
+    def setup_github_options(self):
+        self.form.textedit_gh_username.setText(self.config.gh_username)
+        self.form.textedit_gh_password.setText(self.config.gh_password)
+        self.form.textedit_gh_repo.setText(self.config.gh_repo)
+
+    def changed_gh_username(self):
+        self.config.gh_username = self.form.textedit_gh_username.text()
+    
+    def changed_gh_password(self):
+        self.config.gh_password = self.form.textedit_gh_password.text()
+    
+    def changed_gh_repo(self):
+        self.config.gh_repo = self.form.textedit_gh_repo
 
     def toggle_automated_snapshot(self):
         self.config.automated_snapshot = not self.config.automated_snapshot
