@@ -36,7 +36,7 @@ class GitImporter(object):
         repo_url = repo_url.strip()
         try:
             repo_local_path = self.get_repo_local_path(repo_url)
-            porcelain.pull(porcelain.open_repo(str(repo_local_path)), repo_url)
+            porcelain.pull(str(repo_local_path), repo_url)
         except ValueError:
             return self.notifier.error("URL incorrect", f"URL could not be parsed \"{repo_url}\"")
         except NotGitRepository:
@@ -49,8 +49,9 @@ class GitImporter(object):
 
     def clone_repository(self, repo_url, repo_path):
         repo_path.mkdir(parents=True, exist_ok=True)
-        porcelain.clone(repo_url, target=str(repo_path), bare=False, checkout=True, errstream=porcelain.NoneStream(),
-                        outstream=porcelain.NoneStream())
+        repo_object = porcelain.clone(repo_url, target=str(repo_path), bare=False, checkout=True, errstream=porcelain.NoneStream(),
+                                      outstream=porcelain.NoneStream())
+        repo_object.close()
 
     def get_repo_local_path(self, repo_url):
         repo_name = get_repository_name(repo_url)
