@@ -49,8 +49,7 @@ class GitImporter(object):
 
     def clone_repository(self, repo_url, repo_path):
         repo_path.mkdir(parents=True, exist_ok=True)
-        repo_object = porcelain.clone(repo_url, target=str(repo_path), bare=False, checkout=True, errstream=porcelain.NoneStream(),
-                                      outstream=porcelain.NoneStream())
+        repo_object = porcelain.clone(repo_url, target=str(repo_path), bare=False, checkout=True, errstream=porcelain.NoneStream())
         repo_object.close()
 
     def get_repo_local_path(self, repo_url):
