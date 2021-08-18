@@ -47,16 +47,26 @@
         },
         "dulwich": {
             "hashes": [
-                "sha256:10699277c6268d0c16febe141a5b1c1a6e9744f3144c2d2de1706f4b1adafe63",
-                "sha256:267160904e9a1cb6c248c5efc53597a35d038ecc6f60bdc4546b3053bed11982",
-                "sha256:4e3aba5e4844e7c700721c1fc696987ea820ee3528a03604dc4e74eff4196826",
-                "sha256:60bb2c2c92f5025c1b53a556304008f0f624c98ae36f22d870e056b2d4236c11",
-                "sha256:dddae02d372fc3b5cfb0046d0f62246ef281fa0c088df7601ab5916607add94b",
-                "sha256:f00d132082b8fcc2eb0d722abc773d4aeb5558c1475d7edd1f0f571146c29db9",
-                "sha256:f74561c448bfb6f04c07de731c1181ae4280017f759b0bb04fa5770aa84ca850"
+                "sha256:08a09353620981c8e9cc7ace76f71c8859bf035ae91c1b2bddb54494fe3b7638",
+                "sha256:3ab53d08bc8405cc99a1018e837b2866e0e1d0797999ab94bdfdc3b5369ec325",
+                "sha256:3d4249dd7bd608932ff3e8362b18f9b8ad899436063f8dd395355fd345da92c3",
+                "sha256:555c88a1076cd1cab12c5dac93239e63e2dc4347ae475c5ca0ea5494098eab0f",
+                "sha256:5ff59d02a4d61ee273708b85a8b370d46ea4bedd097904ab92682a2d44553284",
+                "sha256:68cbdeae2e0c247690243c77c8b5cc671d6a091d6fbfcd43ff5eae13210e384f",
+                "sha256:6b61ac0a2a8b1b1e18914310f3f7a422396334208b426b9de570f1de31644cf1",
+                "sha256:7bee1516e0516ff441a93206d0bc0816781ee7f6df37c9f01a9578e2bff7cc7c",
+                "sha256:8025f7249f9ed719af5cf041ac9a8de8fae0bf08875e9dcaedbccc98f4ea67a7",
+                "sha256:8853b0306406f6fb82812d2fc2af43d4cda50ea0223551c3b27df5eb008b655f",
+                "sha256:aba891770d741613a13fc2d76972d99fff9b26a15383ad0f0bfbd3890e2b7a00",
+                "sha256:b9266eba455b399cbda79eac0a138dd80fd8af180e5dcf759d242749936eaeb3",
+                "sha256:bab10f9580372267c3385e3ab9b3939e212a713f398c410d6f1392f96d6f0ffa",
+                "sha256:bcd9c85ea319f7c7076de2717da0532dc99b1e4fd0bea374522af7436179f72f",
+                "sha256:df138aa678e3c6d9c1b21fa8e591311c0871b72fca635cc3c35361a540cc3ad1",
+                "sha256:fc97a857b274f5ed41f73c4593e665924a38f613835cfd72c55393a710a64a49",
+                "sha256:fe649f2c95c209452639075d0ccd8cad6bda960044cf9b2e6268e1ac6ed30bac"
             ],
             "index": "pypi",
-            "version": "==0.19.16"
+            "version": "==0.20.24"
         },
         "future": {
             "hashes": [
