@@ -9,6 +9,7 @@ from ..importer.import_dialog import ImportConfig
 from ..utils import utils
 from ..utils.constants import UUID_FIELD_NAME
 from ..utils.uuid import UuidFetcher
+from ..utils.notifier import AnkiModalNotifier
 
 DeckMetadata = namedtuple("DeckMetadata", ["deck_configs", "models"])
 
@@ -36,7 +37,8 @@ class Deck(JsonSerializableAnkiDict):
                          "deck_configurations",
                          "children",
                          "media_files",
-                         "notes"}
+                         "notes",
+                         "deck_config_uuid"}
 
     def __init__(self,
                  file_provider_supplier: Callable[[Any, Iterable[int]], FileProvider],
@@ -81,6 +83,13 @@ class Deck(JsonSerializableAnkiDict):
         # Todo switch to uuid
         new_config = DeckConfig.from_collection(self.collection, self.anki_dict["conf"])
         self.deck_config_uuid = new_config.get_uuid()
+
+        # TODO Remove this once enough time has passed that #106/#116
+        # is no longer an issue — i.e. when there are likely no more
+        # Anki dbs with a `deck_config_uuid` attached to the deck.
+        # See #133.
+        if "deck_config_uuid" in self.anki_dict:
+            del self.anki_dict["deck_config_uuid"]
 
         self.metadata.deck_configs.setdefault(new_config.get_uuid(), new_config)
 
@@ -170,7 +179,22 @@ class Deck(JsonSerializableAnkiDict):
 
         self.anki_dict = deck_dict
         self.anki_dict["name"] = full_name
-        self.anki_dict["conf"] = self.metadata.deck_configs[self.deck_config_uuid].anki_dict["id"]
+
+        try:
+            self.anki_dict["conf"] = self.metadata.deck_configs[self.deck_config_uuid].anki_dict["id"]
+            # TODO Remove the exception-handling once we're confident
+            # that there are no more buggy decks, with mismatching
+            # `deck_config_uuid`s.
+            # See #133.
+        except KeyError as error:
+            AnkiModalNotifier().error("Incorrect deck config",
+                                      "The deck config uuid {} is not present in the deck. "
+                                      "This is likely due to a now-fixed bug in CrowdAnki. "
+                                      "Please ask the maintainer of the deck to re-export it, if possible. "
+                                      "See here: https://github.com/Stvad/CrowdAnki/issues/106 "
+                                      "for details and alternative solutions.".format(error))
+            raise
+
         collection.decks.save(deck_dict)
 
         return full_name
