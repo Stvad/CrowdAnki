@@ -2,7 +2,11 @@ import logging
 from random import shuffle
 from unittest.mock import MagicMock
 
-from aqt import mw
+# # TODO? Stop mocking (See blame commit message and possibly PR for
+# # discussion.)
+# from aqt import mw
+mw = MagicMock()
+
 from mamba import describe, it, context
 
 from crowd_anki.config.config_settings import ConfigSettings, NoteSortingMethods
@@ -27,14 +31,13 @@ note_sorting_single_result_pairs = [
 
 test_multikey_notemodel_guid = [(notemodel, guid) for notemodel in test_notemodels for guid in test_guids]
 
-
 class NoteSorterTester:
     def __init__(self):
         self.note_sorter = None
         self.notes = []
         self.sorted_notes = []
 
-        self.config = ConfigSettings(mw.addonManager)
+        self.config = ConfigSettings(mw.addonManager, None, mw.pm)
 
     @staticmethod
     def get_single_note_mock(i):
