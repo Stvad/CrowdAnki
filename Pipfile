@@ -10,6 +10,7 @@ hypothesis = "*"
 PyQt5 = "*"
 anki = "*"
 aqt = "*"
+PyQtWebEngine = "*"
 
 [packages]
 PyFunctional = "*"
