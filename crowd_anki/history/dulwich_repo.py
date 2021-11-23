@@ -40,3 +40,6 @@ class DulwichAnkiRepo(AnkiRepo):
 
     def status(self) -> GitStatus:
         return self.git.status(self.dulwich_repo)
+
+    def close(self):
+        self.dulwich_repo.close()
