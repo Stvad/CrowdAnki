@@ -53,11 +53,14 @@ class Note(JsonSerializableAnkiObject):
     def get_uuid(self):
         return self.anki_object.guid if self.anki_object else self.anki_object_dict.get("guid")
 
+    def note_type(self):
+        return self.anki_object.note_type() if hasattr(self.anki_object, 'note_type') else self.anki_object.model()
+
     def handle_model_update(self, collection, model_map_cache):
         """
         Update note's cards if note's model has changed
         """
-        old_model_uuid = self.anki_object.model().get(UUID_FIELD_NAME)
+        old_model_uuid = self.note_type().get(UUID_FIELD_NAME)
         if self.note_model_uuid == old_model_uuid:
             return
 
@@ -67,7 +70,7 @@ class Note(JsonSerializableAnkiObject):
         new_model = NoteModel.from_json(uuid_fetcher.get_model(self.note_model_uuid))
         mapping = model_map_cache[old_model_uuid].get(self.note_model_uuid)
         if mapping:
-            collection.models.change(self.anki_object.model(),
+            collection.models.change(self.note_type(),
                                      [self.anki_object.id],
                                      new_model.anki_dict,
                                      mapping.field_map,
@@ -75,7 +78,7 @@ class Note(JsonSerializableAnkiObject):
         else:
             new_model.make_current(collection)
             # todo signals instead of direct dialog creation?
-            dialog = ChangeModelDialog(collection, [self.anki_object.id], self.anki_object.model())
+            dialog = ChangeModelDialog(collection, [self.anki_object.id], self.note_type())
 
             def on_accepted():
                 model_map_cache[old_model_uuid][self.note_model_uuid] = \

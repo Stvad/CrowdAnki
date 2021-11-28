@@ -7,7 +7,9 @@ from ..anki.adapters.note_model_file_provider import NoteModelFileProvider
 
 
 def from_collection(collection, name, deck_metadata=None, is_child=False) -> Deck:
-    anki_dict = collection.decks.byName(name)
+    decks = collection.decks
+    by_name = decks.by_name if hasattr(decks, 'by_name') else decks.byName
+    anki_dict = by_name(name)
 
     if AnkiDeck(anki_dict).is_dynamic:
         return None
@@ -20,7 +22,7 @@ def from_collection(collection, name, deck_metadata=None, is_child=False) -> Dec
 
     deck.notes = Note.get_notes_from_collection(collection, deck.anki_dict["id"], deck.metadata.models)
 
-    direct_children = [child_name for child_name, _ in collection.decks.children(deck.anki_dict["id"])
+    direct_children = [child_name for child_name, _ in decks.children(deck.anki_dict["id"])
                        if Deck.DECK_NAME_DELIMITER
                        not in child_name[len(name) + len(Deck.DECK_NAME_DELIMITER):]]
 

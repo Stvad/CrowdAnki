@@ -9,7 +9,9 @@ class DeckConfig(JsonSerializableAnkiDict):
 
     @classmethod
     def from_collection(cls, collection, deck_config_id):
-        anki_dict = collection.decks.getConf(deck_config_id)
+        decks = collection.decks
+        get_conf = decks.get_config if hasattr(decks, 'get_config') else decks.getConf
+        anki_dict = get_conf(deck_config_id)
         deck_config = DeckConfig(anki_dict)
         deck_config._update_fields()
 
