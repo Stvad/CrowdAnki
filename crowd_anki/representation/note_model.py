@@ -1,16 +1,10 @@
 from collections import namedtuple
 
 from anki import Collection
-from anki import version as anki_version
 from .json_serializable import JsonSerializableAnkiDict
 from ..anki.overrides.change_model_dialog import ChangeModelDialog
 from ..utils import utils
 from ..utils.uuid import UuidFetcher
-
-anki_version = anki_version.split(".")
-anki_major = int(anki_version[0])
-anki_minor = int(anki_version[1])
-anki_point = int(anki_version[2])
 
 
 class NoteModel(JsonSerializableAnkiDict):
@@ -54,9 +48,6 @@ class NoteModel(JsonSerializableAnkiDict):
             collection.models.add(self.anki_dict)
         else:
             collection.models.update(self.anki_dict)
-
-        if anki_major < 3 and anki_minor < 2 and anki_point < 48:
-            collection.models.flush()
 
         if not new_model:
             self.update_cards(collection, note_model_dict)
