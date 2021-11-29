@@ -8,6 +8,7 @@ from ..anki.adapters.note_model_file_provider import NoteModelFileProvider
 
 def from_collection(collection, name, deck_metadata=None, is_child=False) -> Deck:
     decks = collection.decks
+    # TODO Remove compatibility shims for Anki 2.1.46 and lower.
     by_name = decks.by_name if hasattr(decks, 'by_name') else decks.byName
     anki_dict = by_name(name)
 

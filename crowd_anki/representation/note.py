@@ -54,6 +54,9 @@ class Note(JsonSerializableAnkiObject):
         return self.anki_object.guid if self.anki_object else self.anki_object_dict.get("guid")
 
     def note_type(self):
+        # TODO Remove compatibility shims for Anki 2.1.46 and lower.
+        # (Remove this method altogether — see old version in git
+        # history.)
         return self.anki_object.note_type() if hasattr(self.anki_object, 'note_type') else self.anki_object.model()
 
     def handle_model_update(self, collection, model_map_cache):

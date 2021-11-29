@@ -10,6 +10,7 @@ class DeckConfig(JsonSerializableAnkiDict):
     @classmethod
     def from_collection(cls, collection, deck_config_id):
         decks = collection.decks
+        # TODO Remove compatibility shims for Anki 2.1.46 and lower.
         get_conf = decks.get_config if hasattr(decks, 'get_config') else decks.getConf
         anki_dict = get_conf(deck_config_id)
         deck_config = DeckConfig(anki_dict)
