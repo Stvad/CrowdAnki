@@ -2,7 +2,7 @@ from uuid import uuid1
 
 from .notifier import AnkiModalNotifier
 
-def disambiguate_note_model_uuids(collection):
+def disambiguate_note_model_uuids(collection, notifier=None) -> None:
     """Disambiguate duplicate note model UUIDs.
 
     In CrowdAnki ≤ 0.9, cloning a note model with an already assigned
@@ -19,7 +19,8 @@ def disambiguate_note_model_uuids(collection):
     clone UUIDs.
 
     """
-    notifier = AnkiModalNotifier()
+    if notifier is None:
+        notifier = AnkiModalNotifier()
     uuids = []
     full_message = ""
     for model in filter(lambda model: "crowdanki_uuid" in model,
