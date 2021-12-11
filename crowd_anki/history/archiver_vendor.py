@@ -10,6 +10,7 @@ from ..anki.ui.utils import progress_indicator
 from ..config.config_settings import ConfigSettings
 from ..export.anki_exporter import AnkiJsonExporter
 from ..utils.notifier import Notifier, AnkiTooltipNotifier
+from ..utils.disambiguate_uuids import disambiguate_note_model_uuids
 
 
 @dataclass
@@ -41,6 +42,10 @@ class ArchiverVendor:
             self.do_snapshot('CrowdAnki: Snapshot on sync')
 
     def do_snapshot(self, reason):
+        # Clean up duplicate note models. See
+        # https://github.com/Stvad/CrowdAnki/wiki/Workarounds-%E2%80%94-Duplicate-note-model-uuids.
+        disambiguate_note_model_uuids(self.window.col)
+
         with progress_indicator(self.window, 'Taking CrowdAnki snapshot of all decks'):
             self.all_deck_archiver().archive(overrides=self.overrides(),
                                              reason=reason)

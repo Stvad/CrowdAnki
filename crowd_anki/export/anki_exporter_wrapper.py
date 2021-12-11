@@ -5,6 +5,7 @@ from ..anki.adapters.anki_deck import AnkiDeck
 from ..config.config_settings import ConfigSettings
 from ..utils import constants
 from ..utils.notifier import AnkiModalNotifier, Notifier
+from ..utils.disambiguate_uuids import disambiguate_note_model_uuids
 
 EXPORT_FAILED_TITLE = "Export failed"
 
@@ -44,6 +45,10 @@ class AnkiJsonExporterWrapper:
         if deck.is_dynamic:
             self.notifier.warning(EXPORT_FAILED_TITLE, "CrowdAnki does not support export for dynamic decks.")
             return
+
+        # Clean up duplicate note models. See
+        # https://github.com/Stvad/CrowdAnki/wiki/Workarounds-%E2%80%94-Duplicate-note-model-uuids.
+        disambiguate_note_model_uuids(self.collection)
 
         # .parent because we receive name with random numbers at the end (hacking around internals of Anki) :(
         export_path = Path(directory_path).parent
