@@ -27,7 +27,7 @@ This script is run automatically when packaging the extension in `package_plugin
 but needs to be done manually if the UI files are changed in the dev environment.
 
 # Testing 
-## Testing you changes in Anki
+## Testing your changes in Anki
  
 1. If you have the production version of CrowdAnki installed - remove it from Anki. 
 1. Run `fetch_dependencies.sh` - this will download the dependencies required for CrowdAnki to 
