@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -xe
 
 ./generate_ui.sh
 
