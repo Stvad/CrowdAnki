@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Callable, Any, Optional
+from aqt import mw
 
 from ...github.github_importer import GitImporter
 from ...history.archiver_vendor import ArchiverVendor
@@ -24,7 +25,7 @@ class ActionVendor:
         return action
 
     def actions(self):
-        return [self.import_action(), self.github_import(), self.snapshot()]
+        return [self.import_action(), self.github_import(), self.snapshot(), self.snapshot_and_exit()]
 
     def import_action(self):
         return self.action('CrowdAnki: Import from disk',
@@ -36,3 +37,10 @@ class ActionVendor:
 
     def snapshot(self):
         return self.action('CrowdAnki: Snapshot', self.archiver_vendor.do_manual_snapshot)
+
+    def _snapshot_and_exit(self):
+        self.archiver_vendor.do_manual_snapshot()
+        mw.close()
+
+    def snapshot_and_exit(self):
+        return self.action('CrowdAnki: Snapshot and Exit', self._snapshot_and_exit)
