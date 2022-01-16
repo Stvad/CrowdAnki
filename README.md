@@ -49,7 +49,7 @@ My goal here is to provide a user-friendly description of collaboration workflow
 	![Image](misc/image/7.png?raw=true)
 3. [Import the deck](#import).
 
-If somebody **just wants to use the deck** you've uploaded to GitHub - they can [import decks directly from there](#import-from-github).
+If somebody **just wants to use the deck** you've uploaded to GitHub - they can [import decks directly from there](#import-from-git).
 
 #### How to upload changes
 
@@ -104,7 +104,7 @@ If you just want to **get latest changes from other people** - you need to perfo
 
 3. [Import the deck](#import).
 
-If somebody **just wants to use the deck** you've uploaded to GitHub - they can [import decks directly from there](#import-from-github).
+If somebody **just wants to use the deck** you've uploaded to GitHub - they can [import decks directly from there](#import-from-git).
 
 #### How to upload changes
 
