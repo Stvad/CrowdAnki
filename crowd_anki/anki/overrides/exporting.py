@@ -23,7 +23,7 @@ def get_save_file(parent, title, dir_description, key, ext, fname=None):
         directory = str(QFileDialog.getExistingDirectory(caption="Select Export Directory",
                                                          directory=fname))
         if directory:
-            return os.path.join(directory, str(anki.utils.intTime()))
+            return os.path.join(directory, str(anki.utils.int_time()))
         return None
 
     return aqt.utils.getSaveFile_old(parent, title, dir_description, key, ext, fname)

@@ -107,7 +107,7 @@ class Deck(JsonSerializableAnkiDict):
             # TODO Remove compatibility shims for Anki 2.1.46 and
             # lower.
             join_fields = anki_object.joined_fields if hasattr(anki_object, 'joined_fields') else anki_object.joinedFields
-            for media_file in self.collection.media.filesInStr(anki_object.mid, join_fields()):
+            for media_file in self.collection.media.files_in_str(anki_object.mid, join_fields()):
                 media.add(media_file)
 
         if include_children:
