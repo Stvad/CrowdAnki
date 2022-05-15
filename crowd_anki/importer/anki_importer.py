@@ -33,9 +33,7 @@ class AnkiJsonImporter:
             return False
 
         if aqt.mw:
-            aqt.mw.col.close(downgrade=False)
-            aqt.mw.backup()
-            aqt.mw.col.reopen(after_full_sync=False)
+            aqt.mw.create_backup_now()
         try:
             deck = deck_initializer.from_json(deck_json)
             deck.save_to_collection(self.collection, import_config=import_config)
