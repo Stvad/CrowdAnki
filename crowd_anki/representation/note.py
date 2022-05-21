@@ -122,7 +122,7 @@ class Note(JsonSerializableAnkiObject):
 
         self.anki_object.__dict__.update(self.anki_object_dict)
         self.anki_object.mid = note_model.anki_dict["id"]
-        self.anki_object.mod = anki.utils.intTime()
+        self.anki_object.mod = anki.utils.int_time()
 
         if new_note:
             collection.add_note(self.anki_object, deck.anki_dict["id"])
