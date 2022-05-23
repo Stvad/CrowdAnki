@@ -20,6 +20,7 @@ dataclasses = "*"
 pygtrie = "*"
 cached-property = "*"
 PyYAML = "*"
+pygithub = "*"
 
 [requires]
 python_version = "3.7"

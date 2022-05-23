@@ -1,3 +1,4 @@
+from crowd_anki import config
 from pathlib import Path
 
 from .anki_exporter import AnkiJsonExporter
@@ -24,14 +25,40 @@ class AnkiJsonExporterWrapper:
     def __init__(self, collection,
                  deck_id: int = None,
                  json_exporter: AnkiJsonExporter = None,
+                 gh_username: str = None,
+                 gh_password: str = None,
+                 gh_repo: str = None,
                  notifier: Notifier = None):
+           
+        self.gh_username = gh_username
+        self.gh_password = gh_password
+        self.gh_repo = gh_repo
+        
         self.includeMedia = True
         self.did = deck_id
         self.count = 0  # Todo?
         self.collection = collection
         self.anki_json_exporter = json_exporter or AnkiJsonExporter(collection, ConfigSettings.get_instance())
         self.notifier = notifier or AnkiModalNotifier()
+        
+    def exportToGithub(self):
+        if self.did is None:
+            self.notifier.warning(EXPORT_FAILED_TITLE, "CrowdAnki export works only for specific decks. "
+                                                       "Please use CrowdAnki snapshot if you want to export "
+                                                       "the whole collection.")
+            return
 
+        deck = AnkiDeck(self.collection.decks.get(self.did, default=False))
+        if deck.is_dynamic:
+            self.notifier.warning(EXPORT_FAILED_TITLE, "CrowdAnki does not support export for dynamic decks.")
+            return
+        
+        self.anki_json_exporter.export_to_github(deck, ConfigSettings.get_instance().gh_username,
+                                                ConfigSettings.get_instance().gh_password, self.includeMedia,
+                                                ConfigSettings.get_instance().gh_repo, create_deck_subdirectory=ConfigSettings.get_instance().export_create_deck_subdirectory)
+        
+        self.count = self.anki_json_exporter.last_exported_count
+    
     # required by anki exporting interface with its non-PEP-8 names
     # noinspection PyPep8Naming
     def exportInto(self, directory_path):
@@ -53,10 +80,10 @@ class AnkiJsonExporterWrapper:
         # .parent because we receive name with random numbers at the end (hacking around internals of Anki) :(
         export_path = Path(directory_path).parent
         self.anki_json_exporter.export_to_directory(deck, export_path, self.includeMedia,
-                                                    create_deck_subdirectory=ConfigSettings.get_instance().export_create_deck_subdirectory)
+                                                    create_deck_subdirectory=ConfigSettings.get_instance().export_create_deck_subdirectory,
+                                                    notifier=self.notifier)
 
         self.count = self.anki_json_exporter.last_exported_count
-
 
 def get_exporter_id(exporter):
     return f"{exporter.key} (*{exporter.ext})", exporter
