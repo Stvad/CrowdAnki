@@ -48,7 +48,7 @@ jobs:
     - name: Write dulwich version to requirements.txt
       shell: bash
       run: |
-        pipenv lock -r | sed -nE 's/(^dulwich==.+$)/\1 --global-option=--pure/p' > requirements.txt
+        pipenv requirements | sed -nE 's/(^dulwich==.+$)/\1 --global-option=--pure/p' > requirements.txt
 
     - name: Install pure dulwich from requirements.txt
       run: |
