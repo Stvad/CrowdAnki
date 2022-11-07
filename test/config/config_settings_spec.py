@@ -3,9 +3,10 @@ from unittest.mock import MagicMock
 from expects import expect, contain
 from mamba import describe, it, context
 
-from test_utils.anki import mock_anki_modules
+from test_utils.anki import MockAnkiModules
 
-mock_anki_modules()
+mock_anki_modules = MockAnkiModules()
+
 from aqt import mw
 
 from crowd_anki.config.config_settings import ConfigSettings, NoteSortingMethods
@@ -94,3 +95,5 @@ with describe(ConfigSettings) as self:
 
             expect(config._config.items()).to(contain(*list(new_settings.items())))
             addon_manager_mock.writeConfig.assert_called_once()
+
+mock_anki_modules.unmock()

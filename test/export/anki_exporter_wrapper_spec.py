@@ -2,6 +2,10 @@ from unittest.mock import MagicMock
 
 from mamba import describe, it, context
 
+from test_utils.anki import MockAnkiModules
+
+mock_anki_modules = MockAnkiModules(["win32file", "win32pipe", "pywintypes", "winerror"]) # Anki on Windows uses pywin32
+
 from crowd_anki.export.anki_exporter_wrapper import AnkiJsonExporterWrapper
 
 DUMMY_EXPORT_DIRECTORY = "/tmp"
@@ -23,3 +27,5 @@ with describe(AnkiJsonExporterWrapper) as self:
 
             notifier_mock.warning.assert_called_once()
             exporter_mock.export_to_directory.assert_not_called()
+
+mock_anki_modules.unmock()
