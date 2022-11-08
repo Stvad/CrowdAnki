@@ -18,13 +18,19 @@ on Linux, or simply download from `https://build-system.fman.io/qt-designer-down
 
 In Qt Designer you can create UI files using a simple GUI, and save them as a `.ui` file in the `ui_files` folder.
 
-Run `pip install PyQt5` to get the `pyuic5` on your system.
+If you install the dev dependencies into your pipenv (with `pipenv install --dev`), `pyuic5` and
+`pyuic6` will be available via `pipenv run pyuic5` and `pipenv run pyuic6`, respectively.
+(Alternatively, you can run `pip install PyQt5 PyQt6` so that `pyuic5` and `pyuic6` are globally
+available on your system.)
 
-Then the `pyuic5` module can be used to convert them to python.
-See the `generate_ui.sh` script for examples, and all new UI files should be added there for automation.
+The `pyuic5` and `pyuic6` commands can then be used to convert the UI files to python for Qt5 and
+Qt6 respectively.  See the `generate_ui.sh` script for examples.
+All new UI files should be added there for automation.
 
 This script is run automatically when packaging the extension in `package_plugin.sh`
 but needs to be done manually if the UI files are changed in the dev environment.
+(If you've installed `pyuic(5|6)` globally but not locally, you'll need to adjust the
+`package_plugin.sh` script.)
 
 # Testing 
 ## Testing your changes in Anki
