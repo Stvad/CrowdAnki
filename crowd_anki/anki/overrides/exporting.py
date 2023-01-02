@@ -3,7 +3,12 @@ import os
 import anki.exporting
 import anki.hooks
 import anki.utils
-import aqt.exporting
+import aqt.exporting # Old 2.1.54- exporter
+try:
+    import aqt.import_export.exporting # New 2.1.55+ exporter
+    NEW_EXPORTER_AVAILABLE = True
+except ModuleNotFoundError:
+    NEW_EXPORTER_AVAILABLE = False
 import aqt.utils
 from aqt import QFileDialog
 from aqt.exporting import ExportDialog
@@ -19,7 +24,8 @@ def exporter_changed(self, exporter_id):
 
 
 def get_save_file(parent, title, dir_description, key, ext, fname=None):
-    if ext == constants.ANKI_EXPORT_EXTENSION:
+    # Anki 2.1.55+ passes ".extension" here.  Earlier versions passed just "extension".
+    if ext in [constants.ANKI_EXPORT_EXTENSION, "." + constants.ANKI_EXPORT_EXTENSION]:
         directory = str(QFileDialog.getExistingDirectory(caption="Select Export Directory",
                                                          directory=fname))
         if directory:
@@ -32,5 +38,10 @@ def get_save_file(parent, title, dir_description, key, ext, fname=None):
 ExportDialog.exporterChanged = anki.hooks.wrap(ExportDialog.exporterChanged, exporter_changed)
 
 aqt.utils.getSaveFile_old = aqt.utils.getSaveFile
-aqt.exporting.getSaveFile = get_save_file  # Overriding instance imported with from style import
+
+# Overriding instance imported with from style import
+aqt.exporting.getSaveFile = get_save_file # Anki 2.1.54-
+if NEW_EXPORTER_AVAILABLE:
+    aqt.import_export.exporting.getSaveFile = get_save_file # Anki 2.1.55+
+
 aqt.utils.getSaveFile = get_save_file
