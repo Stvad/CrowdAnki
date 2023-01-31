@@ -1,0 +1,10 @@
+{
+  "package": "crowd-anki",
+  "name": "CrowdAnki",
+  "mod": 1675154545,
+  "conflicts": [],
+  "min_point_version": 50,
+  "max_point_version": 57,
+  "human_version": "v0.9.3",
+  "homepage": "https://github.com/Stvad/CrowdAnki/"
+}
