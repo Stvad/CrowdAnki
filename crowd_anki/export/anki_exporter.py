@@ -36,7 +36,7 @@ class AnkiJsonExporter(DeckExporter):
 
         deck = deck_initializer.from_collection(self.collection, deck.name)
 
-        deck.notes = self.note_sorter.sort_notes(deck.notes)
+        self.note_sorter.sort_deck(deck)
 
         self.last_exported_count = deck.get_note_count()
 

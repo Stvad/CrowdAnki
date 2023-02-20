@@ -1,4 +1,5 @@
 from ..config.config_settings import ConfigSettings, NoteSortingMethods
+from ..representation.deck import Deck
 
 
 class NoteSorter:
@@ -32,6 +33,13 @@ class NoteSorter:
             notes = list(reversed(notes))
 
         return notes
+
+    def sort_deck(self, deck: Deck):
+        """Sort deck and its subdecks recursively."""
+        deck.notes = self.sort_notes(deck.notes)
+
+        for child_deck in deck.children:
+            self.sort_deck(child_deck)
 
     def get_sort_key(self, note):   
         return tuple(
