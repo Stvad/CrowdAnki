@@ -3,6 +3,16 @@ from anki.decks import DeckManager
 
 
 def get_card_ids(self, did, children=False, include_from_dynamic=False):
+    """Get ids of cards in deck with id `did`.
+
+    If include_from_dynamic=True includes cards that are currently in
+    a filtered deck, but which originally come from the specified
+    deck.
+
+    If children=True include cards from children, _recursively_.
+    (Anki's DeckManager.children(did) is recursive.)
+
+    """
     deck_ids = [did] + ([deck_id for _, deck_id in self.children(did)] if children else [])
 
     request = "select id from cards where did in {}" + ("or odid in {}" if include_from_dynamic else "")
