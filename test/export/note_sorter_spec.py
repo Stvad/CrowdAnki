@@ -11,6 +11,8 @@ from mamba import describe, it, context
 
 from crowd_anki.config.config_settings import ConfigSettings, NoteSortingMethods
 from crowd_anki.export.note_sorter import NoteSorter
+from crowd_anki.representation.deck import Deck
+from crowd_anki.anki.adapters.note_model_file_provider import NoteModelFileProvider
 
 test_guids = ["abc", "bcd", "cde", "def", "efg", "fgh"]
 test_flags = [0, 1, 2, 3, 4, 5]
@@ -68,18 +70,21 @@ class NoteSorterTester:
 
         return note
 
-    def setup_notes(self, is_multi_key: bool):
+    @classmethod
+    def get_notes_mock(cls, is_multi_key: bool):
         random_range = list(range(0, len(test_multikey_notemodel_guid if is_multi_key else test_guids)))
         shuffle(random_range)
 
         if is_multi_key:
-            notes_list = [self.get_multikey_note_mock(i) for i in random_range]
+            notes_list = [cls.get_multikey_note_mock(i) for i in random_range]
         else:
-            notes_list = [self.get_single_note_mock(i) for i in random_range]
+            notes_list = [cls.get_single_note_mock(i) for i in random_range]
 
         logging.info("Shuffled list: ", notes_list)
+        return notes_list
 
-        self.notes = notes_list
+    def setup_notes(self, is_multi_key: bool):
+        self.notes = self.get_notes_mock(is_multi_key)
 
     def sort_with(self, sort_methods, reverse_sort, is_multi_key=False):
         self.setup_notes(is_multi_key)
@@ -148,3 +153,61 @@ with describe(NoteSorterTester) as self:
             ]
 
             assert (return_object == list(reversed(test_multikey_notemodel_guid)))
+
+class DeckSorterTester:
+    def __init__(self):
+        self.config = ConfigSettings(mw.addonManager, None, mw.pm)
+        self.note_sorter = None
+
+    def setup_note_sorter(self, sort_methods, reverse_sort):
+        self.config.export_note_sort_methods = sort_methods
+        self.config.export_notes_reverse_order = reverse_sort
+        self.note_sorter = NoteSorter(self.config)
+
+    @staticmethod
+    def create_deck_with_subdecks(notes=None, subdecks=None):
+        """Helper function to create a deck with subdecks.
+
+        Notes and subdecks are lists of notes and decks, respectively.
+        Either can be empty.
+
+        """
+        if notes is None:
+            notes = []
+        if subdecks is None:
+            subdecks = []
+
+        deck = Deck(NoteModelFileProvider)
+        deck.notes = notes
+        deck.children = subdecks
+        return deck
+
+    @classmethod
+    def create_deck_with_random_notes(cls, is_multi_key: bool = False):
+        return cls.create_deck_with_subdecks(
+            NoteSorterTester.get_notes_mock(is_multi_key)
+        )
+
+with describe(DeckSorterTester) as self:
+    with context("user sorts by each sort option"):
+        with it("sorts recursively through subdecks"):
+            for method, _ in note_sorting_single_result_pairs:
+                self.tester = DeckSorterTester()
+
+                # Create decks with notes
+                deck1 = self.tester.create_deck_with_random_notes()
+                deck2 = self.tester.create_deck_with_random_notes()
+                deck3 = self.tester.create_deck_with_random_notes()
+
+                # Create main deck with subdecks
+                main_deck = self.tester.create_deck_with_subdecks([], [deck1, deck2, deck3])
+
+                self.tester.config.export_note_sort_methods = [method]
+                self.tester.config.export_notes_reverse_order = False
+                self.tester.setup_note_sorter([method], False)
+                self.tester.note_sorter.sort_deck(main_deck)
+
+                # Check that notes in main deck and all subdecks are sorted
+                assert (sorted(main_deck.notes, key=NoteSorter.sorting_definitions[method]) == main_deck.notes)
+                for subdeck in main_deck.children:
+                    assert (sorted(subdeck.notes, key=NoteSorter.sorting_definitions[method]) == subdeck.notes)
