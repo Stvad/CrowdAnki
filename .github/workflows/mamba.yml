@@ -60,6 +60,9 @@ jobs:
         pipenv install --dev
 
     # TODO Run each test separately?  (See: #145.)
+    # TODO Remove PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python hack on upgrading python.
     - name: Run tests
       run: |
         pipenv run mamba ./
+      env:
+        PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
