@@ -16,8 +16,6 @@ PyQtWebEngine = "*"
 [packages]
 PyFunctional = "*"
 dulwich = "*"
-typing = "*"
-dataclasses = "*"
 pygtrie = "*"
 cached-property = "*"
 PyYAML = "*"
