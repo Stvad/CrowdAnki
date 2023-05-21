@@ -1,0 +1,38 @@
+name: Fetch dependencies into dist
+
+on:
+  pull_request:
+    paths: [Pipfile, Pipfile.lock]
+  push:
+    branches: [master]
+    paths: [Pipfile, Pipfile.lock]
+
+jobs:
+  fetch_dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+
+    - name: Upgrade pipenv
+      run: |
+        python3 -m pip install --upgrade pipenv
+
+    - name: Check that Pipfile.lock is not stale
+      run: |
+        pipenv verify
+
+    - name: Run fetch_dependencies.sh
+      run: |
+        ./fetch_dependencies.sh
+
+    - name: Upload crowd_anki dist artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: crowd-anki-dist-artifact
+        path: crowd_anki/dist/
