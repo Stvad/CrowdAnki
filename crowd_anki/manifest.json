@@ -1,0 +1,7 @@
+{
+  "package": "crowd-anki",
+  "name": "CrowdAnki",
+  "conflicts": [],
+  "min_point_version": 50,
+  "homepage": "https://github.com/Stvad/CrowdAnki/"
+}
