@@ -1,6 +1,6 @@
 from aqt import gui_hooks
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from ..config.config_settings import ConfigSettings
@@ -14,7 +14,7 @@ from ..utils.deckconf import disambiguate_crowdanki_uuid
 class HookVendor:
     window: Any
     config: ConfigSettings
-    hook_manager: AnkiHookManager = AnkiHookManager()
+    hook_manager: AnkiHookManager = field(default_factory=AnkiHookManager)
 
     def setup_hooks(self):
         self.setup_exporter_hook()
