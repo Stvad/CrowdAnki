@@ -7,7 +7,7 @@ pipenv requirements | sed -E 's/(^dulwich==.+$)/\1 --config-settings "--global-o
 # PYYAML_FORCE_LIBYAML is needed to prevent the libyaml bindings for
 # pyyaml (--without-libyaml doesn't work).  See:
 # https://github.com/yaml/pyyaml/issues/716
-PYYAML_FORCE_LIBYAML=0 pipenv run pip install --upgrade --no-binary "$(pipenv requirements | sed -n 's/==.*//p' | tr '\n' ',')" -r tmp_requirements.txt  --target crowd_anki/dist
+PYYAML_FORCE_LIBYAML=0 pipenv run pip install --no-cache-dir --upgrade --no-binary "$(pipenv requirements | sed -n 's/==.*//p' | tr '\n' ',')" -r tmp_requirements.txt  --target crowd_anki/dist
 
 rm tmp_requirements.txt
 

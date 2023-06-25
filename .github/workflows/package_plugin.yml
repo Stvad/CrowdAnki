@@ -1,0 +1,41 @@
+name: Package plugin
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  package_plugin:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+
+    - name: Upgrade pipenv
+      run: |
+        python3 -m pip install --upgrade pipenv
+
+    - name: Check that Pipfile.lock is not stale
+      run: |
+        pipenv verify
+
+    # For pyuic5/6
+    - name: Install dev tools
+      run: |
+        pipenv install --dev
+
+    - name: Run package_plugin.sh
+      run: |
+        ./package_plugin.sh
+
+    - name: Upload crowd_anki dist artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: crowd-anki-packaged-plugin
+        path: crowd_anki_*.zip
