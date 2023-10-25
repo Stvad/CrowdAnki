@@ -95,24 +95,15 @@ class ImportDialog(QDialog):
 
         def add_header(name):
             heading_ui = QListWidgetItem(name)
-            # Qt5/Qt6 compat
-            try:
-                heading_ui.setFlags(Qt.ItemFlag.ItemIsEnabled)
-            except AttributeError:
-                heading_ui.setFlags(Qt.ItemIsEnabled)
+            heading_ui.setFlags(Qt.ItemFlag.ItemIsEnabled)
             heading_ui.setSizeHint(QSize(self.form.list_personal_fields.width(), 30))
             heading_ui.setFont(heading_font)
             self.form.list_personal_fields.addItem(heading_ui)
 
         def add_field(name, is_personal) -> QListWidgetItem:
             field_ui = QListWidgetItem(name)
-            # Qt5/Qt6 compat
-            try:
-                field_ui.setCheckState(Qt.CheckState.Checked if is_personal else Qt.CheckState.Unchecked)
-                field_ui.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsUserCheckable)
-            except AttributeError:
-                field_ui.setCheckState(Qt.Checked if is_personal else Qt.Unchecked)
-                field_ui.setFlags(Qt.ItemIsEnabled | Qt.ItemIsUserCheckable)
+            field_ui.setCheckState(Qt.CheckState.Checked if is_personal else Qt.CheckState.Unchecked)
+            field_ui.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsUserCheckable)
             self.form.list_personal_fields.addItem(field_ui)
             return field_ui
 
@@ -130,11 +121,7 @@ class ImportDialog(QDialog):
         self.form.import_message_textbox.setText(self.import_defaults.import_message)
 
         if self.import_defaults.suggest_tag_imported_cards:
-            # Qt5/Qt6 compat
-            try:
-                self.form.cb_tag_cards.setCheckState(Qt.CheckState.Checked)
-            except AttributeError:
-                self.form.cb_tag_cards.setCheckState(Qt.Checked)
+            self.form.cb_tag_cards.setCheckState(Qt.CheckState.Checked)
             self.form.cb_tag_cards.setText("Tag Cards (Suggested by Deck Maintainer!)")
         # else:
         # set as default from config settings
@@ -144,11 +131,7 @@ class ImportDialog(QDialog):
 
     def setup_deck_part_checkboxes(self):
         def set_checked_and_text(checkbox, text, count, checked: bool = True):
-            # Qt5/Qt6 compat
-            try:
-                checkbox.setCheckState(Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked)
-            except AttributeError:
-                checkbox.setCheckState(Qt.Checked if checked else Qt.Unchecked)
+            checkbox.setCheckState(Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked)
             if count is not None:
                 text = f"{text}: {'{:,}'.format(count)}"
             checkbox.setText(text)
@@ -176,10 +159,5 @@ class ImportDialog(QDialog):
     def read_personal_fields(self, config):
         for model_name, fields_dict in self.personal_field_ui_dict.items():
             for field_name, widget_item in fields_dict.items():
-                # Qt5/Qt6 compat
-                try:
-                    if widget_item.checkState() == Qt.CheckState.Checked:
-                        config.add_field(model_name, field_name)
-                except AttributeError:
-                    if widget_item.checkState() == Qt.Checked:
-                        config.add_field(model_name, field_name)
+                if widget_item.checkState() == Qt.CheckState.Checked:
+                    config.add_field(model_name, field_name)

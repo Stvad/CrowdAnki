@@ -89,13 +89,8 @@ class AnkiJsonImporter:
                 import_dict = yaml.full_load(meta_file)
 
         import_dialog = ImportDialog(deck_json, import_dict)
-        # Qt5/Qt6 compat
-        try:
-            if import_dialog.exec() == QDialog.DialogCode.Rejected:
-                return None
-        except AttributeError:
-            if import_dialog.exec_() == QDialog.Rejected:
-                return None
+        if import_dialog.exec() == QDialog.DialogCode.Rejected:
+            return None
 
         return import_dialog.final_import_config
 
