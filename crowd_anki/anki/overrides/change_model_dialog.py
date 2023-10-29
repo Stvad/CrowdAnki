@@ -23,7 +23,7 @@ class ChangeModelDialog(QDialog):
         # todo consider extracting UI file
         self.form = aqt.forms.changemodel.Ui_Dialog()
         self.form.setupUi(self)
-        self.setWindowModality(Qt.WindowModal)
+        self.setWindowModality(Qt.WindowModality.WindowModal)
         self.setup()
 
         self.pauseUpdate = False

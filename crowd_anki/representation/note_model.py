@@ -71,4 +71,4 @@ class NoteModel(JsonSerializableAnkiDict):
 
         # todo signals instead of direct dialog creation?
 
-        ChangeModelDialog(collection, collection.models.nids(old_model), old_model).exec_()
+        ChangeModelDialog(collection, collection.models.nids(old_model), old_model).exec()

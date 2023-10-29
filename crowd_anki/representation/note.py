@@ -88,7 +88,7 @@ class Note(JsonSerializableAnkiObject):
                     NoteModel.ModelMap(dialog.get_field_map(), dialog.get_template_map())
 
             dialog.accepted.connect(on_accepted)
-            dialog.exec_()
+            dialog.exec()
             # todo process cancel
 
         # To get an updated note to work with
