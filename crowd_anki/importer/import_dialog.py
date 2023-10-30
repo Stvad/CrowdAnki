@@ -127,7 +127,7 @@ class ImportDialog(QDialog):
         # set as default from config settings
 
         if self.userConfig.import_notes_ignore_deck_movement:
-            self.form.cb_ignore_move_cards.setCheckState(Qt.Checked)
+            self.form.cb_ignore_move_cards.setCheckState(Qt.CheckState.Checked)
 
     def setup_deck_part_checkboxes(self):
         def set_checked_and_text(checkbox, text, count, checked: bool = True):
