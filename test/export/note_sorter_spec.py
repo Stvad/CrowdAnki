@@ -16,19 +16,29 @@ from crowd_anki.anki.adapters.note_model_file_provider import NoteModelFileProvi
 
 test_guids = ["abc", "bcd", "cde", "def", "efg", "fgh"]
 test_flags = [0, 1, 2, 3, 4, 5]
-test_tags = ["adjectives", "directions", "interesting", "nouns", "verbs", "zzzzFinal"]
+test_tags = ["adjectives", "directions10", "directions2", "nouns", "verbs", "zzzzFinal"]
+test_tags_numeric = [["adjectives"], ["directions", 2], ["directions", 10], ["nouns"],
+                     ["verbs"], ["zzzzFinal"]]
+test_note_ids = test_flags
 test_notemodels = ["Default", "LL Noun", "LL Sentence", "LL Verb", "LL Word", "Zulu"]
 test_notemodelids = test_guids
 test_fields = test_tags
+test_fields_numeric = test_tags_numeric
+test_sortf = [0] * 6
 
 note_sorting_single_result_pairs = [
     (NoteSortingMethods.GUID, test_guids),
     (NoteSortingMethods.FLAG, test_flags),
     (NoteSortingMethods.TAG, test_tags),
+    (NoteSortingMethods.TAG_N, test_tags_numeric),
+    (NoteSortingMethods.NOTE_ID, test_note_ids),
     (NoteSortingMethods.NOTE_MODEL_NAME, test_notemodels),
     (NoteSortingMethods.NOTE_MODEL_ID, test_notemodelids),
     (NoteSortingMethods.FIELD1, test_fields),
-    (NoteSortingMethods.FIELD2, test_fields)
+    (NoteSortingMethods.FIELD1_N, test_fields_numeric),
+    (NoteSortingMethods.FIELD2, test_fields),
+    (NoteSortingMethods.FIELD_LAST, test_fields),
+    (NoteSortingMethods.BROWSER_SORT_FIELD, test_fields)
 ]
 
 test_multikey_notemodel_guid = [(notemodel, guid) for notemodel in test_notemodels for guid in test_guids]
@@ -48,10 +58,12 @@ class NoteSorterTester:
         note.anki_object.guid = test_guids[i]
         note.anki_object.flags = test_flags[i]
         note.anki_object.tags = test_tags[i]
+        note.anki_object.id = test_note_ids[i]
 
         note.anki_object._model = {
             "name": test_notemodels[i],
-            "crowdanki_uuid": test_notemodelids[i]
+            "crowdanki_uuid": test_notemodelids[i],
+            "sortf": test_sortf[i]
         }
 
         note.anki_object.fields = [test_fields[i], test_fields[i]]
