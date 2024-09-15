@@ -84,7 +84,7 @@ class AnkiJsonExporter(DeckExporter):
     def _copy_media(self, deck, deck_directory):
         media_directory = deck_directory.joinpath(MEDIA_SUBDIRECTORY_NAME)
 
-        shutil.rmtree(str(media_directory.resolve()), ignore_errors=True)
+        self._clear_media(media_directory.resolve())
         media_directory.mkdir(parents=True, exist_ok=True)
 
         for file_src in deck.get_media_file_list():
@@ -93,3 +93,18 @@ class AnkiJsonExporter(DeckExporter):
                             str(media_directory.resolve()))
             except IOError as ioerror:
                 print("Failed to copy a file {}. Full error: {}".format(file_src, ioerror))
+
+    def _clear_media(self, media_directory: Path):
+        """Clear existing media from export dir before copying.
+
+        Try to be minimally invasive to avoid catastrophic data
+        removal if the relevant variables become incorrectly set
+        elsewhere.
+
+        """
+        unsafe_dirs = [Path.home(), Path("/")]
+        if not media_directory in unsafe_dirs:
+            if media_directory.is_dir():
+                for media_file in media_directory.iterdir():
+                    if media_file.is_file():
+                        media_file.unlink()
