@@ -54,6 +54,11 @@ class AnkiJsonImporter:
                 full_filename = os.path.join(unicode_media_directory, filename)
                 if os.path.isfile(full_filename):
                     shutil.copy(full_filename, self.collection.media.dir())
+            # Set media dir mtime to force sync of media.  Otherwise,
+            # if no media files are added or removed, Anki will not
+            # sync media changes.  See the Anki source:
+            # https://github.com/ankitects/anki/blob/b7cb0c0d0081202586fd2d88541db962819736b3/rslib/src/sync/media/database/client/changetracker.rs#L59
+            os.utime(self.collection.media.dir())
         else:
             print("Warning: no media directory exists.")
 
