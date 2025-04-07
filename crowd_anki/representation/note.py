@@ -127,7 +127,7 @@ class Note(JsonSerializableAnkiObject):
         if new_note:
             collection.add_note(self.anki_object, deck.anki_dict["id"])
         else:
-            self.anki_object.flush()
+            collection.update_note(self.anki_object, skip_undo_entry=True)
             if not import_config.ignore_deck_movement:
                 self.move_cards_to_deck(deck.anki_dict["id"])
 
