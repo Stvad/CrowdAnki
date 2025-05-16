@@ -32,7 +32,7 @@ jobs:
         ./fetch_dependencies.sh
 
     - name: Upload crowd_anki dist artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: crowd-anki-dist-artifact
         path: crowd_anki/dist/
