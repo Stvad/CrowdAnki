@@ -12,6 +12,8 @@ PyQt6 = "*"
 anki = "*"
 aqt = "*"
 PyQtWebEngine = "*"
+PyQt5-Qt5 = "5.15.2" # pin for windows, since there are no later windows wheels
+PyQtWebEngine-Qt5 = "5.15.2" # pin for windows, since there are no later windows wheels
 
 [packages]
 PyFunctional = "*"
