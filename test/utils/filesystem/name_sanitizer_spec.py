@@ -26,6 +26,7 @@ with description("AnkiDeckNameSanitizer"):
         @given(text(characters(min_codepoint=1, max_codepoint=800), max_size=size_limit, min_size=1)
                .filter(byte_length_size))
         @example("line\n another one")
+        @example("COM1")
         def can_create(potential_name):
             assume(potential_name not in ('.', '..'))
             with TemporaryDirectory() as dir_name:

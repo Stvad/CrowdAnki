@@ -14,10 +14,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python 3.7
+    - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7
+        python-version: '3.10'
 
     - name: Upgrade pipenv
       run: |
@@ -32,7 +32,7 @@ jobs:
         ./fetch_dependencies.sh
 
     - name: Upload crowd_anki dist artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: crowd-anki-dist-artifact
         path: crowd_anki/dist/

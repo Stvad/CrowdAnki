@@ -16,14 +16,24 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python 3.7
+    - name: Install OpenGL for Qt6 dev dependency
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get install freeglut3-dev
+
+    - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7
+        python-version: '3.10'
 
     - name: Upgrade pip
       run: |
         python3 -m pip install --upgrade pipenv
+
+    - name: Use setup-python version of python instead of built-in
+      if: runner.os == 'Windows'
+      run: |
+        pipenv --python "$env:pythonLocation\python.exe"
 
     # Pipenv doesn't support specifying global options.  See:
     #
