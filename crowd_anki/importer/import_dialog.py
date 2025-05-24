@@ -103,9 +103,22 @@ class ImportDialog(QDialog):
         def add_field(name, is_personal) -> QListWidgetItem:
             field_ui = QListWidgetItem(name)
             field_ui.setCheckState(Qt.CheckState.Checked if is_personal else Qt.CheckState.Unchecked)
-            field_ui.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsUserCheckable)
+            field_ui.setFlags(Qt.ItemFlag.ItemIsEnabled)
+            field_ui.setData(Qt.ItemDataRole.UserRole, "field")
             self.form.list_personal_fields.addItem(field_ui)
             return field_ui
+
+        # Allow clicking anywhere on a field to toggle the checkbox.
+        # In order to avoid no-op double-toggling we do not add
+        # Qt.ItemFlag.ItemIsUserCheckable to the item flags.  Adapted
+        # from: https://stackoverflow.com/a/51653947
+        def on_click(item):
+            if item.data(Qt.ItemDataRole.UserRole) == "field":
+                if item.checkState() == Qt.CheckState.Checked:
+                    item.setCheckState(Qt.CheckState.Unchecked)
+                else:
+                    item.setCheckState(Qt.CheckState.Checked)
+        self.form.list_personal_fields.itemClicked.connect(on_click)
 
         for model in self.deck_json["note_models"]:
             model_name = model["name"]
