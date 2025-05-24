@@ -30,6 +30,11 @@ jobs:
       run: |
         python3 -m pip install --upgrade pipenv
 
+    - name: Use setup-python version of python instead of built-in
+      if: runner.os == 'Windows'
+      run: |
+        pipenv --python "$env:pythonLocation\python.exe"
+
     # Pipenv doesn't support specifying global options.  See:
     #
     # https://github.com/pypa/pipenv/issues/2208
