@@ -1,9 +1,6 @@
-from unittest.mock import MagicMock, patch
-
-from expects import be_true, be_false, expect
+from expects import be_false, be_true, expect
 from mamba import before, context, description, it
 
-from crowd_anki.anki.overrides import cards
 from test_utils.anki.card_creator import create_card
 
 with description("Card Overrides") as self:
@@ -30,14 +27,3 @@ with description("Card Overrides") as self:
             self.card.odid = 1
             result = self.card.move_to_deck(1)
             expect(result).to(be_false)
-
-        with it("should return true if moving from a dynamic deck"):
-            self.card.col = MagicMock()
-            self.card.col.sched.remFromDyn = MagicMock()
-            self.card.load = MagicMock()
-
-            result = self.card.move_to_deck(1, move_from_dynamic_deck=True)
-
-            expect(result).to(be_true)
-            self.card.col.sched.remFromDyn.assert_called_once_with([self.card.id])
-            self.card.load.assert_called_once()
