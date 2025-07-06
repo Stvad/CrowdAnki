@@ -93,7 +93,7 @@ class Note(JsonSerializableAnkiObject):
         # To get an updated note to work with
         self.anki_object = uuid_fetcher.get_note(self.get_uuid())
 
-    def move_cards_to_deck(self, collection, deck_id, move_from_dynamic_decks=False):
+    def move_cards_to_deck(self, collection, deck_id):
         """
         Move all cards for note with given id to specified deck.
         :param deck_id:
@@ -102,7 +102,7 @@ class Note(JsonSerializableAnkiObject):
         """
         # Todo: consider move only when majority of cards are in a different deck.
         for card in self.anki_object.cards():
-            changed = card.move_to_deck(deck_id, move_from_dynamic_decks)
+            changed = card.move_to_deck(deck_id)
             if changed: 
                 collection.update_card(card)
 
