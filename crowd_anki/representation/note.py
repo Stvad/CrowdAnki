@@ -4,7 +4,6 @@ from anki.notes import Note as AnkiNote
 from .json_serializable import JsonSerializableAnkiObject
 from .note_model import NoteModel
 from ..anki.overrides.change_model_dialog import ChangeModelDialog
-from ..importer.import_dialog import ImportConfig
 from ..config.config_settings import ConfigSettings
 from ..utils.constants import UUID_FIELD_NAME
 from ..utils.uuid import UuidFetcher
@@ -94,7 +93,7 @@ class Note(JsonSerializableAnkiObject):
         # To get an updated note to work with
         self.anki_object = uuid_fetcher.get_note(self.get_uuid())
 
-    def move_cards_to_deck(self, deck_id, move_from_dynamic_decks=False):
+    def move_cards_to_deck(self, collection, deck_id):
         """
         Move all cards for note with given id to specified deck.
         :param deck_id:
@@ -103,8 +102,9 @@ class Note(JsonSerializableAnkiObject):
         """
         # Todo: consider move only when majority of cards are in a different deck.
         for card in self.anki_object.cards():
-            card.move_to_deck(deck_id, move_from_dynamic_decks)
-            card.flush()
+            changed = card.move_to_deck(deck_id)
+            if changed: 
+                collection.update_card(card)
 
     def save_to_collection(self, collection, deck, model_map_cache, import_config):
         # Todo uuid match on existing notes
@@ -129,7 +129,7 @@ class Note(JsonSerializableAnkiObject):
         else:
             collection.update_note(self.anki_object, skip_undo_entry=True)
             if not import_config.ignore_deck_movement:
-                self.move_cards_to_deck(deck.anki_dict["id"])
+                self.move_cards_to_deck(collection, deck.anki_dict["id"])
 
     def handle_import_config_changes(self, import_config, note_model):
         # Personal Fields
