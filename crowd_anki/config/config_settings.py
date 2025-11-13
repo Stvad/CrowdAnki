@@ -32,6 +32,7 @@ class ConfigSettings:
     export_note_sort_methods: list
     export_create_deck_subdirectory: bool
     import_notes_ignore_deck_movement: bool
+    snapshot_custom_command: str
 
     @property
     def formatted_export_note_sort_methods(self) -> list:
@@ -48,6 +49,7 @@ class ConfigSettings:
         EXPORT_NOTES_REVERSE_ORDER = ConfigEntry("export_notes_reverse_order", False)
         EXPORT_CREATE_DECK_SUBDIRECTORY = ConfigEntry("export_create_deck_subdirectory", True)
         IMPORT_NOTES_IGNORE_DECK_MOVEMENT = ConfigEntry("import_notes_ignore_deck_movement", False)
+        SNAPSHOT_CUSTOM_COMMAND = ConfigEntry("snapshot_custom_command", "")
 
     def __init__(self, addon_manager=None, init_values=None, profile_manager=None):
         self._profile_manager = profile_manager or mw.pm

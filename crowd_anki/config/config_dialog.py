@@ -47,6 +47,9 @@ class ConfigDialog(QDialog):
         self.form.textedit_snapshot_root_decks.appendPlainText(list_to_cs_string(self.config.snapshot_root_decks))
         self.form.textedit_snapshot_root_decks.textChanged.connect(self.changed_textedit_snapshot_root_decks)
 
+        self.form.textedit_snapshot_custom_command.setText(self.config.snapshot_custom_command)
+        self.form.textedit_snapshot_custom_command.textChanged.connect(self.changed_textedit_snapshot_custom_command)
+
     def setup_export_options(self):
         self.form.cb_reverse_sort.setChecked(self.config.export_notes_reverse_order)
         self.form.cb_reverse_sort.stateChanged.connect(self.toggle_reverse_sort)
@@ -83,3 +86,6 @@ class ConfigDialog(QDialog):
 
     def changed_textedit_snapshot_path(self):
         self.config.snapshot_path = self.form.textedit_snapshot_path.text()
+
+    def changed_textedit_snapshot_custom_command(self):
+        self.config.snapshot_custom_command = self.form.textedit_snapshot_custom_command.text()

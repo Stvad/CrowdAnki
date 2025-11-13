@@ -4,6 +4,7 @@ from typing import Any
 
 from .anki_deck_archiver import AnkiDeckArchiver
 from .archiver import AllDeckArchiver
+from .custom_command_repo import CustomCommandRepo
 from .dulwich_repo import DulwichAnkiRepo
 from ..anki.adapters.deck_manager import AnkiStaticDeckManager, DeckManager
 from ..anki.ui.utils import progress_indicator
@@ -24,12 +25,18 @@ class ArchiverVendor:
         return AnkiStaticDeckManager(self.window.col.decks)
 
     def all_deck_archiver(self):
+        if self.config.snapshot_custom_command:
+            repo_provider = lambda path: CustomCommandRepo(
+                path, self.config.snapshot_custom_command)
+        else:
+            repo_provider = DulwichAnkiRepo
+
         return AllDeckArchiver(
             self.deck_manager,
             lambda deck: AnkiDeckArchiver(deck,
                                           self.config.full_snapshot_path,
                                           AnkiJsonExporter(self.window.col, self.config),
-                                          DulwichAnkiRepo))
+                                          repo_provider))
 
     def snapshot_path(self):
         return Path(self.config.snapshot_path)
