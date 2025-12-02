@@ -9,3 +9,7 @@ class AnkiRepo(ABC):
     @abstractmethod
     def commit(self, message: str = None):
         pass
+
+    @abstractmethod
+    def close(self):
+        pass

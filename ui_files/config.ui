@@ -55,6 +55,20 @@
           <item>
            <widget class="QPlainTextEdit" name="textedit_snapshot_root_decks"/>
           </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="lbl_snapshot_custom_command">
+              <property name="text">
+               <string>Custom commit command:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="textedit_snapshot_custom_command"/>
+            </item>
+           </layout>
+          </item>
          </layout>
         </widget>
        </item>
@@ -128,6 +142,8 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Snapshot Root Decks&lt;/span&gt;: A list of names of the decks that should be considered `root`. When CrowdAnki creates a snapshot it'll create a separate git repository for each `root` deck.&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Default&lt;/span&gt;: Each deck with no children is considered `root`.&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Example&lt;/span&gt;: Let's assume that you have the following decks in your collection: `a` (with sub-decks `b` and `c`), and  `d`. By default CrowdAnki is going to create 3 separate repositories - `a::b`, `a::c` and `d`. If you are to add `a` to `snapshot_root_decks` then CrowdAnki would create 2 repositories instead -  `a` and `d`. The information for sub-decks `b` and `c` would be stored within repository `a` in this case.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Custom commit command&lt;/span&gt;: Optional shell command to run instead of the built-in `git-commit` procedure. During this command execution, the `CROWD_ANKI_COMMIT_MESSAGE` environment variable will be set to the commit message that would be used normally.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Default&lt;/span&gt;: Blank, meaning the built-in `git-commit` procedure is run.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Import&lt;/span&gt;&lt;/p&gt;
