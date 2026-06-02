@@ -51,6 +51,7 @@ class Deck(JsonSerializableAnkiDict):
 
         self.collection = None
         self.notes = []
+        self.media_files = []
         self.children = []
         self.metadata = None
         self.deck_config_uuid = None
@@ -68,6 +69,9 @@ class Deck(JsonSerializableAnkiDict):
 
     def get_note_count(self):
         return len(self.notes) + sum(child.get_note_count() for child in self.children)
+
+    def get_media_file_count(self):
+        return len(self.media_files) + sum(child.get_media_file_count() for child in self.children)
 
     def _update_db(self):
         # Introduce uuid field for unique identification of entities

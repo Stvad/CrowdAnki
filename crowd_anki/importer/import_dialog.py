@@ -66,13 +66,13 @@ class ImportConfig(PersonalFieldsHolder):
 
 
 class ImportDialog(QDialog):
-    def __init__(self, deck_json, config, parent=None):
+    def __init__(self, deck, config, parent=None):
         super().__init__(None)
         self.parent = parent
         self.form = ConfigUI()
         self.form.setupUi(self)
         self.userConfig = ConfigSettings.get_instance()
-        self.deck_json = deck_json
+        self.deck = deck
         self.import_defaults = ImportDefaults.from_dict(config)
         self.personal_field_ui_dict = defaultdict(dict)
         self.ui_initial_setup()
@@ -120,12 +120,12 @@ class ImportDialog(QDialog):
                     item.setCheckState(Qt.CheckState.Checked)
         self.form.list_personal_fields.itemClicked.connect(on_click)
 
-        for model in self.deck_json["note_models"]:
-            model_name = model["name"]
-            model_id = model[UUID_FIELD_NAME]
+        for model in self.deck.metadata.models.values():
+            model_name = model.anki_dict["name"]
+            model_id = model.anki_dict[UUID_FIELD_NAME]
             add_header(model_name)
 
-            for field in model["flds"]:
+            for field in model.anki_dict["flds"]:
                 field_name = field["name"]
                 field_ui = add_field(field_name, self.import_defaults.is_personal_field(model_name, field_name))
                 self.personal_field_ui_dict[model_name].setdefault(field_name, field_ui)
@@ -149,10 +149,10 @@ class ImportDialog(QDialog):
                 text = f"{text}: {'{:,}'.format(count)}"
             checkbox.setText(text)
 
-        set_checked_and_text(self.form.cb_notes, "Notes", len(self.deck_json['notes']))
-        set_checked_and_text(self.form.cb_media, "Media Files", len(self.deck_json['media_files']))
+        set_checked_and_text(self.form.cb_notes, "Notes", self.deck.get_note_count())
+        set_checked_and_text(self.form.cb_media, "Media Files", self.deck.get_media_file_count())
 
-        # TODO: Deck Parts to Use, check which are actually in the deck_json
+        # TODO: Deck Parts to Use, check which are actually in the deck
 
     def read_import_config(self):
         config = ImportConfig(
