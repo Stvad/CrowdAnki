@@ -29,7 +29,7 @@ class DulwichAnkiRepo(AnkiRepo):
 
     def stage_all(self):
         status = self.status()
-        self.dulwich_repo.stage(status.untracked + status.unstaged)
+        self.dulwich_repo.get_worktree().stage(status.untracked + status.unstaged)
 
     def commit(self, message: str = None):
         if self.there_are_staged_changes():
