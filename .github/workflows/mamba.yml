@@ -19,7 +19,7 @@ jobs:
     - name: Install OpenGL for Qt6 dev dependency
       if: runner.os == 'Linux'
       run: |
-        sudo apt-get install freeglut3-dev
+        sudo apt-get update && sudo apt-get install freeglut3-dev
 
     - name: Set up Python 3.10
       uses: actions/setup-python@v2
