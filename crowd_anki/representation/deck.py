@@ -51,6 +51,7 @@ class Deck(JsonSerializableAnkiDict):
 
         self.collection = None
         self.notes = []
+        self.media_files = []
         self.children = []
         self.metadata = None
         self.deck_config_uuid = None
@@ -68,6 +69,21 @@ class Deck(JsonSerializableAnkiDict):
 
     def get_note_count(self):
         return len(self.notes) + sum(child.get_note_count() for child in self.children)
+
+    def get_media_file_count(self):
+        return len(self._collect_media_files())
+
+    def _collect_media_files(self):
+        """Unique media file names in this deck and all its subdecks.
+
+        Media files are deduplicated by name, since the same file (e.g.
+        re-used media or shared `_xxx` media) can appear in multiple
+        decks and must only be counted once.
+        """
+        media = set(self.media_files)
+        for child in self.children:
+            media |= child._collect_media_files()
+        return media
 
     def _update_db(self):
         # Introduce uuid field for unique identification of entities

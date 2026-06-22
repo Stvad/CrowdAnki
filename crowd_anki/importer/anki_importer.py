@@ -27,15 +27,15 @@ class AnkiJsonImporter:
         :param directory_path: Path
         """
         deck_json = self.read_deck(self.get_deck_path(directory_path))
+        deck = deck_initializer.from_json(deck_json)
 
-        import_config = self.read_import_config(directory_path, deck_json)
+        import_config = self.read_import_config(directory_path, deck)
         if import_config is None:
             return False
 
         if aqt.mw:
             aqt.mw.create_backup_now()
         try:
-            deck = deck_initializer.from_json(deck_json)
             deck.save_to_collection(self.collection, import_config=import_config)
 
             if import_config.use_media:
@@ -84,7 +84,7 @@ class AnkiJsonImporter:
             return json.load(deck_file)
 
     @staticmethod
-    def read_import_config(directory_path, deck_json):
+    def read_import_config(directory_path, deck):
         file_path = directory_path.joinpath(IMPORT_CONFIG_NAME)
 
         if not file_path.exists():
@@ -93,7 +93,7 @@ class AnkiJsonImporter:
             with file_path.open(encoding='utf8') as meta_file:
                 import_dict = yaml.full_load(meta_file)
 
-        import_dialog = ImportDialog(deck_json, import_dict)
+        import_dialog = ImportDialog(deck, import_dict)
         if import_dialog.exec() == QDialog.DialogCode.Rejected:
             return None
 
