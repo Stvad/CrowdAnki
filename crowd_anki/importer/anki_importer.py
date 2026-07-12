@@ -65,15 +65,22 @@ class AnkiJsonImporter:
     def get_deck_path(self, directory_path):
         """
         Provides compatibility layer between deck file naming conventions.
-        Assumes that deck json file is located in the directory and named 'deck.json'
+        Prefers a direct 'deck.json', then a unique 'deck.json' found anywhere
+        below the selected directory.
         """
 
         def path_for_name(name):
             return directory_path.joinpath(name).with_suffix(DECK_FILE_EXTENSION)
 
         convention_path = path_for_name(self.deck_file_name)   # [folder]/deck.json
-        inferred_path = path_for_name(directory_path.name)     # [folder]/[folder].json
-        return convention_path if convention_path.exists() else inferred_path
+        if convention_path.exists():
+            return convention_path
+
+        deck_json_files = list(directory_path.rglob(f"{self.deck_file_name}{DECK_FILE_EXTENSION}"))
+        if len(deck_json_files) == 1:
+            return deck_json_files[0]
+
+        return convention_path
 
     @staticmethod
     def read_deck(file_path: Path):
