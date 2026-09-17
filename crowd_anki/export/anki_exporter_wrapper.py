@@ -25,7 +25,7 @@ EXPORT_FAILED_TITLE = "Export failed"
 EXPORT_KEY = "CrowdAnki JSON representation" # TODO make this localisable, like in Anki (tr.(...))
 
 
-class AnkiJsonExporterWrapperNew(Exporter):
+class AnkiJsonExporterWrapper(Exporter):
     """Wrapper to work with standard export dialog in anki 2.1.55+."""
     extension = constants.ANKI_EXPORT_EXTENSION
     show_deck_list = True
@@ -61,11 +61,11 @@ class AnkiJsonExporterWrapperNew(Exporter):
             notifier = AnkiModalNotifier()
 
         try:
-            deck = AnkiJsonExporterWrapperNew.return_deck_or_reject(mw.col, deck_id, notifier)
+            deck = AnkiJsonExporterWrapper.return_deck_or_reject(mw.col, deck_id, notifier)
         except UnexportableDeckException:
             return
 
-        count = AnkiJsonExporterWrapperNew.clean_up_and_export(
+        count = AnkiJsonExporterWrapper.clean_up_and_export(
             options.out_path, mw.col, deck, options.include_media, anki_json_exporter,
         )
 
@@ -115,9 +115,7 @@ class AnkiJsonExporterWrapperNew(Exporter):
 
         return anki_json_exporter.last_exported_count
 
-def exporters_hook_new(exporters_list):
+def exporters_hook(exporters_list):
     """Exporter hook for exporters_list_did_initialize."""
-    if not AnkiJsonExporterWrapperNew in exporters_list:
-        exporters_list.append(AnkiJsonExporterWrapperNew)
-
-
+    if not AnkiJsonExporterWrapper in exporters_list:
+        exporters_list.append(AnkiJsonExporterWrapper)

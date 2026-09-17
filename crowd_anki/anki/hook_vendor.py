@@ -5,7 +5,7 @@ from typing import Any
 
 from ..config.config_settings import ConfigSettings
 from ..anki.adapters.hook_manager import AnkiHookManager
-from ..export.anki_exporter_wrapper import exporters_hook_new
+from ..export.anki_exporter_wrapper import exporters_hook
 from ..history.archiver_vendor import ArchiverVendor
 from ..utils.deckconf import disambiguate_crowdanki_uuid
 
@@ -22,7 +22,7 @@ class HookVendor:
         self.setup_add_config_hook()
 
     def setup_exporter_hook(self):
-        gui_hooks.exporters_list_did_initialize.append(exporters_hook_new)
+        gui_hooks.exporters_list_did_initialize.append(exporters_hook)
 
     def setup_snapshot_hooks(self):
         snapshot_handler = ArchiverVendor(self.window, self.config).snapshot_on_sync
