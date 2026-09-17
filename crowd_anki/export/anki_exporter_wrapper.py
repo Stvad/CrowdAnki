@@ -4,10 +4,7 @@ from pathlib import Path
 from typing import Optional
 from typing import TYPE_CHECKING
 
-try: # Anki 2.1.55+
-    from aqt.import_export.exporting import Exporter, ExportOptions
-except (ModuleNotFoundError, ImportError): # Anki 2.1.54-
-    from ..anki.compat.exporting import Exporter, ExportOptions
+from aqt.import_export.exporting import Exporter, ExportOptions
 
 from aqt.utils import tr, tooltip
 
@@ -27,52 +24,6 @@ from ..errors import UnexportableDeckException
 EXPORT_FAILED_TITLE = "Export failed"
 EXPORT_KEY = "CrowdAnki JSON representation" # TODO make this localisable, like in Anki (tr.(...))
 
-class AnkiJsonExporterWrapper:
-    """
-    Wrapper designed to work with standard export dialog in anki.
-
-    It works with the standard dialog for Anki 2.1.54/lower and the
-    legacy dialog for Anki 2.1.55/higher.
-    """
-
-    key = EXPORT_KEY
-    ext = constants.ANKI_EXPORT_EXTENSION
-    hideTags = True
-    includeTags = True
-    directory_export = True
-
-    def __init__(self, collection,
-                 deck_id: int = None,
-                 json_exporter: AnkiJsonExporter = None,
-                 notifier: Notifier = None):
-        self.includeMedia = True
-        self.did = deck_id
-        self.count = 0
-        self.collection = collection
-        self.anki_json_exporter = json_exporter or AnkiJsonExporter(collection, ConfigSettings.get_instance())
-        self.notifier = notifier or AnkiModalNotifier()
-
-    # required by anki exporting interface with its non-PEP-8 names
-    # noinspection PyPep8Naming
-    def exportInto(self, directory_path):
-        try:
-            deck = AnkiJsonExporterWrapperNew.return_deck_or_reject(self.collection, self.did, self.notifier)
-        except UnexportableDeckException:
-            return
-
-        self.count = AnkiJsonExporterWrapperNew.clean_up_and_export(
-            directory_path, self.collection, deck, self.includeMedia, self.anki_json_exporter
-        )
-
-def get_exporter_id(exporter):
-    return f"{exporter.key} (*{exporter.ext})", exporter
-
-
-def exporters_hook(exporters_list):
-    exporter_id = get_exporter_id(AnkiJsonExporterWrapper)
-    if exporter_id not in exporters_list:
-        exporters_list.append(exporter_id)
-
 
 class AnkiJsonExporterWrapperNew(Exporter):
     """Wrapper to work with standard export dialog in anki 2.1.55+."""
@@ -85,7 +36,7 @@ class AnkiJsonExporterWrapperNew(Exporter):
         return EXPORT_KEY
 
     def export(self, mw: aqt.main.AnkiQt,
-               options, #: ExportOptions,
+               options: ExportOptions,
                anki_json_exporter: AnkiJsonExporter = None,
                notifier: Notifier = None) -> None:
 
@@ -165,7 +116,7 @@ class AnkiJsonExporterWrapperNew(Exporter):
         return anki_json_exporter.last_exported_count
 
 def exporters_hook_new(exporters_list):
-    """Exporter hook for Anki 2.1.55+."""
+    """Exporter hook for exporters_list_did_initialize."""
     if not AnkiJsonExporterWrapperNew in exporters_list:
         exporters_list.append(AnkiJsonExporterWrapperNew)
 
