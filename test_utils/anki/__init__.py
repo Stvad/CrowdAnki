@@ -9,8 +9,8 @@ class MockAnkiModules:
     I'd like to get rid of the situation when this is required, but for now this helps with the situation that
     anki modules are not available during test runtime.
     """
-    module_names_list = ['anki', 'anki.hooks', 'anki.exporting', 'anki.decks', 'anki.utils', 'anki.cards', 'anki.models',
-                         'anki.notes', 'aqt', 'aqt.qt', 'aqt.exporting', 'aqt.utils']
+    module_names_list = ['anki', 'anki.hooks', 'anki.decks', 'anki.utils', 'anki.cards', 'anki.models',
+                         'anki.notes', 'aqt', 'aqt.qt', 'aqt.utils']
 
     def __init__(self, module_names_list: Optional[List[str]] = None):
         if module_names_list is None:
